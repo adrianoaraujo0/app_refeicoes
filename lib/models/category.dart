@@ -11,6 +11,4 @@ class Category {
     required this.title,
     this.color = Colors.orange,
   });
-
-
 }
