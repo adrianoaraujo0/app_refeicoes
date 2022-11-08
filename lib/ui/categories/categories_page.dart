@@ -1,5 +1,9 @@
 import 'package:app_refeicoes/data/dummy_data.dart';
+import 'package:app_refeicoes/models/category.dart';
+import 'package:app_refeicoes/ui/meal/meal_page.dart';
 import 'package:flutter/material.dart';
+
+import '../../models/meal.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({super.key});
@@ -19,21 +23,25 @@ class CategoriesPage extends StatelessWidget {
       itemCount: dummyMeals.length,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
+        Meal meal = dummyMeals[index];
+        Category category = dummyCategories[index];
+
         return InkWell(
-          child: itemList(index)
+          child: itemList(meal, category),
+          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal),)),
         );
       },
     );
   }
 
-  Widget itemList(int index){
+  Widget itemList(Meal meal, Category category){
     return Container(
         margin: const EdgeInsets.symmetric(horizontal: 20),
         height: 300,
         width: 200,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
-          image: DecorationImage(image: NetworkImage(dummyMeals[index].imageUrl), fit: BoxFit.cover),
+          image: DecorationImage(image: NetworkImage(meal.imageUrl), fit: BoxFit.cover),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -46,7 +54,7 @@ class CategoriesPage extends StatelessWidget {
                 borderRadius:  BorderRadius.vertical(bottom: Radius.circular(20)),
                 color: Colors.black38, 
               ),
-              child: Text(dummyCategories[index].title, style: const TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center),
+              child: Text(category.title, style: const TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center),
             ),
           ]
         ),
