@@ -5,10 +5,11 @@ class StopwatchPage extends StatelessWidget {
   final int seconds;
   StopwatchPage({required this.seconds, super.key});
 
-  final displayTime = StopWatchTimer.getDisplayTime(seconds); 
 
   @override
   Widget build(BuildContext context) {
+
+  final displayTime = StopWatchTimer.getDisplayTime(seconds); 
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.red),
       body: Center(
@@ -19,7 +20,7 @@ class StopwatchPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Container(),
-                Text("00:00:00", style: TextStyle(fontSize: 60)),
+                Text("${seconds}", style: TextStyle(fontSize: 60)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
