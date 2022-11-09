@@ -1,3 +1,4 @@
+import 'package:app_refeicoes/ui/stopwatch/stopwatch_page.dart';
 import 'package:flutter/material.dart';
 import '../../models/meal.dart';
 
@@ -147,7 +148,13 @@ class MealPage extends StatelessWidget {
                 style: const TextStyle(fontSize: 30, color: Colors.grey, fontWeight: FontWeight.w100)),
                 const SizedBox(width: 15),
                 Expanded(child: Text(meal!.steps[index]["step"], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
-                if(meal!.steps[index]["seconds"] != null) IconButton(icon: Icon(Icons.access_time, size: 40, color: Colors.amber[300],), onPressed: (){}),
+                if(meal!.steps[index]["seconds"] != null) 
+                IconButton(
+                  icon: Icon(Icons.access_time, size: 40, color: Colors.amber[300]),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => StopwatchPage(seconds: meal!.steps[index]["seconds"])));
+                  }
+                ),
               ]
             ),
         );  
