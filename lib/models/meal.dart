@@ -15,7 +15,7 @@ class Meal{
   final String title;
   final String imageUrl;
   final List<String> ingredients;
-  final List<String> steps;
+  final List<Map<String, dynamic>> steps;
   final int duration;
   final bool isGlutenFree;
   final bool isLactoseFree;
@@ -23,6 +23,7 @@ class Meal{
   final bool isVegetarian;
   final Complexity complexity;
   final Cost cost;
+  final bool favorite;
 
   const Meal({
     required this.id,
@@ -38,6 +39,7 @@ class Meal{
     required this.isVegetarian,
     required this.complexity,
     required this.cost,
+    required this.favorite
   });
 
   String get complexityText {
