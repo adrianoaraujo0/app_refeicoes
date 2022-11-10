@@ -118,6 +118,7 @@ class MealPage extends StatelessWidget {
         return Container(
           padding: const EdgeInsets.all(10.0),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Icon(Icons.arrow_right_sharp),
               const SizedBox(width: 10),

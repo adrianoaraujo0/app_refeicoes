@@ -82,7 +82,7 @@ const List<Meal> dummyMeals = [
       },
       {
         "step": "Put the spaghetti into the boiling water - they should be done in about 10 to 12 minutes.",
-        "seconds": 12 
+        "seconds": 12.0
       },
       {
         "step": "In the meantime, heaten up some olive oil and add the cut onion.",
@@ -122,7 +122,7 @@ const List<Meal> dummyMeals = [
     steps: [
       {
         "step" : "Grease one side of the white bread with butter for 20 minutes.",
-        "seconds" : 1200
+        "seconds" : 1200.0
       },
       {
         "step" : "Layer ham, the pineapple and cheese on the white bread"
@@ -158,7 +158,7 @@ const List<Meal> dummyMeals = [
       {"step":"Form 2 patties"},
       {
       "step":"Fry the patties for c. 4 minutes on each sides",
-      "seconds": 240
+      "seconds": 240.0
       },
       {"step":"Quickly fry the buns for c. 1 minute on each side"},
       {"step":"Bruch buns with ketchup'"},
@@ -325,7 +325,7 @@ const List<Meal> dummyMeals = [
       {"step":'Add spices and stir fry'},
       {
         "step":'Add chicken breast + 250ml of water and cook everything for 10 minutes',
-        "seconds": 600
+        "seconds": 600.0
       },
       {"step":'Add coconut milk'},
       {"step":'Serve with rice'}
@@ -370,13 +370,13 @@ const List<Meal> dummyMeals = [
       {"step":'Add salt and cayenne pepper. Mix together thoroughly. Add egg yolk and mix to combine.'},
       {"step":'Leave bowl above the hot (not simmering) water to keep chocolate warm while you whip the egg whites.'},
       {"step":'Place 2 egg whites in a mixing bowl; add cream of tartar. Whisk until mixture begins to thicken and a drizzle from the whisk stays on the surface about 1 second before disappearing into the mix.'},
-      {"step":'Add 1/3 of sugar and whisk in. Whisk in a bit more sugar about 15 seconds.', "seconds": 15},
-      {"step":'whisk in the rest of the sugar. Continue whisking until mixture is about as thick as shaving cream and holds soft peaks, 3 to 5 minutes.', "seconds": 300},
+      {"step":'Add 1/3 of sugar and whisk in. Whisk in a bit more sugar about 15 seconds.', "seconds": 15.0},
+      {"step":'whisk in the rest of the sugar. Continue whisking until mixture is about as thick as shaving cream and holds soft peaks, 3 to 5 minutes.', "seconds": 300.0},
       {"step":'Transfer a little less than half of egg whites to chocolate.'},
       {"step": 'Mix until egg whites are thoroughly incorporated into the chocolate.'},
       {"step":'Add the rest of the egg whites; gently fold into the chocolate with a spatula, lifting from the bottom and folding over.'},
       {"step":'Stop mixing after the egg white disappears. Divide mixture between 2 prepared ramekins. Place ramekins on prepared baking sheet.'},
-      {"step":'Bake in preheated oven until scuffles are puffed and have risen above the top of the rims, 12 to 15 minutes.', "seconds": 900},
+      {"step":'Bake in preheated oven until scuffles are puffed and have risen above the top of the rims, 12 to 15 minutes.', "seconds": 900.0},
     ],
     isGlutenFree: true,
     isVegan: false,
