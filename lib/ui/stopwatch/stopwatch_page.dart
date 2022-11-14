@@ -1,6 +1,5 @@
 import 'package:app_refeicoes/ui/stopwatch/stopwatch_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 class StopwatchPage extends StatelessWidget {
 
   final double seconds;

@@ -1,5 +1,5 @@
-import 'package:app_refeicoes/ui/categories/categories_page.dart';
 import 'package:app_refeicoes/ui/home_page.dart';
+import 'package:app_refeicoes/ui/registration/registration_page.dart';
 import 'package:app_refeicoes/ui/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 
@@ -8,48 +8,53 @@ class DrawerComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Drawer(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return  Drawer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 150, 
+            width: double.infinity,
+            color: Colors.red,
+          ),
+          const SizedBox(height: 20),
+          buildInkWell(
+            context,
+            MaterialPageRoute(builder: (context) =>  const HomePage()),
+            Icons.fastfood,
+            "Refeicões"
+          ),
+          const SizedBox(height: 30),
+          buildInkWell(
+            context,
+            MaterialPageRoute(builder: (context) =>  const SettingsPage()),
+            Icons.settings,
+            "Configuracões"
+          ),
+          const SizedBox(height: 30),
+          buildInkWell(
+            context,
+            MaterialPageRoute(builder: (context) =>  RegistrationPage()),
+            Icons.add_circle_outline_outlined,
+            "Cadastre sua receita"
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget buildInkWell(BuildContext context, MaterialPageRoute route , IconData? icon, String text){
+    return  InkWell(
+      onTap: () => Navigator.push(context, route),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Container(
-              height: 150, 
-              width: double.infinity,
-              color: Colors.red,
-            ),
-            const SizedBox(height: 20),
-            InkWell(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const HomePage())),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.fastfood, size: 30),
-                    SizedBox(width: 10),
-                    Text("Refeicões", style: TextStyle(fontSize: 30),)
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            InkWell(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const SettingsPage())),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Icon(Icons.settings, size: 30),
-                    SizedBox(width: 10),
-                    Text("Configuracões", style: TextStyle(fontSize: 30),)
-                  ],
-                ),
-              ),
-            ),
+            Icon(icon),
+            const SizedBox(width: 10),
+            Text(text , style: const TextStyle(fontSize: 25))
           ],
         ),
       ),
