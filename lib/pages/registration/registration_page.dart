@@ -40,7 +40,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(),
+                    style: ElevatedButton.styleFrom(
+                      
+                    ),
                     onPressed: () => buildAlertDialog(
                       context, 
                       "Insira os ingredientes", 
