@@ -36,18 +36,43 @@ class _RegistrationPageState extends State<RegistrationPage> {
             const SizedBox(height: 10),
             buildForm(),
             const SizedBox(height: 40),
-            ElevatedButton(onPressed: () => buildAlertDialog(context) , child: const Text("APERTAR")),
-            ElevatedButton(onPressed: () async{
-             registrationController.insertMeal();
-            } , child: const Text("AAAAA")),
-            buildListViewAndTextField(
-              text: "Insira o próximo passo",
-              hintText: "Ex: Mexa 2 ovos",
-              controller: registrationController.controllerListSteps,
-              textController: registrationController.textControllerSteps,
-              function: registrationController.updateListSteps
-            )
-          ]
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(),
+                    onPressed: () => buildAlertDialog(
+                      context, 
+                      "Insira os ingredientes", 
+                      "Ex: 4 Tomates", 
+                      registrationController.controllerListIngredients,
+                      registrationController.textControllerIngredients,
+                      registrationController.updateListIngredients
+                    ), 
+                    child: const Text("ingredientes")
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () => buildAlertDialog(
+                      context, 
+                      "Insira os passos", 
+                      "Ex: Ferver água", 
+                      registrationController.controllerListSteps,
+                      registrationController.textControllerSteps,
+                      registrationController.updateListSteps
+                    ), 
+                    child: const Text("Passos")
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
@@ -165,7 +190,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Widget buildListView(List<String> list){
-    return Container(
+    return SizedBox(
       height: 50,
       width: 100,
       child: ListView.builder(
@@ -178,18 +203,21 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Future<void> buildAlertDialog(BuildContext context){
+  Future<void> buildAlertDialog(BuildContext context, String text, String hintText, StreamController<List<String>> controller, TextEditingController textEditingController, Function function){
     return showDialog(
       useSafeArea: true,
       context: context,
       builder: (context) {
         return AlertDialog(
+          actions: [
+            ElevatedButton(onPressed: (){}, child: const Text("Salvar"))
+          ],
           content: buildListViewAndTextField(
-            text: "Insira os ingredientes",
-            hintText: "Ex: 4 Tomates",
-            controller: registrationController.controllerListIngredients,
-            textController: registrationController.textControllerIngredients,
-            function: registrationController.updateListIngredients,
+            text: text,
+            hintText: hintText,
+            controller: controller,
+            textController: textEditingController,
+            function: function,
           ),
         );
       },

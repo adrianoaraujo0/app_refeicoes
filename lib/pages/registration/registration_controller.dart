@@ -32,10 +32,10 @@ class RegistrationController{
      controllerListIngredients.sink.add(listIngredients);
      textControllerIngredients.clear();
   }
+
   void updateListSteps(){
      listSteps.add(textControllerSteps.text);
      controllerListSteps.sink.add(listSteps);
      textControllerSteps.clear();
   }
-
 }
