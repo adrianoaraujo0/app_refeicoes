@@ -1,12 +1,26 @@
 import 'package:app_refeicoes/data/dummy_data.dart';
 import 'package:app_refeicoes/models/category.dart';
-import 'package:app_refeicoes/ui/meal/meal_page.dart';
+import 'package:app_refeicoes/pages/categories/categories_controller.dart';
+import 'package:app_refeicoes/pages/meal/meal_page.dart';
 import 'package:flutter/material.dart';
-
 import '../../models/meal.dart';
 
-class CategoriesPage extends StatelessWidget {
+class CategoriesPage extends StatefulWidget {
   const CategoriesPage({super.key});
+
+  @override
+  State<CategoriesPage> createState() => _CategoriesPageState();
+}
+
+class _CategoriesPageState extends State<CategoriesPage> {
+
+  CategoriesController categoriesController = CategoriesController();
+
+  @override
+  void initState() {
+    categoriesController.initCategoriesPage();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +41,7 @@ class CategoriesPage extends StatelessWidget {
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: 200,
           child: listViewFavorites(), 
         )
@@ -58,7 +72,7 @@ class CategoriesPage extends StatelessWidget {
       width: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        image: DecorationImage(image: NetworkImage(meal.imageUrl), fit: BoxFit.cover),
+        image: DecorationImage(image: NetworkImage(meal.imgUrl), fit: BoxFit.cover),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,

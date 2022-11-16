@@ -1,4 +1,4 @@
-import 'package:app_refeicoes/ui/drawer/drawer_component.dart';
+import 'package:app_refeicoes/pages/drawer/drawer_component.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';

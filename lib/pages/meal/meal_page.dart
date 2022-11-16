@@ -1,4 +1,4 @@
-import 'package:app_refeicoes/ui/stopwatch/stopwatch_page.dart';
+import 'package:app_refeicoes/pages/stopwatch/stopwatch_page.dart';
 import 'package:flutter/material.dart';
 import '../../models/meal.dart';
 
@@ -18,7 +18,7 @@ class MealPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Image.network(meal!.imageUrl),
+              Image.network(meal!.imgUrl),
               containerDetails(),
               const SizedBox(height: 30),
               const Divider(endIndent: 30, indent: 30),
@@ -82,7 +82,7 @@ class MealPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            meal!.title,
+            meal!.name,
             style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w700, overflow: TextOverflow.fade)
           ),
           const SizedBox(height: 12),
@@ -96,12 +96,12 @@ class MealPage extends StatelessWidget {
 
               const Icon(Icons.monetization_on_outlined),
               const SizedBox(width: 5),
-              Text(meal!.costText),
+              Text(""),
               const SizedBox(width: 20),
               
               const Icon(Icons.food_bank),
               const SizedBox(width: 5),
-              Text(meal!.complexityText)
+              Text("")
             ],
           )
         ],
@@ -113,7 +113,7 @@ class MealPage extends StatelessWidget {
     return  ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: meal!.ingredients.length,
+      itemCount: meal!.mealIngredients.length,
       itemBuilder: (context, index) {
         return Container(
           padding: const EdgeInsets.all(10.0),
@@ -124,7 +124,7 @@ class MealPage extends StatelessWidget {
               const SizedBox(width: 10),
               Expanded(
                 child: Text( 
-                  meal!.ingredients[index],
+                  meal!.mealIngredients[index],
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300)
                 ),
               ),
@@ -139,7 +139,7 @@ class MealPage extends StatelessWidget {
     return  ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: meal!.steps.length,
+      itemCount: meal!.mealSteps.length,
       itemBuilder: (context, index) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
@@ -148,12 +148,12 @@ class MealPage extends StatelessWidget {
                 Text("${index + 1}",
                 style: const TextStyle(fontSize: 30, color: Colors.grey, fontWeight: FontWeight.w100)),
                 const SizedBox(width: 15),
-                Expanded(child: Text(meal!.steps[index]["step"], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
-                if(meal!.steps[index]["seconds"] != null) 
+                Expanded(child: Text(meal!.mealSteps[index]["step"], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
+                if(meal!.mealSteps[index]["seconds"] != null) 
                 IconButton(
                   icon: Icon(Icons.access_time, size: 40, color: Colors.amber[300]),
                   onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => StopwatchPage(seconds: meal!.steps[index]["seconds"])));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => StopwatchPage(seconds: meal!.mealSteps[index]["seconds"])));
                   }
                 ),
               ]

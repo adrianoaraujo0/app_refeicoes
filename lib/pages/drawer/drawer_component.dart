@@ -1,6 +1,6 @@
-import 'package:app_refeicoes/ui/home_page.dart';
-import 'package:app_refeicoes/ui/registration/registration_page.dart';
-import 'package:app_refeicoes/ui/settings/settings_page.dart';
+import 'package:app_refeicoes/pages/home_page.dart';
+import 'package:app_refeicoes/pages/registration/registration_page.dart';
+import 'package:app_refeicoes/pages/settings/settings_page.dart';
 import 'package:flutter/material.dart';
 
 class DrawerComponent extends StatelessWidget {

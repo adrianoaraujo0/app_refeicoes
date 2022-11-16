@@ -1,13 +1,27 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:app_refeicoes/ui/registration/registration_controller.dart';
+import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
 
-class RegistrationPage extends StatelessWidget {
+import 'registration_repository.dart';
+
+class RegistrationPage extends StatefulWidget {
   RegistrationPage({super.key});
 
+  @override
+  State<RegistrationPage> createState() => _RegistrationPageState();
+}
+
+class _RegistrationPageState extends State<RegistrationPage> {
+
   RegistrationController registrationController = RegistrationController();
+
+  @override
+  void initState() {
+    registrationController.initMealPage();
+    super.initState();
+  }
 
 
   @override
@@ -22,8 +36,10 @@ class RegistrationPage extends StatelessWidget {
             const SizedBox(height: 10),
             buildForm(),
             const SizedBox(height: 40),
-            ElevatedButton(onPressed: () => buildAlertDialog(context) , child: Text("APERTAR")),
-           
+            ElevatedButton(onPressed: () => buildAlertDialog(context) , child: const Text("APERTAR")),
+            ElevatedButton(onPressed: () async{
+             registrationController.insertMeal();
+            } , child: const Text("AAAAA")),
             buildListViewAndTextField(
               text: "Insira o próximo passo",
               hintText: "Ex: Mexa 2 ovos",
@@ -66,8 +82,10 @@ class RegistrationPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
             buildDropDownButton("Custo",["Barato","Razoável","Caro"]),
-            const SizedBox(width: 20),
+            const SizedBox(width: 5),
             buildDropDownButton("Dificuldade",["Fácil","Médio","Difícil"]),
+            const SizedBox(width: 5),
+            buildDropDownButton("Categorias",["Italiano" , "Médio" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"]),
             ],
           ),
           const SizedBox(
@@ -176,6 +194,5 @@ class RegistrationPage extends StatelessWidget {
         );
       },
     );
-
   }
 }

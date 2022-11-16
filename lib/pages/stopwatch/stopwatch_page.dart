@@ -1,4 +1,4 @@
-import 'package:app_refeicoes/ui/stopwatch/stopwatch_controller.dart';
+import 'package:app_refeicoes/pages/stopwatch/stopwatch_controller.dart';
 import 'package:flutter/material.dart';
 class StopwatchPage extends StatelessWidget {
 

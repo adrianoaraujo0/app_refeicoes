@@ -1,4 +1,4 @@
-import 'package:app_refeicoes/ui/drawer/drawer_component.dart';
+import 'package:app_refeicoes/pages/drawer/drawer_component.dart';
 import 'package:flutter/material.dart';
 
 import 'categories/categories_page.dart';
@@ -15,7 +15,9 @@ class HomePage extends StatelessWidget {
         title: const Text("Categorias"),
         centerTitle: true,
       ),
-      body: const CategoriesPage(),
+      body: const SingleChildScrollView(
+        child: CategoriesPage()
+      ),
     );
   }
 }
