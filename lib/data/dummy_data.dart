@@ -5,59 +5,50 @@ import '../../models/meal.dart';
 const List<Category> dummyCategories = [
   Category(
     id: 'c1',
-    title: 'Italiano',
-    color: Colors.purple,
+    name: 'Italiano',
   ),
   Category(
     id: 'c2',
-    title: 'Rápido & Fácil',
-    color: Colors.red,
+    name: 'Rápido & Fácil',
   ),
   Category(
     id: 'c3',
-    title: 'Hamburgers',
-    color: Colors.orange,
+    name: 'Hamburgers',
   ),
   Category(
     id: 'c4',
-    title: 'Alemã',
-    color: Colors.amber,
+    name: 'Alemã',
   ),
   Category(
     id: 'c5',
-    title: 'Leve & Saudável',
-    color: Colors.indigo,
+    name: 'Leve & Saudável',
   ),
   Category(
     id: 'c6',
-    title: 'Exótica',
-    color: Colors.green,
+    name: 'Exótica',
   ),
   Category(
     id: 'c7',
-    title: 'Café da Manhã',
-    color: Colors.lightBlue,
+    name: 'Café da Manhã',
   ),
   Category(
     id: 'c8',
-    title: 'Asiática',
-    color: Colors.lightGreen,
+    name: 'Asiática',
   ),
   Category(
     id: 'c9',
-    title: 'Francesa',
-    color: Colors.pink,
+    name: 'Francesa',
   ),
   Category(
     id: 'c10',
-    title: 'Verão',
-    color: Colors.teal,
+    name: 'Verão',
   ),
 ];
 
 const List<Meal> dummyMeals = [
   Meal(
     id: 1,
+    uidMeal: "",
     name: 'Spaghetti with Tomato Sauce',
     cost: "a",
     complexity: "simple",

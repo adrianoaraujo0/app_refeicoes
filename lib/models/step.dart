@@ -1,9 +1,21 @@
 class Step{
 
-  final int id;
+  final int? id;
+  final String uidMeal;
   final String name;
-  final String seconds;
 
-  Step({required this.id, required this.name, required this.seconds});
+  Step({this.id, required this.uidMeal ,required this.name});
+
+  factory Step.fromMap(Map<String, dynamic> map){
+    return Step(
+      id: map["idStep"],
+      uidMeal: map["uidMeal"],
+      name: map["name"],
+    );
+  }
+
+  static fromMapList(List<Map<String, dynamic>> step){
+    return step.map((e) => Step.fromMap(e)).toList();
+  }
 
 }

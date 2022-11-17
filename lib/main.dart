@@ -1,4 +1,3 @@
-import 'package:app_refeicoes/db/database_provider.dart';
 import 'package:app_refeicoes/pages/home_page.dart';
 import 'package:flutter/material.dart';
 

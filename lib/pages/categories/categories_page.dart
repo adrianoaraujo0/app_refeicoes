@@ -18,7 +18,6 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
   @override
   void initState() {
-    categoriesController.initCategoriesPage();
     super.initState();
   }
 
@@ -85,7 +84,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
               borderRadius:  BorderRadius.vertical(bottom: Radius.circular(20)),
               color: Colors.black38, 
             ),
-            child: Text(category.title, style: const TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center),
+            child: Text(category.name, style: const TextStyle(color: Colors.white, fontSize: 16), textAlign: TextAlign.center),
           ),
         ]
       ),

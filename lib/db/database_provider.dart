@@ -13,8 +13,8 @@ class DBProvider {
     return await openDatabase(path, version: 1,
       onCreate: (db, version) async {
         await db.execute(_meal);
-        // await db.execute(_ingredient);
-        // await db.execute(_step);
+        await db.execute(_ingredient);
+        await db.execute(_step);
       },
     );    
   }
@@ -22,6 +22,7 @@ class DBProvider {
   String get _meal => '''
     CREATE TABLE meal(
       idMeal INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      uidMeal,
       name TEXT,
       cost TEXT,
       complexity TEXT,
@@ -38,14 +39,10 @@ class DBProvider {
     );
   ''';
 
-
-  // FOREIGN KEY(mealIngredient) REFERENCES ingredient(idIngredient),
-  // FOREIGN KEY(mealStep) REFERENCES step(idStep),
-
-
   String get _ingredient => '''
     CREATE TABLE ingredient(
       idIngredient INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      uidMeal,
       name TEXT
     );
   ''';
@@ -53,6 +50,7 @@ class DBProvider {
   String get _step => '''
     CREATE TABLE step(
       idStep INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      uidMeal,
       name TEXT
     );
   ''';

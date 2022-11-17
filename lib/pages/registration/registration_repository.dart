@@ -1,5 +1,7 @@
 import 'package:app_refeicoes/db/database_provider.dart';
+import 'package:app_refeicoes/models/ingredient.dart';
 import 'package:app_refeicoes/models/meal.dart';
+import 'package:app_refeicoes/models/step.dart';
 import 'package:sqflite/sqflite.dart';
 
 class RegistrationRepository{
@@ -9,22 +11,11 @@ class RegistrationRepository{
     _database = await DBProvider.db.database;
   }
 
-  Future<void> insertMeal(
-    String name, 
-    String cost,
-    String complexity,
-    String img,
-    int duration,
-    String category,
-    String mealIngredients,
-    String mealSteps,
-    int glutenFree,
-    int lactoseFree,
-    int vegan,
-    int vegetarian,
-    int favorite
-  ) async{
-    await _database.insert("meal", {
+  Future<void> insertMeal(String name, String uidMeal, String cost, String complexity, String img, int duration, String category, String mealIngredients, String mealSteps, int glutenFree, int lactoseFree, int vegan, int vegetarian, int favorite) async{
+    await _database.insert(
+      "meal", 
+    {
+      "uidMeal" : uidMeal,
       "name" : name,
       "cost" : cost,
       "complexity" : complexity,
@@ -41,8 +32,26 @@ class RegistrationRepository{
     });
   }
 
-   Future<List<Meal>> findAllMeals() async {
-    var mealMap = await _database.rawQuery("SELECT * FROM meal");
+  Future<void> insertIngredients(String uidMeal, String name) async{
+    await _database.insert("ingredient", {"uidMeal" : uidMeal, "name" : name });
+  }
+
+  Future<void> insertStep(String uidMeal, String name) async{
+    await _database.insert("step",{ "uidMeal" : uidMeal, "name" : name});
+  }
+
+  Future<List<Meal>> findAllMeals() async {
+    List<Map<String, dynamic>> mealMap = await _database.rawQuery("SELECT * FROM meal");
     return Meal.fromMapList(mealMap);
+  }
+
+  Future<List<Ingredient>> findAllIngredients() async{
+    List<Map<String, dynamic>> ingredientMap = await _database.rawQuery("SELECT * FROM ingredient");
+    return Ingredient.fromMapList(ingredientMap);
+  }
+
+  Future<List<Step>> findAllSteps() async{
+    List<Map<String, dynamic>> stepMap = await _database.rawQuery("SELECT * FROM step");
+    return Step.fromMapList(stepMap);
   }
 }

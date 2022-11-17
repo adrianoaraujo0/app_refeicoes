@@ -1,13 +1,11 @@
 import 'dart:async';
-import 'dart:developer';
-
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
-import 'registration_repository.dart';
 
 class RegistrationPage extends StatefulWidget {
-  RegistrationPage({super.key});
+  const RegistrationPage({super.key});
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -16,13 +14,17 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
 
   RegistrationController registrationController = RegistrationController();
+  late Uuid uidMeal;
 
   @override
   void initState() {
-    registrationController.initMealPage();
+    registrationController.initMealPage().then((value) => registrationController.printTables());
+    uidMeal = const Uuid();
+
+    // registrationController.printTables();
+
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +42,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
               children: [
                 Expanded(
                   child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      
-                    ),
                     onPressed: () => buildAlertDialog(
                       context, 
-                      "Insira os ingredientes", 
-                      "Ex: 4 Tomates", 
-                      registrationController.controllerListIngredients,
-                      registrationController.textControllerIngredients,
-                      registrationController.updateListIngredients
+                      text:  "Insira os ingredientes", 
+                      hintText: "Ex: 4 Tomates", 
+                      controller: registrationController.controllerListIngredients,
+                      textEditingController: registrationController.textControllerIngredients,
+                      functionUpdateList: ()=> registrationController.updateListIngredients(uidMeal.toString()),
+                      insertDatabase: ()=> registrationController.insertIngredientsDatabase(),
                     ), 
                     child: const Text("ingredientes")
                   ),
@@ -63,11 +63,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   child: ElevatedButton(
                     onPressed: () => buildAlertDialog(
                       context, 
-                      "Insira os passos", 
-                      "Ex: Ferver água", 
-                      registrationController.controllerListSteps,
-                      registrationController.textControllerSteps,
-                      registrationController.updateListSteps
+                      text: "Insira os passos", 
+                      hintText: "Ex: Ferver água", 
+                      controller: registrationController.controllerListSteps,
+                      textEditingController: registrationController.textControllerSteps,
+                      functionUpdateList: ()=> registrationController.updateListSteps(uidMeal.toString()),
+                      insertDatabase: () => registrationController.insertStepDatabase(uidMeal.toString()) 
                     ), 
                     child: const Text("Passos")
                   ),
@@ -141,12 +142,62 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+  Widget buildStreamBuilder({required StreamController<List<dynamic>> controller}){
+    return StreamBuilder<List<dynamic>>(
+      stream: controller.stream,
+      builder: (context, snapshot) {
+        if(snapshot.data != null && snapshot.data!.isNotEmpty){
+            return buildListView(snapshot.data!);
+        }
+        return Container();
+      }
+    );
+  }
+
+  Widget buildListView(List<dynamic> list){
+    return SizedBox(
+      height: 200,
+      width: 100,
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: list.length,
+        itemBuilder: (context, index) {
+          return ListTile(title: Text(list[index].name));
+        }, 
+      ),
+    );
+  }
+
+  Future<void> buildAlertDialog(BuildContext context , {required String text ,required String hintText,required StreamController<List<dynamic>> controller, required TextEditingController textEditingController, required Function functionUpdateList, required Function insertDatabase}){
+    return showDialog(
+      useSafeArea: true,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          actions: [
+            ElevatedButton(
+              onPressed: (){
+                insertDatabase();
+              }, child: const Text("Salvar"))
+          ],
+          content: buildListViewAndTextField(
+            text: text,
+            hintText: hintText,
+            controller: controller,
+            textController: textEditingController,
+            functionUpdateList: functionUpdateList,
+          ),
+        );
+      },
+    );
+  }
+
   Widget buildListViewAndTextField({
     required String text,
     required String hintText,
-    required Function function,
+    required Function functionUpdateList,
     required TextEditingController textController,
-    required StreamController<List<String>> controller
+    required StreamController<List<dynamic>> controller
   }){
     return Container(
       padding: const EdgeInsets.all(8),
@@ -165,64 +216,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     hintText: hintText,
                     border: const OutlineInputBorder()
                   ),
-                  onSubmitted: (_)=> function(),
+                  onSubmitted: (_)=> functionUpdateList(),
                 ),
               ),
               IconButton(
-                onPressed: () => function(),
-                icon: const Icon(Icons.add))
+                onPressed: () => functionUpdateList(),
+                icon: const Icon(Icons.add)
+              )
             ],
           ),
           buildStreamBuilder(controller: controller)
         ],
       ),
-    );
-  }
-
-  Widget buildStreamBuilder({required StreamController<List<String>> controller}){
-    return StreamBuilder<List<String>>(
-      stream: controller.stream,
-      builder: (context, snapshot) {
-        if(snapshot.data != null && snapshot.data!.isNotEmpty){
-            return buildListView(snapshot.data!);
-        }
-        return Container();
-      }
-    );
-  }
-
-  Widget buildListView(List<String> list){
-    return SizedBox(
-      height: 50,
-      width: 100,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          return ListTile(title: Text(list[index]));
-        }, 
-      ),
-    );
-  }
-
-  Future<void> buildAlertDialog(BuildContext context, String text, String hintText, StreamController<List<String>> controller, TextEditingController textEditingController, Function function){
-    return showDialog(
-      useSafeArea: true,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          actions: [
-            ElevatedButton(onPressed: (){}, child: const Text("Salvar"))
-          ],
-          content: buildListViewAndTextField(
-            text: text,
-            hintText: hintText,
-            controller: controller,
-            textController: textEditingController,
-            function: function,
-          ),
-        );
-      },
     );
   }
 }
