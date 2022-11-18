@@ -11,7 +11,7 @@ class RegistrationRepository{
     _database = await DBProvider.db.database;
   }
 
-  Future<void> insertMeal(String name, String uidMeal, String cost, String complexity, String img, int duration, String category, String mealIngredients, String mealSteps, int glutenFree, int lactoseFree, int vegan, int vegetarian, int favorite) async{
+  Future<void> insertMeal(String name, String uidMeal, String cost, String complexity, String img, int duration, String category,  bool glutenFree, bool lactoseFree, bool vegan, bool vegetarian, bool favorite) async{
     await _database.insert(
       "meal", 
     {
@@ -22,8 +22,6 @@ class RegistrationRepository{
       "img" : img,
       "duration" : duration,
       "category" : category,
-      "mealIngredient" : mealIngredients,
-      "mealSteps" : mealSteps,
       "glutenFree" : glutenFree,
       "lactoseFree" : lactoseFree,
       "vegan" : vegan,

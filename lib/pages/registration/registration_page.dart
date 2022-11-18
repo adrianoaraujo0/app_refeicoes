@@ -21,8 +21,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
     registrationController.initMealPage().then((value) => registrationController.printTables());
     uidMeal = const Uuid();
 
-    // registrationController.printTables();
-
     super.initState();
   }
 
@@ -47,7 +45,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       text:  "Insira os ingredientes", 
                       hintText: "Ex: 4 Tomates", 
                       controller: registrationController.controllerListIngredients,
-                      textEditingController: registrationController.textControllerIngredients,
+                      textEditingController: registrationController.textControllerNameIngredients,
                       functionUpdateList: ()=> registrationController.updateListIngredients(uidMeal.toString()),
                       insertDatabase: ()=> registrationController.insertIngredientsDatabase(),
                     ), 
@@ -66,7 +64,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       text: "Insira os passos", 
                       hintText: "Ex: Ferver água", 
                       controller: registrationController.controllerListSteps,
-                      textEditingController: registrationController.textControllerSteps,
+                      textEditingController: registrationController.textControllerNameSteps,
                       functionUpdateList: ()=> registrationController.updateListSteps(uidMeal.toString()),
                       insertDatabase: () => registrationController.insertStepDatabase(uidMeal.toString()) 
                     ), 
@@ -78,20 +76,31 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        child: const Text("Salvar"),
+        onPressed: (){
+          registrationController.insertMealDatabase(uidMeal.toString());
+        }
+      ),
     );
   }
 
   Widget addImage(){
-    return Container(
-      height: 200,
-      width: double.infinity,
-      color: Colors.grey[300],
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
-          Icon(Icons.add, size: 60),
-          Text("Adicione uma imagem", style: TextStyle(fontSize: 27),)
-        ]
+    return InkWell(
+      onTap: () {
+        registrationController.takePhotoFromGallery();
+      },
+      child: Container(
+        height: 200,
+        width: double.infinity,
+        color: Colors.grey[300],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(Icons.add, size: 60),
+            Text("Adicione uma imagem", style: TextStyle(fontSize: 27),)
+          ]
+        ),
       ),
     );
   }
@@ -102,24 +111,36 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-           const TextField(
-              decoration: InputDecoration(hintText: "Nome da receita"),
+            TextField(
+            controller: registrationController.textControllerNameMeal,
+              decoration: const InputDecoration(hintText: "Nome da receita"),
             ),
           const SizedBox(height: 10),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-            buildDropDownButton("Custo",["Barato","Razoável","Caro"]),
-            const SizedBox(width: 5),
-            buildDropDownButton("Dificuldade",["Fácil","Médio","Difícil"]),
-            const SizedBox(width: 5),
-            buildDropDownButton("Categorias",["Italiano" , "Médio" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"]),
+              buildDropDownButton(
+                title: "Custo",
+                items: ["Barato","Razoável","Caro"],
+              ),
+              const SizedBox(width: 5),
+              buildDropDownButton(
+                title: "Dificuldade",
+                items: ["Fácil","Médio","Difícil"],
+              ),
+              const SizedBox(width: 5),
+              buildDropDownButton(
+                title: "Categorias",
+                items: ["Italiano" , "Médio" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
+                
+              ),
             ],
           ),
-          const SizedBox(
+          SizedBox(
             width: 60,
             child: TextField(
-              decoration: InputDecoration(hintText: "Tempo"),
+              controller: registrationController.textControllerTimeMeal,
+              decoration: const InputDecoration(hintText: "Tempo"),
             )
           ),
         ],
@@ -127,18 +148,24 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget buildDropDownButton( String title, List<String> values){
-    return DropdownButton(
-      hint: Text(title),
-      items: values.map((e){
-        return DropdownMenuItem(
-          value: e, 
-          child: Text(e),
+  Widget buildDropDownButton({required String title, required List<String> items}){
+    return StreamBuilder<String>(
+      stream: registrationController.controllerDropdownButton.stream,
+      builder: (context, snapshot) {
+        return DropdownButton(
+          hint: Text(title),
+          items: items.map((name){
+            return DropdownMenuItem(
+              value: name, 
+              child: Text(name),
+            );
+          }).toList(),
+          onChanged: (newTitle) {
+            registrationController.controllerDropdownButton.sink.add(newTitle!);
+            title = newTitle;
+          }
         );
-      }).toList(),
-      onChanged: ((value) {
-        print(value);
-      })
+      }
     );
   }
 

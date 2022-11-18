@@ -58,7 +58,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
         return InkWell(
           child: itemList(meal, category),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal),)),
+          // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal),)),
         );
       },
     );
@@ -102,7 +102,7 @@ class _CategoriesPageState extends State<CategoriesPage> {
 
         return InkWell(
           child: itemList(meal, category),
-          onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal),)),
+          // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal))),
         );
       },
     );

@@ -34,7 +34,7 @@ class DrawerComponent extends StatelessWidget {
           const SizedBox(height: 30),
           buildInkWell(
             context,
-            MaterialPageRoute(builder: (context) =>  RegistrationPage()),
+            MaterialPageRoute(builder: (context) => const RegistrationPage()),
             Icons.add_circle_outline_outlined,
             "Cadastre sua receita"
           )

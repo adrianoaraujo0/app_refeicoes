@@ -16,8 +16,8 @@ class Meal{
   final String category;
   final String name;
   final String imgUrl;
-  final List<String> mealIngredients;
-  final List<Map<String, dynamic>> mealSteps;
+  final String mealIngredients;
+  final String mealSteps;
   final int duration;
   final bool glutenFree;
   final bool lactoseFree;
