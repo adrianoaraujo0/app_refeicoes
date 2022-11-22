@@ -16,16 +16,10 @@ class Meal{
   final String category;
   final String name;
   final String imgUrl;
-  final String mealIngredients;
-  final String mealSteps;
   final int duration;
-  final bool glutenFree;
-  final bool lactoseFree;
-  final bool vegan;
-  final bool vegetarian;
   final String complexity;
   final String cost;
-  final bool favorite;
+  final bool? favorite;
 
   const Meal({
     required this.id,
@@ -33,16 +27,10 @@ class Meal{
     required this.category,
     required this.name,
     required this.imgUrl,
-    required this.mealIngredients,
-    required this.mealSteps,
     required this.duration,
-    required this.glutenFree,
-    required this.lactoseFree,
-    required this.vegan,
-    required this.vegetarian,
     required this.complexity,
     required this.cost,
-    required this.favorite
+    this.favorite
   });
 
   factory Meal.fromMap(Map<String, dynamic> map) {
@@ -55,13 +43,7 @@ class Meal{
       imgUrl: map["img"],
       duration: map["duration"],
       category: map["category"],
-      mealIngredients: map["mealIngredient"],
-      mealSteps: map["mealSteps"],
-      glutenFree: map["glutenFree"],
-      lactoseFree: map["lactoseFree"],
-      vegan: map["vegan"],
-      vegetarian: map["vegetarian"],
-      favorite: map["favorite"],
+      favorite: map["favorite"] == 1 ? true : false,
     );
   }
 

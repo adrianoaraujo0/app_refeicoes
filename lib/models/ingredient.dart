@@ -18,4 +18,10 @@ class Ingredient{
     return ingredient.map((e) => Ingredient.fromMap(e)).toList();
   }
 
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "id: $id, name: $name, uid: $uidMeal";
+  }
+
 }

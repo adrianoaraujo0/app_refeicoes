@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:math';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
 
 
@@ -15,6 +19,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   RegistrationController registrationController = RegistrationController();
   late Uuid uidMeal;
+  
+  String? complexity;
+  String? cost;
+  String? category;
 
   @override
   void initState() {
@@ -42,7 +50,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   child: ElevatedButton(
                     onPressed: () => buildAlertDialog(
                       context, 
-                      text:  "Insira os ingredientes", 
+                      text: "Insira os ingredientes", 
                       hintText: "Ex: 4 Tomates", 
                       controller: registrationController.controllerListIngredients,
                       textEditingController: registrationController.textControllerNameIngredients,
@@ -79,7 +87,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
       floatingActionButton: FloatingActionButton(
         child: const Text("Salvar"),
         onPressed: (){
-          registrationController.insertMealDatabase(uidMeal.toString());
+          // print(registrationController.image);
+          // print(registrationController.textControllerNameMeal.text);
+          // print(category);
+          // print(registrationController.textControllerTimeMeal.text);
+          // print(complexity);
+          // print(cost);
+          registrationController.insertMealDatabase(uidMeal.toString(), cost!, complexity!, category!);
         }
       ),
     );
@@ -90,17 +104,29 @@ class _RegistrationPageState extends State<RegistrationPage> {
       onTap: () {
         registrationController.takePhotoFromGallery();
       },
-      child: Container(
-        height: 200,
-        width: double.infinity,
-        color: Colors.grey[300],
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const [
-            Icon(Icons.add, size: 60),
-            Text("Adicione uma imagem", style: TextStyle(fontSize: 27),)
-          ]
-        ),
+      child: StreamBuilder<String>(
+        stream: registrationController.controllerImage.stream,
+        builder: (context, snapshot) {
+          if(snapshot.data == null){
+            return Container(
+              height: 200,
+              width: double.infinity,
+              color: Colors.grey[300],
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const [
+                  Icon(Icons.add, size: 60),
+                  Text("Adicione uma imagem", style: TextStyle(fontSize: 27))
+                ]
+              ),
+            );
+          }
+          return SizedBox(
+            height: 300,
+            width: double.infinity,
+            child: Image.file(File(snapshot.data!), fit: BoxFit.cover)
+          );
+        }
       ),
     );
   }
@@ -113,38 +139,120 @@ class _RegistrationPageState extends State<RegistrationPage> {
         children: [
             TextField(
             controller: registrationController.textControllerNameMeal,
-              decoration: const InputDecoration(hintText: "Nome da receita"),
+              decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
             ),
           const SizedBox(height: 10),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              buildDropDownButton(
-                title: "Custo",
-                items: ["Barato","Razoável","Caro"],
-              ),
-              const SizedBox(width: 5),
-              buildDropDownButton(
-                title: "Dificuldade",
-                items: ["Fácil","Médio","Difícil"],
-              ),
-              const SizedBox(width: 5),
-              buildDropDownButton(
-                title: "Categorias",
-                items: ["Italiano" , "Médio" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
-                
-              ),
-            ],
+          const SizedBox(width: 5),
+          buildDropDownButton(
+            title: "Categorias",
+            items: ["Italiano" , "Médio" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
           ),
           SizedBox(
-            width: 60,
+            width: 100,
             child: TextField(
               controller: registrationController.textControllerTimeMeal,
-              decoration: const InputDecoration(hintText: "Tempo"),
+              keyboardType: TextInputType.numberWithOptions(),
+              inputFormatters: [FilteringTextInputFormatter.deny(RegExp ("[,]"))],
+              decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
             )
           ),
+          buildRadioButton(),
         ],
       ),
+    );
+  }
+
+  Widget buildRadioButton(){
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
+          child: const Text("Dificuldade", style: TextStyle(fontSize: 22)),
+        ),
+        StreamBuilder<String>(
+          stream: registrationController.controllerRadioComplexity.stream,
+          builder: (context, snapshot) {
+            return StreamBuilder<String>(
+              stream: registrationController.controllerRadioComplexity.stream,
+              builder: (context, snapshot) {
+                return Column(
+                  children: [
+                    RadioListTile(
+                      title: const Text("Fácil"),
+                      value: "Fácil", 
+                      groupValue: snapshot.data,
+                      onChanged: (value){
+                        complexity = value;
+                        registrationController.controllerRadioComplexity.sink.add(value!);
+                      }
+                    ),
+                    RadioListTile(
+                      title: const Text("Médio"),
+                      value: "Médio",
+                      groupValue: snapshot.data,
+                      onChanged: (value){
+                        complexity = value;
+                        registrationController.controllerRadioComplexity.sink.add(value!);
+                      }
+                    ),
+                    RadioListTile(
+                      title: const Text("Difícil"),
+                      value: "Difícil",
+                      groupValue: snapshot.data,
+                      onChanged: (value){
+                        complexity = value;
+                         registrationController.controllerRadioComplexity.sink.add(value!);
+                      }
+                    ),
+                  ],
+                );
+              }
+            );
+          }
+        ),
+        Container(
+          margin: const EdgeInsets.fromLTRB(0, 20, 0 , 10),
+          child: const Text("Custo", style: TextStyle(fontSize: 22)),
+        ),
+        StreamBuilder<String>(
+          stream: registrationController.controllerRadioCost.stream,
+          builder: (context, snapshot) {
+            return Column(
+              children: [
+                RadioListTile(
+                  title: const Text("Barato"),
+                  value: "Barato",
+                  groupValue: snapshot.data,
+                  onChanged: 
+                    (value){
+                      cost = value;
+                      registrationController.controllerRadioCost.sink.add(value!);
+                    }
+                  ),
+                RadioListTile(
+                  title: const Text("Razoável"),
+                  value: "Razoável",
+                  groupValue: snapshot.data,
+                  onChanged: (value){
+                    cost = value; 
+                    registrationController.controllerRadioCost.sink.add(value!);
+                  }
+                ),
+                RadioListTile(
+                  title: const Text("Caro"),
+                  value: "Caro",
+                  groupValue: snapshot.data,
+                  onChanged: (value){
+                    cost = value;
+                    registrationController.controllerRadioCost.sink.add(value!);
+                  }
+                ),
+              ],
+            );
+          }
+        ),
+      ],
     );
   }
 
@@ -161,8 +269,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
             );
           }).toList(),
           onChanged: (newTitle) {
-            registrationController.controllerDropdownButton.sink.add(newTitle!);
-            title = newTitle;
+            title = newTitle!;
+            category = newTitle;
+            registrationController.controllerDropdownButton.sink.add(newTitle);
           }
         );
       }
@@ -205,7 +314,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ElevatedButton(
               onPressed: (){
                 insertDatabase();
-              }, child: const Text("Salvar"))
+                Navigator.pop(context);
+              }, child: const Text("Salvar")
+            )
           ],
           content: buildListViewAndTextField(
             text: text,
