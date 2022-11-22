@@ -36,7 +36,7 @@ class RegistrationController{
   String? complexity;
   String? cost;
 
-  Future<void> initMealPage() async{
+  Future<void> initBd() async{
     await registrationRepository.initDb();
   }
 
@@ -56,15 +56,15 @@ class RegistrationController{
     textControllerNameSteps.clear();
   }
 
-  void insertMealDatabase(String category) async{
+  void insertMealDatabase({String? category}) async{
     registrationRepository.insertMeal(
       name: textControllerNameMeal.text,
       category: category,
-      complexity: complexity!,
-      cost: cost!,
+      complexity: complexity,
+      cost: cost,
       duration: int.parse(textControllerTimeMeal.text),
       favorite: false,
-      img: image!.path
+      img: image?.path
     );
   }
 

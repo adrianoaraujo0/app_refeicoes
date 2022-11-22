@@ -1,12 +1,23 @@
 import 'package:app_refeicoes/pages/home_page.dart';
-import 'package:app_refeicoes/pages/registration/registration_page.dart';
-import 'package:app_refeicoes/pages/registration/registration_repository.dart';
+import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
 
-class DrawerComponent extends StatelessWidget {
+class DrawerComponent extends StatefulWidget {
   DrawerComponent({super.key});
 
-  RegistrationRepository registrationRepository = RegistrationRepository();
+  @override
+  State<DrawerComponent> createState() => _DrawerComponentState();
+}
+
+class _DrawerComponentState extends State<DrawerComponent> {
+  
+  RegistrationController registrationController = RegistrationController();
+
+  @override
+  void initState() {
+    registrationController.initBd();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,8 +49,8 @@ class DrawerComponent extends StatelessWidget {
           const SizedBox(height: 30),
           InkWell(
             onTap: () {
-              registrationRepository.insertMeal();
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage()));
+              registrationController.insertMealDatabase();
+              // Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(id: 1,)));
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),

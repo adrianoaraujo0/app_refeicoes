@@ -27,7 +27,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   void initState() {
-    registrationController.initMealPage();
+    registrationController.initBd();
     super.initState();
   }
 
@@ -57,7 +57,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       floatingActionButton: FloatingActionButton(
         child: const Text("Salvar"),
         onPressed: (){
-          registrationController.insertMealDatabase(category!);
+          // registrationController.insertMealDatabase(category!);
         }
       ),
     );

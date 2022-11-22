@@ -11,7 +11,7 @@ class RegistrationRepository{
     _database = await DBProvider.db.database;
   }
 
-  Future<void> insertMeal({String? name, String? cost,String? complexity,String? img,int? duration,String? category,bool? favorite}) async{
+  Future<void> insertMeal({String? name, String? cost,String? complexity,String? img, int? duration,String? category, bool? favorite}) async{
     await _database.insert(
       "meal", 
     {
@@ -38,8 +38,6 @@ class RegistrationRepository{
     
     return Meal.fromMapList(mealMap);
   }
-
-
 
   Future<List<Ingredient>> findAllIngredients() async{
     List<Map<String, dynamic>> ingredientMap = await _database.rawQuery("SELECT * FROM ingredient");
