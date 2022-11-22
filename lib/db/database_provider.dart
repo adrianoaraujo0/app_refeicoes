@@ -31,10 +31,6 @@ class DBProvider {
       category TEXT,
       mealIngredient TEXT,
       mealStep TEXT,
-      glutenFree INTEGER,
-      lactoseFree INTEGER,
-      vegan INTEGER,
-      vegetarian INTEGER,
       favorite INTEGER
     );
   ''';

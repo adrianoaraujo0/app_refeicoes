@@ -1,50 +1,44 @@
-import 'package:flutter/material.dart';
 import '../../models/category.dart';
-import '../../models/meal.dart';
 
 const List<Category> dummyCategories = [
   Category(
-    id: 'c1',
-    name: 'Italiano',
+    name: "Alemã",
+    image: "assets/images/alema.jpeg"
   ),
   Category(
-    id: 'c2',
-    name: 'Rápido & Fácil',
+    name: "Asiatica",
+    image: "assets/images/asiatica.jpg"
   ),
   Category(
-    id: 'c3',
-    name: 'Hamburgers',
+    name: "Cafe da manhã",
+    image: "assets/images/cafe_da_manha.jpeg"
   ),
   Category(
-    id: 'c4',
-    name: 'Alemã',
+    name: "Exótica",
+    image: "assets/images/exotica.jpeg"
   ),
   Category(
-    id: 'c5',
-    name: 'Leve & Saudável',
+    name: "Francesa",
+    image: "assets/images/francesa.jpg"
   ),
   Category(
-    id: 'c6',
-    name: 'Exótica',
+    name: "Hamburguer",
+    image: "assets/images/hamburguer.jpeg"
   ),
   Category(
-    id: 'c7',
-    name: 'Café da Manhã',
+    name: "Italiano",
+    image: "assets/images/italia.jpeg"
   ),
   Category(
-    id: 'c8',
-    name: 'Asiática',
+    name: "Leve & Saudável",
+    image: "assets/images/leve_saudavel.jpeg"
   ),
   Category(
-    id: 'c9',
-    name: 'Francesa',
+    name: "Fácil e rápido",
+    image: "assets/images/panqueca.jpeg"
   ),
   Category(
-    id: 'c10',
-    name: 'Verão',
+    name: "Verão",
+    image: "assets/images/verao.jpeg"
   ),
-];
-
-const List<Meal> dummyMeals = [
-
 ];

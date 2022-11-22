@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 
 class Category {
 
-  final String id;
   final String name;
+  final String image;
 
   const Category({
-    required this.id,
     required this.name,
+    required this.image,
   });
 
   //transformar um mapa num objetoo
   factory Category.fromMap(Map<String, dynamic> map){
     return Category(
-      id: map["idCategory"],
-      name: map["name"]);
+      name: map["name"],
+      image: map["image"]);
   }
 
   //transformar uma lista de mapa num objeto

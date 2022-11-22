@@ -1,7 +1,6 @@
 import 'package:app_refeicoes/data/dummy_data.dart';
 import 'package:app_refeicoes/models/category.dart';
 import 'package:app_refeicoes/pages/categories/categories_controller.dart';
-import 'package:app_refeicoes/pages/meal/meal_page.dart';
 import 'package:flutter/material.dart';
 import '../../models/meal.dart';
 
@@ -40,38 +39,33 @@ class _CategoriesPageState extends State<CategoriesPage> {
             ],
           ),
         ),
-        SizedBox(
-          height: 200,
-          child: listViewFavorites(), 
-        )
       ],
     );
   }
 
   Widget listViewCategories(){
    return ListView.builder(
-      itemCount: dummyMeals.length,
+      itemCount: 10,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        Meal meal = dummyMeals[index];
         Category category = dummyCategories[index];
 
         return InkWell(
-          child: itemList(meal, category),
+          child: itemList(category),
           // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal),)),
         );
       },
     );
   }
 
-  Widget itemList(Meal meal, Category category){
+  Widget itemList(Category category){
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20),
       height: 300,
       width: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        image: DecorationImage(image: NetworkImage(meal.imgUrl), fit: BoxFit.cover),
+        image: DecorationImage(image: AssetImage(category.image), fit: BoxFit.cover),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -91,20 +85,20 @@ class _CategoriesPageState extends State<CategoriesPage> {
     );
   }
 
-  Widget listViewFavorites(){
-   return ListView.builder(
-      shrinkWrap: true,
-      itemCount: dummyMeals.length,
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (context, index) {
-        Meal meal = dummyMeals[index];
-        Category category = dummyCategories[index];
+  // Widget listViewFavorites(){
+  //  return ListView.builder(
+  //     shrinkWrap: true,
+  //     itemCount: dummyMeals.length,
+  //     scrollDirection: Axis.horizontal,
+  //     itemBuilder: (context, index) {
+  //       Meal meal = dummyMeals[index];
+  //       Category category = dummyCategories[index];
 
-        return InkWell(
-          child: itemList(meal, category),
-          // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal))),
-        );
-      },
-    );
-  }
+  //       return InkWell(
+  //         child: itemList(meal, category),
+  //         // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal))),
+  //       );
+  //     },
+  //   );
+  // }
 }

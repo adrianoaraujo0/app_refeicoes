@@ -28,7 +28,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void initState() {
     registrationController.initMealPage().then((value) => registrationController.printTables());
     uidMeal = const Uuid();
-
     super.initState();
   }
 
@@ -73,7 +72,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       hintText: "Ex: Ferver água", 
                       controller: registrationController.controllerListSteps,
                       textEditingController: registrationController.textControllerNameSteps,
-                      functionUpdateList: ()=> registrationController.updateListSteps(uidMeal.toString()),
+                      functionUpdateList: (_)=> registrationController.updateListSteps(uidMeal.toString()),
                       insertDatabase: () => registrationController.insertStepDatabase(uidMeal.toString()) 
                     ), 
                     child: const Text("Passos")
@@ -87,13 +86,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       floatingActionButton: FloatingActionButton(
         child: const Text("Salvar"),
         onPressed: (){
-          // print(registrationController.image);
-          // print(registrationController.textControllerNameMeal.text);
-          // print(category);
-          // print(registrationController.textControllerTimeMeal.text);
-          // print(complexity);
-          // print(cost);
-          registrationController.insertMealDatabase(uidMeal.toString(), cost!, complexity!, category!);
+          registrationController.insertMealDatabase(uidMeal.toString(), category!);
         }
       ),
     );
@@ -142,16 +135,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
               decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
             ),
           const SizedBox(height: 10),
-          const SizedBox(width: 5),
           buildDropDownButton(
             title: "Categorias",
-            items: ["Italiano" , "Médio" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
+            items: ["Italiano" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
           ),
           SizedBox(
             width: 100,
             child: TextField(
               controller: registrationController.textControllerTimeMeal,
-              keyboardType: TextInputType.numberWithOptions(),
+              keyboardType: const TextInputType.numberWithOptions(),
               inputFormatters: [FilteringTextInputFormatter.deny(RegExp ("[,]"))],
               decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
             )
@@ -178,33 +170,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               builder: (context, snapshot) {
                 return Column(
                   children: [
-                    RadioListTile(
-                      title: const Text("Fácil"),
-                      value: "Fácil", 
-                      groupValue: snapshot.data,
-                      onChanged: (value){
-                        complexity = value;
-                        registrationController.controllerRadioComplexity.sink.add(value!);
-                      }
-                    ),
-                    RadioListTile(
-                      title: const Text("Médio"),
-                      value: "Médio",
-                      groupValue: snapshot.data,
-                      onChanged: (value){
-                        complexity = value;
-                        registrationController.controllerRadioComplexity.sink.add(value!);
-                      }
-                    ),
-                    RadioListTile(
-                      title: const Text("Difícil"),
-                      value: "Difícil",
-                      groupValue: snapshot.data,
-                      onChanged: (value){
-                        complexity = value;
-                         registrationController.controllerRadioComplexity.sink.add(value!);
-                      }
-                    ),
+                    buildRadioListTile("Fácil", snapshot.data, registrationController.updateRadioComplexity),
+                    buildRadioListTile("Médio", snapshot.data, registrationController.updateRadioComplexity),
+                    buildRadioListTile("Difícil", snapshot.data, registrationController.updateRadioComplexity),
                   ],
                 );
               }
@@ -220,39 +188,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
           builder: (context, snapshot) {
             return Column(
               children: [
-                RadioListTile(
-                  title: const Text("Barato"),
-                  value: "Barato",
-                  groupValue: snapshot.data,
-                  onChanged: 
-                    (value){
-                      cost = value;
-                      registrationController.controllerRadioCost.sink.add(value!);
-                    }
-                  ),
-                RadioListTile(
-                  title: const Text("Razoável"),
-                  value: "Razoável",
-                  groupValue: snapshot.data,
-                  onChanged: (value){
-                    cost = value; 
-                    registrationController.controllerRadioCost.sink.add(value!);
-                  }
-                ),
-                RadioListTile(
-                  title: const Text("Caro"),
-                  value: "Caro",
-                  groupValue: snapshot.data,
-                  onChanged: (value){
-                    cost = value;
-                    registrationController.controllerRadioCost.sink.add(value!);
-                  }
-                ),
+                buildRadioListTile("Barato", snapshot.data, registrationController.updateRadioCost),
+                buildRadioListTile("Razoável", snapshot.data, registrationController.updateRadioCost),
+                buildRadioListTile("Caro", snapshot.data, registrationController.updateRadioCost),
               ],
             );
           }
         ),
       ],
+    );
+  }
+
+  Widget buildRadioListTile(String title, String? groupValue, Function updateRadio){
+    return RadioListTile(
+      title: Text(title),
+      value: title,
+      groupValue: groupValue,
+      onChanged: (value){
+        updateRadio(value);
+      }
     );
   }
 

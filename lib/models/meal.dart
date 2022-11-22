@@ -50,4 +50,9 @@ class Meal{
   static fromMapList(List<Map<String, dynamic>> meals){
     return meals.map((e) => Meal.fromMap(e)).toList();
   }
+
+   String toString() {
+    // TODO: implement toString
+    return "id: $id, name: $name, uid: ${uidMeal.toString()}, cost: $cost. complexity: $complexity, image: $imgUrl, duration: $duration, category: $category, favorite: $favorite";
+  }
 }

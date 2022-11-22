@@ -43,7 +43,7 @@ class DrawerComponent extends StatelessWidget {
     );
   }
 
-  Widget buildInkWell(BuildContext context, MaterialPageRoute route , IconData? icon, String text){
+  Widget buildInkWell(BuildContext context, MaterialPageRoute route ,IconData? icon, String text){
     return  InkWell(
       onTap: () => Navigator.push(context, route),
       child: Container(

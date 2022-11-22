@@ -29,6 +29,8 @@ class RegistrationController{
 
   final ImagePicker _picker = ImagePicker();
   XFile? image;
+  String? complexity;
+  String? cost;
 
   Future<void> initMealPage() async{
     await registrationRepository.initDb();
@@ -46,28 +48,17 @@ class RegistrationController{
     textControllerNameSteps.clear();
   }
 
-  void insertMealDatabase(String uidMeal, String cost, String complexity, String category) async{
+  void insertMealDatabase(String uidMeal, String category) async{
     registrationRepository.insertMeal(
       name: textControllerNameMeal.text,
       category: category,
-      complexity: complexity,
-      cost: cost,
+      complexity: complexity!,
+      cost: cost!,
       duration: int.parse(textControllerTimeMeal.text),
       favorite: false,
       img: image!.path, 
       uidMeal: uidMeal
     );
-
-
-
-    print("name: ${textControllerNameMeal.text}");
-    print("time: ${textControllerTimeMeal.text}");
-    print("uidMeal: ${uidMeal.toString()}");
-    print("cost: $cost");
-    print("complexity: $complexity");
-    print("imgUrl: ${image!.path}");
-    print("duration: ${textControllerTimeMeal.text}");
-    print("category: $category");
   }
 
   void insertIngredientsDatabase() async{
@@ -78,7 +69,7 @@ class RegistrationController{
 
   void insertStepDatabase(String uidMeal) async{
     for(Step step in listSteps){
-      await registrationRepository.insertStep(step.name!, step.name!);
+      await registrationRepository.insertStep(step.name!, uidMeal);
     }
   }
 
@@ -89,10 +80,20 @@ class RegistrationController{
     }
   }
 
+  void updateRadioComplexity(String value){
+    complexity = value;
+    controllerRadioComplexity.sink.add(value);
+  }
+
+  void updateRadioCost(String value){
+    cost = value;
+    controllerRadioCost.sink.add(value);
+  }
+
   void printTables() async{
     print("-------------Meal------------------------");
     for(var x in await registrationRepository.findAllMeals()){
-      print("${x.id}, ${x.name}, ${x.uidMeal}");
+      print(x.toString());
     }
     print("-------------INGREDIENTS------------------------");
     for(var x in await registrationRepository.findAllIngredients()){
