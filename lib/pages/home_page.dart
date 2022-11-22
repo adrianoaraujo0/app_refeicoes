@@ -9,7 +9,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: const DrawerComponent(),
+      drawer: DrawerComponent(),
       appBar: AppBar(
         backgroundColor: Colors.red,
         title: const Text("Categorias"),

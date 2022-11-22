@@ -1,94 +1,63 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:math';
+import 'package:app_refeicoes/models/form_registration.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
 
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({super.key});
+  RegistrationPage({required this.id ,super.key});
+
+  final int id;
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
-
   RegistrationController registrationController = RegistrationController();
-  late Uuid uidMeal;
-  
+
   String? complexity;
+
   String? cost;
+
   String? category;
 
   @override
   void initState() {
-    registrationController.initMealPage().then((value) => registrationController.printTables());
-    uidMeal = const Uuid();
+    registrationController.initMealPage();
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.red),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            addImage(),
-            const SizedBox(height: 10),
-            buildForm(),
-            const SizedBox(height: 40),
-           buildExpansioList(controller: registrationController.controllereExpasionListIngredients, title: "Insira os ingredientes"),
-           buildExpansioList(controller: registrationController.controllereExpasionListSteps, title: "Insira os passos"),
-            Row(
+      body: StreamBuilder<FormRegistration>(
+        stream: registrationController.controllerForm.stream,
+        builder: (context, snapshot) {
+          return SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => buildAlertDialog(
-                      context, 
-                      text: "Insira os ingredientes", 
-                      hintText: "Ex: 4 Tomates", 
-                      controller: registrationController.controllerListIngredients,
-                      textEditingController: registrationController.textControllerNameIngredients,
-                      functionUpdateList: ()=> registrationController.updateListIngredients(uidMeal.toString()),
-                      insertDatabase: ()=> registrationController.insertIngredientsDatabase(),
-                    ), 
-                    child: const Text("ingredientes")
-                  ),
-                ),
+                addImage(),
+                const SizedBox(height: 10),
+                buildForm(),
+                const SizedBox(height: 40),
+               buildExpansioList(controller: registrationController.controllereExpasionListIngredients, title: "Insira os ingredientes"),
+               buildExpansioList(controller: registrationController.controllereExpasionListSteps, title: "Insira os passos"),
               ],
             ),
-            const SizedBox(height: 20),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => buildAlertDialog(
-                      context, 
-                      text: "Insira os passos", 
-                      hintText: "Ex: Ferver água", 
-                      controller: registrationController.controllerListSteps,
-                      textEditingController: registrationController.textControllerNameSteps,
-                      functionUpdateList: (_)=> registrationController.updateListSteps(uidMeal.toString()),
-                      insertDatabase: () => registrationController.insertStepDatabase(uidMeal.toString()) 
-                    ), 
-                    child: const Text("Passos")
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
+          );
+        }
       ),
       floatingActionButton: FloatingActionButton(
         child: const Text("Salvar"),
         onPressed: (){
-          registrationController.insertMealDatabase(uidMeal.toString(), category!);
+          registrationController.insertMealDatabase(category!);
         }
       ),
     );
@@ -125,7 +94,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
   }
- 
+
   Widget buildForm(){
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -169,7 +138,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           builder: (context, snapshot) {
             return StreamBuilder<String>(
               stream: registrationController.controllerRadioComplexity.stream,
-              builder: (context, snapshot) {
+              builder: (context, snapshot){
                 return Column(
                   children: [
                     buildRadioListTile("Fácil", snapshot.data, registrationController.updateRadioComplexity),
@@ -310,13 +279,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget buildListViewAndTextField({
-    required String text,
-    required String hintText,
-    required Function functionUpdateList,
-    required TextEditingController textController,
-    required StreamController<List<dynamic>> controller
-  }){
+  Widget buildListViewAndTextField({required String text, required String hintText, required Function functionUpdateList, required TextEditingController textController, required StreamController<List<dynamic>> controller}){
     return Container(
       padding: const EdgeInsets.all(8),
       child: Column(

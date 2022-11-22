@@ -1,15 +1,13 @@
 class Ingredient{
 
   final int? id;
-  final String uidMeal;
   final String name;
 
-  Ingredient({this.id, required this.uidMeal, required this.name});
+  Ingredient({this.id,required this.name});
 
   factory Ingredient.fromMap(Map<String, dynamic> map){
     return Ingredient(
       id: map["idIngredient"],
-      uidMeal: map["uidMeal"],
       name: map["name"]
     );
   }
@@ -21,7 +19,7 @@ class Ingredient{
   @override
   String toString() {
     // TODO: implement toString
-    return "id: $id, name: $name, uid: $uidMeal";
+    return "id: $id, name: $name";
   }
 
 }

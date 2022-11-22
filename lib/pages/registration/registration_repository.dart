@@ -11,11 +11,10 @@ class RegistrationRepository{
     _database = await DBProvider.db.database;
   }
 
-  Future<void> insertMeal({required String name,required String uidMeal,required String cost,required String complexity,required String img,required int duration,required String category,required bool favorite}) async{
+  Future<void> insertMeal({String? name, String? cost,String? complexity,String? img,int? duration,String? category,bool? favorite}) async{
     await _database.insert(
       "meal", 
     {
-      "uidMeal" : uidMeal,
       "name" : name,
       "cost" : cost,
       "complexity" : complexity,
@@ -26,12 +25,12 @@ class RegistrationRepository{
     });
   }
 
-  Future<void> insertIngredients(String uidMeal, String name) async{
-    await _database.insert("ingredient", {"uidMeal" : uidMeal, "name" : name });
+  Future<void> insertIngredients(String name) async{
+    await _database.insert("ingredient", {"name" : name});
   }
 
-  Future<void> insertStep(String uidMeal, String name) async{
-    await _database.insert("step",{ "uidMeal" : uidMeal, "name" : name});
+  Future<void> insertStep(String name) async{
+    await _database.insert("step",{"name" : name});
   }
 
   Future<List<Meal>> findAllMeals() async {
@@ -40,10 +39,13 @@ class RegistrationRepository{
     return Meal.fromMapList(mealMap);
   }
 
+
+
   Future<List<Ingredient>> findAllIngredients() async{
     List<Map<String, dynamic>> ingredientMap = await _database.rawQuery("SELECT * FROM ingredient");
     return Ingredient.fromMapList(ingredientMap);
   }
+
 
   Future<List<Step>> findAllSteps() async{
     List<Map<String, dynamic>> stepMap = await _database.rawQuery("SELECT * FROM step");

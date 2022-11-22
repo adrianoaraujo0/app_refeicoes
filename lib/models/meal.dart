@@ -12,18 +12,16 @@ enum Cost {
 
 class Meal{
   final int id;
-  final String uidMeal;
-  final String category;
-  final String name;
-  final String imgUrl;
-  final int duration;
-  final String complexity;
-  final String cost;
+  final String? name;
+  final String? category;
+  final String? imgUrl;
+  final int? duration;
+  final String? complexity;
+  final String? cost;
   final bool? favorite;
 
   const Meal({
     required this.id,
-    required this.uidMeal,
     required this.category,
     required this.name,
     required this.imgUrl,
@@ -36,7 +34,6 @@ class Meal{
   factory Meal.fromMap(Map<String, dynamic> map) {
     return Meal(
       id: map["idMeal"],
-      uidMeal: map["uidMeal"],
       name: map["name"],
       cost: map["cost"],
       complexity: map["complexity"],
@@ -53,6 +50,6 @@ class Meal{
 
    String toString() {
     // TODO: implement toString
-    return "id: $id, name: $name, uid: ${uidMeal.toString()}, cost: $cost. complexity: $complexity, image: $imgUrl, duration: $duration, category: $category, favorite: $favorite";
+    return "id: $id, name: $name cost: $cost. complexity: $complexity, image: $imgUrl, duration: $duration, category: $category, favorite: $favorite";
   }
 }
