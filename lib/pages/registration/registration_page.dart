@@ -43,6 +43,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
             const SizedBox(height: 10),
             buildForm(),
             const SizedBox(height: 40),
+           buildExpansioList(controller: registrationController.controllereExpasionListIngredients, title: "Insira os ingredientes"),
+           buildExpansioList(controller: registrationController.controllereExpasionListSteps, title: "Insira os passos"),
             Row(
               children: [
                 Expanded(
@@ -123,7 +125,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       ),
     );
   }
-
+ 
   Widget buildForm(){
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -255,6 +257,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
           return ListTile(title: Text(list[index].name));
         }, 
       ),
+    );
+  }
+
+  Widget buildExpansioList({required StreamController controller, required String title}){
+    return StreamBuilder(
+      stream: controller.stream,
+      initialData: false,
+      builder: (context, snapshot) {
+        return ExpansionPanelList(
+          expansionCallback: (panelIndex, isExpanded) {
+            controller.sink.add(!isExpanded);
+          },
+          children: [
+            ExpansionPanel(
+              isExpanded: snapshot.data,
+              canTapOnHeader: true,
+              headerBuilder: (context, isExpanded) {
+                return Text(title);
+              },
+              body: const Text("TESTE")
+            )
+          ],
+        );
+      }
     );
   }
 

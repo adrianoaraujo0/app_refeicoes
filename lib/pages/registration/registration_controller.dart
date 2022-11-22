@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:app_refeicoes/models/ingredient.dart';
 import 'package:app_refeicoes/pages/registration/registration_repository.dart';
 import 'package:flutter/cupertino.dart';
@@ -20,12 +19,15 @@ class RegistrationController{
   StreamController<String> controllerImage = StreamController<String>.broadcast();
   StreamController<String> controllerRadioComplexity = StreamController<String>.broadcast();
   StreamController<String> controllerRadioCost = StreamController<String>.broadcast();
+  StreamController<bool> controllereExpasionListIngredients = StreamController<bool>.broadcast();
+  StreamController<bool> controllereExpasionListSteps = StreamController<bool>.broadcast();
   
+
   RegistrationRepository registrationRepository = RegistrationRepository();
   
   List<Ingredient> listIngredients = [];
   List<Step> listSteps = [];
-
+  List<String> listTitleExpansionList = ["Insira os ingredientes","Insira os passos"];
 
   final ImagePicker _picker = ImagePicker();
   XFile? image;
