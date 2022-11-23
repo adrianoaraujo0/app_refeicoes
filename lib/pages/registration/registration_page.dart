@@ -1,14 +1,16 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'package:app_refeicoes/models/form_registration.dart';
+import 'package:app_refeicoes/models/ingredient.dart';
+import 'package:app_refeicoes/models/meal.dart';
+import 'package:app_refeicoes/models/step_meal.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:image_picker/image_picker.dart';
-
 
 class RegistrationPage extends StatefulWidget {
-  RegistrationPage({required this.id ,super.key});
+  const RegistrationPage({required this.id ,super.key});
 
   final int id;
 
@@ -19,31 +21,28 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   RegistrationController registrationController = RegistrationController();
 
-  String? complexity;
-
-  String? cost;
-
   String? category;
 
   @override
   void initState() {
-    registrationController.initBd();
+    registrationController.initDb();
+    registrationController.initFormRegistration(widget.id);
+    log("${widget.id}");
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.red),
       body: StreamBuilder<FormRegistration>(
-        stream: registrationController.controllerForm.stream,
+        stream: registrationController.controllerFormRegistration.stream,
         builder: (context, snapshot) {
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                addImage(),
+                addImage(imgUrl: snapshot.data?.meal?.imgUrl),
                 const SizedBox(height: 10),
                 buildForm(),
                 const SizedBox(height: 40),
@@ -57,41 +56,35 @@ class _RegistrationPageState extends State<RegistrationPage> {
       floatingActionButton: FloatingActionButton(
         child: const Text("Salvar"),
         onPressed: (){
-          // registrationController.insertMealDatabase(category!);
+          registrationController.insertMealDatabase(category: category);
         }
       ),
     );
   }
 
-  Widget addImage(){
+  Widget addImage({required String? imgUrl}){
     return InkWell(
       onTap: () {
         registrationController.takePhotoFromGallery();
       },
-      child: StreamBuilder<String>(
-        stream: registrationController.controllerImage.stream,
-        builder: (context, snapshot) {
-          if(snapshot.data == null){
-            return Container(
-              height: 200,
-              width: double.infinity,
-              color: Colors.grey[300],
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
-                  Icon(Icons.add, size: 60),
-                  Text("Adicione uma imagem", style: TextStyle(fontSize: 27))
-                ]
-              ),
-            );
-          }
-          return SizedBox(
-            height: 300,
-            width: double.infinity,
-            child: Image.file(File(snapshot.data!), fit: BoxFit.cover)
-          );
-        }
-      ),
+      child: imgUrl == null 
+      ? Container(
+        height: 200,
+        width: double.infinity,
+        color: Colors.grey[300],
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Icon(Icons.add, size: 60),
+            Text("Adicione uma imagem", style: TextStyle(fontSize: 27))
+          ]
+        ),
+      )
+      : SizedBox(
+        height: 300,
+        width: double.infinity,
+        child: Image.file(File(imgUrl), fit: BoxFit.cover)
+      )
     );
   }
 
@@ -133,39 +126,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
           margin: const EdgeInsets.fromLTRB(0, 20, 0, 10),
           child: const Text("Dificuldade", style: TextStyle(fontSize: 22)),
         ),
-        StreamBuilder<String>(
-          stream: registrationController.controllerRadioComplexity.stream,
-          builder: (context, snapshot) {
-            return StreamBuilder<String>(
-              stream: registrationController.controllerRadioComplexity.stream,
-              builder: (context, snapshot){
-                return Column(
-                  children: [
-                    buildRadioListTile("Fácil", snapshot.data, registrationController.updateRadioComplexity),
-                    buildRadioListTile("Médio", snapshot.data, registrationController.updateRadioComplexity),
-                    buildRadioListTile("Difícil", snapshot.data, registrationController.updateRadioComplexity),
-                  ],
-                );
-              }
-            );
-          }
-        ),
+        Column(
+        children: [
+          buildRadioListTile("Fácil", "", registrationController.updateRadioComplexity),
+          buildRadioListTile("Médio", "", registrationController.updateRadioComplexity),
+          buildRadioListTile("Difícil", "", registrationController.updateRadioComplexity),
+        ],
+      ),
         Container(
           margin: const EdgeInsets.fromLTRB(0, 20, 0 , 10),
           child: const Text("Custo", style: TextStyle(fontSize: 22)),
         ),
-        StreamBuilder<String>(
-          stream: registrationController.controllerRadioCost.stream,
-          builder: (context, snapshot) {
-            return Column(
-              children: [
-                buildRadioListTile("Barato", snapshot.data, registrationController.updateRadioCost),
-                buildRadioListTile("Razoável", snapshot.data, registrationController.updateRadioCost),
-                buildRadioListTile("Caro", snapshot.data, registrationController.updateRadioCost),
-              ],
-            );
-          }
+
+        Column(
+          children: [
+            buildRadioListTile("Barato", "", registrationController.updateRadioCost),
+            buildRadioListTile("Razoável", "", registrationController.updateRadioCost),
+            buildRadioListTile("Caro", "", registrationController.updateRadioCost),
+          ],
         ),
+        
       ],
     );
   }
@@ -182,35 +162,18 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Widget buildDropDownButton({required String title, required List<String> items}){
-    return StreamBuilder<String>(
-      stream: registrationController.controllerDropdownButton.stream,
-      builder: (context, snapshot) {
-        return DropdownButton(
-          hint: Text(title),
-          items: items.map((name){
-            return DropdownMenuItem(
-              value: name, 
-              child: Text(name),
-            );
-          }).toList(),
-          onChanged: (newTitle) {
-            title = newTitle!;
-            category = newTitle;
-            registrationController.controllerDropdownButton.sink.add(newTitle);
-          }
+    return DropdownButton(
+      hint: Text(title),
+      items: items.map((name){
+        return DropdownMenuItem(
+          value: name, 
+          child: Text(name),
         );
-      }
-    );
-  }
-
-  Widget buildStreamBuilder({required StreamController<List<dynamic>> controller}){
-    return StreamBuilder<List<dynamic>>(
-      stream: controller.stream,
-      builder: (context, snapshot) {
-        if(snapshot.data != null && snapshot.data!.isNotEmpty){
-            return buildListView(snapshot.data!);
-        }
-        return Container();
+      }).toList(),
+      onChanged: (newTitle) {
+        title = newTitle!;
+        category = newTitle;
+        registrationController.controllerDropdownButton.sink.add(newTitle);
       }
     );
   }
@@ -230,26 +193,20 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Widget buildExpansioList({required StreamController controller, required String title}){
-    return StreamBuilder(
-      stream: controller.stream,
-      initialData: false,
-      builder: (context, snapshot) {
-        return ExpansionPanelList(
-          expansionCallback: (panelIndex, isExpanded) {
-            controller.sink.add(!isExpanded);
+    return ExpansionPanelList(
+      expansionCallback: (panelIndex, isExpanded) {
+        controller.sink.add(!isExpanded);
+      },
+      children: [
+        ExpansionPanel(
+          isExpanded:false,
+          canTapOnHeader: true,
+          headerBuilder: (context, isExpanded) {
+            return Text(title);
           },
-          children: [
-            ExpansionPanel(
-              isExpanded: snapshot.data,
-              canTapOnHeader: true,
-              headerBuilder: (context, isExpanded) {
-                return Text(title);
-              },
-              body: const Text("TESTE")
-            )
-          ],
-        );
-      }
+          body: const Text("TESTE")
+        )
+      ],
     );
   }
 
@@ -306,7 +263,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               )
             ],
           ),
-          buildStreamBuilder(controller: controller)
+          buildListView([])
         ],
       ),
     );

@@ -1,4 +1,5 @@
 import 'package:sqflite/sqflite.dart';
+// ignore: depend_on_referenced_packages
 import 'package:path/path.dart';
 
 class DBProvider {
@@ -22,7 +23,6 @@ class DBProvider {
   String get _meal => '''
     CREATE TABLE meal(
       idMeal INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      uidMeal,
       name TEXT,
       cost TEXT,
       complexity TEXT,
@@ -38,16 +38,18 @@ class DBProvider {
   String get _ingredient => '''
     CREATE TABLE ingredient(
       idIngredient INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      uidMeal,
-      name TEXT
+      idMeal INTEGER,
+      name TEXT,
+      isExpanded INTEGER
     );
   ''';
 
   String get _step => '''
     CREATE TABLE step(
       idStep INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      uidMeal,
-      name TEXT
+      idMeal INTEGER,
+      name TEXT,
+      isExpanded INTEGER
     );
   ''';
 }

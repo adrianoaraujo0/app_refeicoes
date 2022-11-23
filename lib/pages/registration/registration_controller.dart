@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:app_refeicoes/models/form_registration.dart';
 import 'package:app_refeicoes/models/ingredient.dart';
+import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/registration/registration_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/subjects.dart';
-import '../../models/step.dart';
+import '../../models/step_meal.dart';
 
 class RegistrationController{
 
@@ -15,9 +16,9 @@ class RegistrationController{
   TextEditingController textControllerNameIngredients = TextEditingController();
   TextEditingController textControllerNameSteps = TextEditingController();
 
-  BehaviorSubject<FormRegistration> controllerForm = BehaviorSubject<FormRegistration>();
-  BehaviorSubject<List<Ingredient>> controllerListIngredients = BehaviorSubject<List<Ingredient>>();
-  BehaviorSubject<List<Step>> controllerListSteps = BehaviorSubject<List<Step>>();
+  BehaviorSubject<FormRegistration> controllerFormRegistration = BehaviorSubject<FormRegistration>();
+  BehaviorSubject<List<IngredientMeal>> controllerListIngredients = BehaviorSubject<List<IngredientMeal>>();
+  BehaviorSubject<List<StepMeal>> controllerListSteps = BehaviorSubject<List<StepMeal>>();
   BehaviorSubject<String> controllerDropdownButton = BehaviorSubject<String>();
   BehaviorSubject<String> controllerImage = BehaviorSubject<String>();
   BehaviorSubject<String> controllerRadioComplexity = BehaviorSubject<String>();
@@ -27,33 +28,43 @@ class RegistrationController{
   
   RegistrationRepository registrationRepository = RegistrationRepository();
   
-  List<Ingredient> listIngredients = [];
-  List<Step> listSteps = [];
+  List<IngredientMeal> listIngredients = [];
+  List<StepMeal> listSteps = [];
   List<String> listTitleExpansionList = ["Insira os ingredientes", "Insira os passos"];
 
+  FormRegistration formRegistration = FormRegistration();
   final ImagePicker _picker = ImagePicker();
   XFile? image;
   String? complexity;
   String? cost;
 
-  Future<void> initBd() async{
+  Future<void> initDb() async{
     await registrationRepository.initDb();
   }
 
   void updateForm(FormRegistration formRegistration){
-    controllerForm.sink.add(formRegistration);
+    controllerFormRegistration.sink.add(formRegistration);
   }
 
-  void updateListIngredients() async{
-    listIngredients.add(Ingredient(name: textControllerNameIngredients.text));
-    controllerListIngredients.sink.add(listIngredients);
-    textControllerNameIngredients.clear();
-  }
+  // void updateListIngredients() async{
+  //   listIngredients.add(Ingredient(name: textControllerNameIngredients.text, isExpanded: false));
+  //   controllerListIngredients.sink.add(listIngredients);
+  //   textControllerNameIngredients.clear();
+  // }
 
-  void updateListSteps(){
-    listSteps.add(Step(name: textControllerNameSteps.text));
-    controllerListSteps.sink.add(listSteps);
-    textControllerNameSteps.clear();
+  // void updateListSteps(){
+  //   listSteps.add(Step(name: textControllerNameSteps.text, isExpanded: false));
+  //   controllerListSteps.sink.add(listSteps);
+  //   textControllerNameSteps.clear();
+  // }
+
+  void initFormRegistration(int id){
+    formRegistration =  FormRegistration(
+        meal: Meal(id: id, category: null, name: null, imgUrl: null, duration: null, complexity: null, cost: null),
+        ingredient: IngredientMeal(idMeal: id, name: null, isExpanded: false),
+        step: StepMeal(idMeal: id, name: null, isExpanded: false)
+      );
+    controllerFormRegistration.sink.add(formRegistration);
   }
 
   void insertMealDatabase({String? category}) async{
@@ -62,32 +73,36 @@ class RegistrationController{
       category: category,
       complexity: complexity,
       cost: cost,
-      duration: int.parse(textControllerTimeMeal.text),
+      duration: textControllerTimeMeal.text.isNotEmpty ? int.parse(textControllerTimeMeal.text) : 0,
       favorite: false,
       img: image?.path
     );
   }
 
   void insertIngredientsDatabase() async{
-    for(Ingredient ingredient in listIngredients){
-        await registrationRepository.insertIngredients(ingredient.name);
+    for(IngredientMeal ingredient in listIngredients){
+        await registrationRepository.insertIngredients(ingredient.idMeal!,ingredient.name);
     }
   }
 
   void insertStepDatabase() async{
-    for(Step step in listSteps){
-      await registrationRepository.insertStep(step.name!);
+    for(StepMeal step in listSteps){
+      await registrationRepository.insertStep(step.idMeal!, step.name!);
     }
   }
-
 
   Future<void> takePhotoFromGallery() async{
     image = await _picker.pickImage(source: ImageSource.gallery);
     if(image != null && image!.path.isNotEmpty){
-    controllerImage.sink.add(image!.path);
-    controllerForm.sink.add(FormRegistration());
+      // controllerFormRegistration.sink.add();
     }
   }
+
+  Future<int> idLastMeal() async{
+    Meal lastMeal =  await registrationRepository.findLastMeal();
+    return lastMeal.id;
+  }
+
 
   void updateRadioComplexity(String value){
     complexity = value;

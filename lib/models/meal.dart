@@ -1,15 +1,3 @@
-enum Complexity {
-    simple,
-    medium,
-    difficult,
-}
-
-enum Cost {
-  cheap,
-  fair,
-  expensive,
-}
-
 class Meal{
   final int id;
   final String? name;
@@ -48,8 +36,8 @@ class Meal{
     return meals.map((e) => Meal.fromMap(e)).toList();
   }
 
-   String toString() {
-    // TODO: implement toString
+   @override
+     String toString() {
     return "id: $id, name: $name cost: $cost. complexity: $complexity, image: $imgUrl, duration: $duration, category: $category, favorite: $favorite";
   }
 }

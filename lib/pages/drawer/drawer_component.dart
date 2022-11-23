@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:app_refeicoes/pages/home_page.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
+
+import '../registration/registration_page.dart';
 
 class DrawerComponent extends StatefulWidget {
   DrawerComponent({super.key});
@@ -15,7 +19,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
 
   @override
   void initState() {
-    registrationController.initBd();
+    registrationController.initDb();
     super.initState();
   }
 
@@ -48,9 +52,11 @@ class _DrawerComponentState extends State<DrawerComponent> {
           ),
           const SizedBox(height: 30),
           InkWell(
-            onTap: () {
+            onTap: ()async {
               registrationController.insertMealDatabase();
-              // Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(id: 1,)));
+              await registrationController.idLastMeal().then((value) =>  
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(id: value)))
+              );
             },
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),

@@ -1,7 +1,7 @@
 import 'package:app_refeicoes/db/database_provider.dart';
 import 'package:app_refeicoes/models/ingredient.dart';
 import 'package:app_refeicoes/models/meal.dart';
-import 'package:app_refeicoes/models/step.dart';
+import 'package:app_refeicoes/models/step_meal.dart';
 import 'package:sqflite/sqflite.dart';
 
 class RegistrationRepository{
@@ -25,12 +25,12 @@ class RegistrationRepository{
     });
   }
 
-  Future<void> insertIngredients(String name) async{
-    await _database.insert("ingredient", {"name" : name});
+  Future<void> insertIngredients(int idMeal, String? name) async{
+    await _database.insert("ingredient", {"idMeal" : idMeal ,"name" : name});
   }
 
-  Future<void> insertStep(String name) async{
-    await _database.insert("step",{"name" : name});
+  Future<void> insertStep(int idMeal, String? name) async{
+    await _database.insert("step",{"idMeal" : idMeal ,"name" : name});
   }
 
   Future<List<Meal>> findAllMeals() async {
@@ -39,14 +39,18 @@ class RegistrationRepository{
     return Meal.fromMapList(mealMap);
   }
 
-  Future<List<Ingredient>> findAllIngredients() async{
-    List<Map<String, dynamic>> ingredientMap = await _database.rawQuery("SELECT * FROM ingredient");
-    return Ingredient.fromMapList(ingredientMap);
+  Future<Meal> findLastMeal() async {
+    List<Meal> x = await findAllMeals(); 
+    return x.last;
   }
 
+  Future<List<IngredientMeal>> findAllIngredients() async{
+    List<Map<String, dynamic>> ingredientMap = await _database.rawQuery("SELECT * FROM ingredient");
+    return IngredientMeal.fromMapList(ingredientMap);
+  }
 
-  Future<List<Step>> findAllSteps() async{
+  Future<List<StepMeal>> findAllSteps() async{
     List<Map<String, dynamic>> stepMap = await _database.rawQuery("SELECT * FROM step");
-    return Step.fromMapList(stepMap);
+    return StepMeal.fromMapList(stepMap);
   }
 }

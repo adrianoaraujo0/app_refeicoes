@@ -1,25 +1,29 @@
-class Ingredient{
+class IngredientMeal{
 
   final int? id;
-  final String name;
+  final int? idMeal;
+  final String? name;
+  final bool isExpanded;
 
-  Ingredient({this.id,required this.name});
+  IngredientMeal({this.id, required this.idMeal, required this.name, required this.isExpanded});
 
-  factory Ingredient.fromMap(Map<String, dynamic> map){
-    return Ingredient(
+  factory IngredientMeal.fromMap(Map<String, dynamic> map){
+    return IngredientMeal(
       id: map["idIngredient"],
-      name: map["name"]
+      idMeal: map["idMeal"],
+      name: map["name"],
+      isExpanded: map["isExpanded"] == false
     );
   }
 
   static fromMapList(List<Map<String, dynamic>> ingredient){
-    return ingredient.map((e) => Ingredient.fromMap(e)).toList();
+    return ingredient.map((e) => IngredientMeal.fromMap(e)).toList();
   }
 
   @override
   String toString() {
     // TODO: implement toString
-    return "id: $id, name: $name";
+    return "id: $id, idMeal: $idMeal ,name: $name, isExpanded: $isExpanded";
   }
 
 }
