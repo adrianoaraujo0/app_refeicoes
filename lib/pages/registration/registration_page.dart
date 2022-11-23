@@ -21,7 +21,7 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   RegistrationController registrationController = RegistrationController();
 
-  String? category;
+String? category;
 
   @override
   void initState() {
@@ -38,13 +38,14 @@ class _RegistrationPageState extends State<RegistrationPage> {
       body: StreamBuilder<FormRegistration>(
         stream: registrationController.controllerFormRegistration.stream,
         builder: (context, snapshot) {
+          print(snapshot.data?.meal?.imgUrl);
           return SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 addImage(imgUrl: snapshot.data?.meal?.imgUrl),
                 const SizedBox(height: 10),
-                buildForm(),
+                buildForm(snapshot.data?.meal?.complexity),
                 const SizedBox(height: 40),
                buildExpansioList(controller: registrationController.controllereExpasionListIngredients, title: "Insira os ingredientes"),
                buildExpansioList(controller: registrationController.controllereExpasionListSteps, title: "Insira os passos"),
@@ -88,7 +89,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget buildForm(){
+  Widget buildForm(String? groupValue){
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -112,13 +113,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
               decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
             )
           ),
-          buildRadioButton(),
+          buildRadioButton(groupValue),
         ],
       ),
     );
   }
 
-  Widget buildRadioButton(){
+  Widget buildRadioButton(String? groupValue){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -128,9 +129,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         ),
         Column(
         children: [
-          buildRadioListTile("Fácil", "", registrationController.updateRadioComplexity),
-          buildRadioListTile("Médio", "", registrationController.updateRadioComplexity),
-          buildRadioListTile("Difícil", "", registrationController.updateRadioComplexity),
+          buildRadioListTile("Fácil", groupValue, registrationController.updateRadioComplexity),
+          buildRadioListTile("Médio", groupValue, registrationController.updateRadioComplexity),
+          buildRadioListTile("Difícil", groupValue, registrationController.updateRadioComplexity),
         ],
       ),
         Container(
@@ -171,9 +172,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
         );
       }).toList(),
       onChanged: (newTitle) {
-        title = newTitle!;
+        registrationController.category = newTitle!;
         category = newTitle;
-        registrationController.controllerDropdownButton.sink.add(newTitle);
       }
     );
   }

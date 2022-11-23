@@ -1,5 +1,5 @@
 class Meal{
-  final int id;
+  final int? id;
   final String? name;
   final String? category;
   final String? imgUrl;
@@ -9,7 +9,7 @@ class Meal{
   final bool? favorite;
 
   const Meal({
-    required this.id,
+    this.id,
     required this.category,
     required this.name,
     required this.imgUrl,

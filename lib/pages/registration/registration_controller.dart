@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:app_refeicoes/models/form_registration.dart';
 import 'package:app_refeicoes/models/ingredient.dart';
 import 'package:app_refeicoes/models/meal.dart';
@@ -35,7 +36,9 @@ class RegistrationController{
   FormRegistration formRegistration = FormRegistration();
   final ImagePicker _picker = ImagePicker();
   XFile? image;
+  String? imgUrl;
   String? complexity;
+  String? category;
   String? cost;
 
   Future<void> initDb() async{
@@ -46,17 +49,6 @@ class RegistrationController{
     controllerFormRegistration.sink.add(formRegistration);
   }
 
-  // void updateListIngredients() async{
-  //   listIngredients.add(Ingredient(name: textControllerNameIngredients.text, isExpanded: false));
-  //   controllerListIngredients.sink.add(listIngredients);
-  //   textControllerNameIngredients.clear();
-  // }
-
-  // void updateListSteps(){
-  //   listSteps.add(Step(name: textControllerNameSteps.text, isExpanded: false));
-  //   controllerListSteps.sink.add(listSteps);
-  //   textControllerNameSteps.clear();
-  // }
 
   void initFormRegistration(int id){
     formRegistration =  FormRegistration(
@@ -92,15 +84,16 @@ class RegistrationController{
   }
 
   Future<void> takePhotoFromGallery() async{
+    print("1 ${textControllerNameMeal.text}");
     image = await _picker.pickImage(source: ImageSource.gallery);
+    print("2 $image");
     if(image != null && image!.path.isNotEmpty){
-      // controllerFormRegistration.sink.add();
     }
   }
 
   Future<int> idLastMeal() async{
     Meal lastMeal =  await registrationRepository.findLastMeal();
-    return lastMeal.id;
+    return lastMeal.id!;
   }
 
 
@@ -115,17 +108,17 @@ class RegistrationController{
   }
 
   void printTables() async{
-    print("-------------Meal------------------------");
+    
     for(var x in await registrationRepository.findAllMeals()){
-      print(x.toString());
+      log(x.toString());
     }
-    print("-------------INGREDIENTS------------------------");
+
     for(var x in await registrationRepository.findAllIngredients()){
-      print(x.toString());
+      log(x.toString());
     }
-    print("-------------Steps------------------------");
+
      for(var x in await registrationRepository.findAllSteps()){
-      print(x.toString());
+      log(x.toString());
     }
   }
 }
