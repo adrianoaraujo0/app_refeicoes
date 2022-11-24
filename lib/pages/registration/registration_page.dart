@@ -53,7 +53,8 @@ String? category;
                   buildForm(snapshot.data),
                   const SizedBox(height: 40),
                  buildExpansioList("Insira os ingredientes", snapshot.data!, true),
-                 buildExpansioList("Insira os passos", snapshot.data!)
+                 buildExpansioList("Insira os passos", snapshot.data!),
+                 Container(height: 100),
                 ],
               ),
             );
@@ -97,30 +98,37 @@ String? category;
   }
 
   Widget buildForm(Meal? meal){
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-            TextField(
-            controller: registrationController.textControllerNameMeal,
-              decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
+    return Form(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+              TextFormField(
+                validator: (value) {
+                  if(value!.isEmpty){
+                    return "Insira um valor";
+                  }
+                },
+              controller: registrationController.textControllerNameMeal,
+                decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
+              ),
+            const SizedBox(height: 10),
+            buildDropDownButton(
+              items: ["Italiano" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
+              meal: meal!
             ),
-          const SizedBox(height: 10),
-          buildDropDownButton(
-            items: ["Italiano" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
-            meal: meal!
-          ),
-          SizedBox(
-            width: 100,
-            child: TextField(
-              controller: registrationController.textControllerTimeMeal,
-              keyboardType: const TextInputType.numberWithOptions(),
-              decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
-            )
-          ),
-          buildRadioButton(meal),
-        ],
+            SizedBox(
+              width: 100,
+              child: TextFormField(
+                controller: registrationController.textControllerTimeMeal,
+                keyboardType: const TextInputType.numberWithOptions(),
+                decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
+              )
+            ),
+            buildRadioButton(meal),
+          ],
+        ),
       ),
     );
   }
@@ -164,8 +172,9 @@ String? category;
       onChanged:  (value){ 
         if(changeToCost){
           registrationController.insertCost(meal, value!);
+        }else{
+          registrationController.insertComplexity(meal, value!);
         }
-        registrationController.insertComplexity(meal, value!);
       }  
     );
   }
