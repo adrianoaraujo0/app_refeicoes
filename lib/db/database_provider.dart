@@ -22,23 +22,21 @@ class DBProvider {
 
   String get _meal => '''
     CREATE TABLE meal(
-      idMeal INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       name TEXT,
       cost TEXT,
       complexity TEXT,
-      img TEXT,
-      duration INTEGER,
       category TEXT,
-      mealIngredient TEXT,
-      mealStep TEXT,
+      duration INTEGER,
+      imgUrl TEXT,
       favorite INTEGER
     );
   ''';
 
   String get _ingredient => '''
     CREATE TABLE ingredient(
-      idIngredient INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      idMeal INTEGER,
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      mealId INTEGER,
       name TEXT,
       isExpanded INTEGER
     );
@@ -46,8 +44,8 @@ class DBProvider {
 
   String get _step => '''
     CREATE TABLE step(
-      idStep INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-      idMeal INTEGER,
+      id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+      mealId INTEGER,
       name TEXT,
       isExpanded INTEGER
     );

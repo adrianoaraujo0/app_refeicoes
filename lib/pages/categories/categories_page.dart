@@ -1,4 +1,3 @@
-import 'package:app_refeicoes/data/dummy_data.dart';
 import 'package:app_refeicoes/models/category.dart';
 import 'package:app_refeicoes/pages/categories/categories_controller.dart';
 import 'package:flutter/material.dart';
@@ -23,23 +22,23 @@ class _CategoriesPageState extends State<CategoriesPage> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
-          height: 300,
-          width: double.infinity,
-          child: listViewCategories()
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: const [
-              Text("Favorites", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500)),
-            ],
-          ),
-        ),
-      ],
+      // children: [
+      //   Container(
+      //     padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+      //     height: 300,
+      //     width: double.infinity,
+      //     child: listViewCategories()
+      //   ),
+      //   Padding(
+      //     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.start,
+      //       children: const [
+      //         Text("Favorites", style: TextStyle(fontSize: 25, fontWeight: FontWeight.w500)),
+      //       ],
+      //     ),
+      //   ),
+      // ],
     );
   }
 
@@ -48,10 +47,10 @@ class _CategoriesPageState extends State<CategoriesPage> {
       itemCount: 10,
       scrollDirection: Axis.horizontal,
       itemBuilder: (context, index) {
-        Category category = dummyCategories[index];
+        // Category category = dummyCategories[index];
 
         return InkWell(
-          child: itemList(category),
+          // child: itemList(category),
           // onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal),)),
         );
       },

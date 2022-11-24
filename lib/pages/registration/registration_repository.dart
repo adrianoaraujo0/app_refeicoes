@@ -1,5 +1,5 @@
 import 'package:app_refeicoes/db/database_provider.dart';
-import 'package:app_refeicoes/models/ingredient.dart';
+import 'package:app_refeicoes/models/ingredient_meal.dart';
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/models/step_meal.dart';
 import 'package:sqflite/sqflite.dart';
@@ -11,26 +11,26 @@ class RegistrationRepository{
     _database = await DBProvider.db.database;
   }
 
-  Future<void> insertMeal({String? name, String? cost,String? complexity,String? img, int? duration,String? category, bool? favorite}) async{
+  Future<void> insertMeal({String? name, String? cost,String? complexity,String? imgUrl, int? duration,String? category, bool? favorite}) async{
     await _database.insert(
       "meal", 
     {
       "name" : name,
       "cost" : cost,
       "complexity" : complexity,
-      "img" : img,
+      "imgUrl" : imgUrl,
       "duration" : duration,
       "category" : category,
       "favorite" : favorite != false ? 1 : 0
     });
   }
 
-  Future<void> insertIngredients(int idMeal, String? name) async{
-    await _database.insert("ingredient", {"idMeal" : idMeal ,"name" : name});
+  Future<void> insertIngredients(int mealId, String? name) async{
+    await _database.insert("ingredient", {"mealId" : mealId ,"name" : name});
   }
 
-  Future<void> insertStep(int idMeal, String? name) async{
-    await _database.insert("step",{"idMeal" : idMeal ,"name" : name});
+  Future<void> insertStep(int mealId, String? name) async{
+    await _database.insert("step",{"mealId" : mealId ,"name" : name});
   }
 
   Future<List<Meal>> findAllMeals() async {
@@ -40,7 +40,7 @@ class RegistrationRepository{
   }
 
   Future<Meal> findLastMeal() async {
-    List<Meal> x = await findAllMeals(); 
+    List<Meal> x = await findAllMeals();
     return x.last;
   }
 

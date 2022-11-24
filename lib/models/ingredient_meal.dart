@@ -1,16 +1,16 @@
 class IngredientMeal{
 
   final int? id;
-  final int? idMeal;
+  final int? mealId;
   final String? name;
   final bool isExpanded;
 
-  IngredientMeal({this.id, required this.idMeal, required this.name, required this.isExpanded});
+  IngredientMeal({this.id, required this.mealId, required this.name, required this.isExpanded});
 
   factory IngredientMeal.fromMap(Map<String, dynamic> map){
     return IngredientMeal(
-      id: map["idIngredient"],
-      idMeal: map["idMeal"],
+      id: map["id"],
+      mealId: map["mealId"],
       name: map["name"],
       isExpanded: map["isExpanded"] == false
     );
@@ -22,8 +22,7 @@ class IngredientMeal{
 
   @override
   String toString() {
-    // TODO: implement toString
-    return "id: $id, idMeal: $idMeal ,name: $name, isExpanded: $isExpanded";
+    return "id: $id, mealId: $mealId ,name: $name, isExpanded: $isExpanded";
   }
 
 }

@@ -1,31 +1,42 @@
-class Meal{
-  final int? id;
-  final String? name;
-  final String? category;
-  final String? imgUrl;
-  final int? duration;
-  final String? complexity;
-  final String? cost;
-  final bool? favorite;
+import 'package:app_refeicoes/models/ingredient_meal.dart';
+import 'package:app_refeicoes/models/step_meal.dart';
 
-  const Meal({
+class Meal{
+ final int? id;
+ String? name;
+ String? category;
+ String? imgUrl;
+ int? duration;
+ String? complexity;
+ String? cost;
+ bool ingredientIsExpanded;
+ bool stepIsExpanded;
+ List<IngredientMeal>? ingredientMeal;
+ List<StepMeal>? stepMeal;
+ bool? favorite;
+
+  Meal({
     this.id,
-    required this.category,
-    required this.name,
-    required this.imgUrl,
-    required this.duration,
-    required this.complexity,
-    required this.cost,
+    this.name,
+    this.cost,
+    this.complexity,
+    this.imgUrl,
+    this.category,
+    this.duration,
+    this.ingredientIsExpanded = false,
+    this.stepIsExpanded = false,
+    this.ingredientMeal,
+    this.stepMeal,
     this.favorite
   });
 
   factory Meal.fromMap(Map<String, dynamic> map) {
     return Meal(
-      id: map["idMeal"],
+      id: map["id"],
       name: map["name"],
       cost: map["cost"],
       complexity: map["complexity"],
-      imgUrl: map["img"],
+      imgUrl: map["imgUrl"],
       duration: map["duration"],
       category: map["category"],
       favorite: map["favorite"] == 1 ? true : false,

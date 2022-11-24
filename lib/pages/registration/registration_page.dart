@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'package:app_refeicoes/models/form_registration.dart';
-import 'package:app_refeicoes/models/ingredient.dart';
 import 'package:app_refeicoes/models/meal.dart';
-import 'package:app_refeicoes/models/step_meal.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({required this.id ,super.key});
@@ -26,7 +22,7 @@ String? category;
   @override
   void initState() {
     registrationController.initDb();
-    registrationController.initFormRegistration(widget.id);
+    registrationController.initMeal(widget.id);
     log("${widget.id}");
     super.initState();
   }
@@ -35,23 +31,34 @@ String? category;
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.red),
-      body: StreamBuilder<FormRegistration>(
-        stream: registrationController.controllerFormRegistration.stream,
+      body: StreamBuilder<Meal>(
+        stream: registrationController.controllerMeal.stream,
         builder: (context, snapshot) {
-          print(snapshot.data?.meal?.imgUrl);
+          if(snapshot.data != null){
+            print("id: ${snapshot.data!.id}");
+            print("img: ${snapshot.data!.imgUrl}");
+            print("name: ${snapshot.data!.name}");
+            print("category: ${snapshot.data!.category}");
+            print("time: ${snapshot.data!.duration}");
+            print("complexity: ${snapshot.data!.complexity}");
+            print("cost: ${snapshot.data!.cost}");
+            print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
+            print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
           return SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                addImage(imgUrl: snapshot.data?.meal?.imgUrl),
-                const SizedBox(height: 10),
-                buildForm(snapshot.data?.meal?.complexity),
-                const SizedBox(height: 40),
-               buildExpansioList(controller: registrationController.controllereExpasionListIngredients, title: "Insira os ingredientes"),
-               buildExpansioList(controller: registrationController.controllereExpasionListSteps, title: "Insira os passos"),
-              ],
-            ),
-          );
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  addImage(meal: snapshot.data!),
+                  const SizedBox(height: 10),
+                  buildForm(snapshot.data),
+                  const SizedBox(height: 40),
+                 buildExpansioList("Insira os ingredientes", snapshot.data!, true),
+                 buildExpansioList("Insira os passos", snapshot.data!)
+                ],
+              ),
+            );
+          }
+        return Container();
         }
       ),
       floatingActionButton: FloatingActionButton(
@@ -63,12 +70,12 @@ String? category;
     );
   }
 
-  Widget addImage({required String? imgUrl}){
+  Widget addImage({required Meal meal}){
     return InkWell(
       onTap: () {
-        registrationController.takePhotoFromGallery();
+        registrationController.takePhotoFromGallery(meal);
       },
-      child: imgUrl == null 
+      child: meal.imgUrl == null 
       ? Container(
         height: 200,
         width: double.infinity,
@@ -84,12 +91,12 @@ String? category;
       : SizedBox(
         height: 300,
         width: double.infinity,
-        child: Image.file(File(imgUrl), fit: BoxFit.cover)
+        child: Image.file(File(meal.imgUrl!), fit: BoxFit.cover)
       )
     );
   }
 
-  Widget buildForm(String? groupValue){
+  Widget buildForm(Meal? meal){
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -101,25 +108,24 @@ String? category;
             ),
           const SizedBox(height: 10),
           buildDropDownButton(
-            title: "Categorias",
             items: ["Italiano" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
+            meal: meal!
           ),
           SizedBox(
             width: 100,
             child: TextField(
               controller: registrationController.textControllerTimeMeal,
               keyboardType: const TextInputType.numberWithOptions(),
-              inputFormatters: [FilteringTextInputFormatter.deny(RegExp ("[,]"))],
               decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
             )
           ),
-          buildRadioButton(groupValue),
+          buildRadioButton(meal),
         ],
       ),
     );
   }
 
-  Widget buildRadioButton(String? groupValue){
+  Widget buildRadioButton(Meal meal){
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -129,9 +135,9 @@ String? category;
         ),
         Column(
         children: [
-          buildRadioListTile("Fácil", groupValue, registrationController.updateRadioComplexity),
-          buildRadioListTile("Médio", groupValue, registrationController.updateRadioComplexity),
-          buildRadioListTile("Difícil", groupValue, registrationController.updateRadioComplexity),
+          buildRadioListTile("Fácil", meal),
+          buildRadioListTile("Médio", meal),
+          buildRadioListTile("Difícil", meal),
         ],
       ),
         Container(
@@ -141,39 +147,35 @@ String? category;
 
         Column(
           children: [
-            buildRadioListTile("Barato", "", registrationController.updateRadioCost),
-            buildRadioListTile("Razoável", "", registrationController.updateRadioCost),
-            buildRadioListTile("Caro", "", registrationController.updateRadioCost),
+            buildRadioListTile("Barato", meal, true),
+            buildRadioListTile("Razoável", meal, true),
+            buildRadioListTile("Caro", meal, true),
           ],
         ),
-        
       ],
     );
   }
 
-  Widget buildRadioListTile(String title, String? groupValue, Function updateRadio){
+  Widget buildRadioListTile(String title, Meal meal, [bool changeToCost = false]){
     return RadioListTile(
       title: Text(title),
       value: title,
-      groupValue: groupValue,
-      onChanged: (value){
-        updateRadio(value);
-      }
+      groupValue: changeToCost ? meal.cost : meal.complexity,
+      onChanged:  (value){ 
+        if(changeToCost){
+          registrationController.insertCost(meal, value!);
+        }
+        registrationController.insertComplexity(meal, value!);
+      }  
     );
   }
 
-  Widget buildDropDownButton({required String title, required List<String> items}){
+  Widget buildDropDownButton({required List<String> items, required Meal meal}){
     return DropdownButton(
-      hint: Text(title),
-      items: items.map((name){
-        return DropdownMenuItem(
-          value: name, 
-          child: Text(name),
-        );
-      }).toList(),
+      hint:Text(meal.category == null ? "Categorias" : meal.category!),
+      items: items.map((name){return DropdownMenuItem(value: name, child: Text(name));}).toList(),
       onChanged: (newTitle) {
-        registrationController.category = newTitle!;
-        category = newTitle;
+        registrationController.insertCategory(meal, newTitle!);
       }
     );
   }
@@ -192,14 +194,20 @@ String? category;
     );
   }
 
-  Widget buildExpansioList({required StreamController controller, required String title}){
+  Widget buildExpansioList(String title, Meal meal, [bool changeToStep = false]){
     return ExpansionPanelList(
       expansionCallback: (panelIndex, isExpanded) {
-        controller.sink.add(!isExpanded);
+        if(changeToStep){
+          print(title);
+          print(isExpanded);
+          registrationController.changeExpansionListIngredient(meal, isExpanded);
+        }else{
+          registrationController.changeExpansionListStep(meal, isExpanded);
+        }
       },
       children: [
         ExpansionPanel(
-          isExpanded:false,
+          isExpanded: changeToStep ? meal.ingredientIsExpanded : meal.stepIsExpanded,
           canTapOnHeader: true,
           headerBuilder: (context, isExpanded) {
             return Text(title);
