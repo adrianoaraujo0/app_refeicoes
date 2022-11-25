@@ -24,6 +24,9 @@ class RegistrationController{
   List<StepMeal> listSteps = [];
   List<String> listTitleExpansionList = ["Insira os ingredientes", "Insira os passos"];
 
+
+  final formKey = GlobalKey<FormState>();
+
   
 
 
@@ -103,6 +106,14 @@ class RegistrationController{
   Future<int> idLastMeal() async{
     Meal lastMeal =  await registrationRepository.findLastMeal();
     return lastMeal.id!;
+  }
+
+  void formVerification() async{
+    if(formKey.currentState!.validate()){
+      print("valido");
+    }else{
+      print("invalido");
+    }
   }
 
   void printTables() async{

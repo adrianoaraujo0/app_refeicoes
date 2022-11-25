@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class RegistrationPage extends StatefulWidget {
   const RegistrationPage({required this.id ,super.key});
@@ -17,7 +18,7 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   RegistrationController registrationController = RegistrationController();
 
-String? category;
+  String? category;
 
   @override
   void initState() {
@@ -65,7 +66,9 @@ String? category;
       floatingActionButton: FloatingActionButton(
         child: const Text("Salvar"),
         onPressed: (){
-          registrationController.insertMealDatabase(category: category);
+
+          registrationController.formVerification();
+          // registrationController.insertMealDatabase(category: category);
         }
       ),
     );
@@ -99,6 +102,7 @@ String? category;
 
   Widget buildForm(Meal? meal){
     return Form(
+      key: registrationController.formKey,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -109,6 +113,7 @@ String? category;
                   if(value!.isEmpty){
                     return "Insira um valor";
                   }
+                  return null;
                 },
               controller: registrationController.textControllerNameMeal,
                 decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
@@ -121,6 +126,20 @@ String? category;
             SizedBox(
               width: 100,
               child: TextFormField(
+                validator: (value) {
+                 if(value!.isEmpty){
+                  return "Insira o tempo.";
+                 }
+                 else{
+                  try{   
+                    int x = int.parse(value);
+                  }catch(e){
+                    return "tempo inválido";
+                  }
+               
+                 }
+                },
+                inputFormatters: [FilteringTextInputFormatter.deny (RegExp ("[0-9] +"))],
                 controller: registrationController.textControllerTimeMeal,
                 keyboardType: const TextInputType.numberWithOptions(),
                 decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
@@ -236,9 +255,10 @@ String? category;
           actions: [
             ElevatedButton(
               onPressed: (){
-                insertDatabase();
-                Navigator.pop(context);
-              }, child: const Text("Salvar")
+                // insertDatabase();
+                // Navigator.pop(context);
+                registrationController.formVerification();
+              }, child: const Text("ALERT DIALOG")
             )
           ],
           content: buildListViewAndTextField(
