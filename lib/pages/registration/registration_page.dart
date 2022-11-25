@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
+import 'package:app_refeicoes/models/ingredient_meal.dart';
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
@@ -36,27 +37,30 @@ class _RegistrationPageState extends State<RegistrationPage> {
         stream: registrationController.controllerMeal.stream,
         builder: (context, snapshot) {
           if(snapshot.data != null){
-            print("id: ${snapshot.data!.id}");
-            print("img: ${snapshot.data!.imgUrl}");
-            print("name: ${snapshot.data!.name}");
-            print("category: ${snapshot.data!.category}");
-            print("time: ${snapshot.data!.duration}");
-            print("complexity: ${snapshot.data!.complexity}");
-            print("cost: ${snapshot.data!.cost}");
-            print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
-            print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
+            // print("id: ${snapshot.data!.id}");
+            // print("img: ${snapshot.data!.imgUrl}");
+            // print("name: ${snapshot.data!.name}");
+            // print("category: ${snapshot.data!.category}");
+            // print("time: ${snapshot.data!.duration}");
+            // print("complexity: ${snapshot.data!.complexity}");
+            // print("cost: ${snapshot.data!.cost}");
+            // print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
+            // print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
           return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  addImage(meal: snapshot.data!),
-                  const SizedBox(height: 10),
-                  buildForm(snapshot.data),
-                  const SizedBox(height: 40),
-                 buildExpansioList("Insira os ingredientes", snapshot.data!, true),
-                 buildExpansioList("Insira os passos", snapshot.data!),
-                 Container(height: 100),
-                ],
+              child: Form(
+                key: registrationController.formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    addImage(meal: snapshot.data!),
+                    const SizedBox(height: 10),
+                    buildForm(snapshot.data),
+                    const SizedBox(height: 40),
+                   buildExpansioList("Insira os ingredientes", snapshot.data!, true),
+                   buildExpansioList("Insira os passos", snapshot.data!),
+                   Container(height: 100),
+                  ],
+                ),
               ),
             );
           }
@@ -101,53 +105,49 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Widget buildForm(Meal? meal){
-    return Form(
-      key: registrationController.formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-              TextFormField(
-                validator: (value) {
-                  if(value!.isEmpty){
-                    return "Insira um valor";
-                  }
-                  return null;
-                },
-              controller: registrationController.textControllerNameMeal,
-                decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
-              ),
-            const SizedBox(height: 10),
-            buildDropDownButton(
-              items: ["Italiano" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
-              meal: meal!
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+            TextFormField(
+              validator: (value) {
+                if(value!.isEmpty){
+                  return "Insira um valor";
+                }
+                return null;
+              },
+            controller: registrationController.textControllerNameMeal,
+              decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
             ),
-            SizedBox(
-              width: 100,
-              child: TextFormField(
-                validator: (value) {
-                 if(value!.isEmpty){
-                  return "Insira o tempo.";
-                 }
-                 else{
-                  try{   
-                    int x = int.parse(value);
-                  }catch(e){
-                    return "tempo inválido";
-                  }
-               
-                 }
-                },
-                inputFormatters: [FilteringTextInputFormatter.deny (RegExp ("[0-9] +"))],
-                controller: registrationController.textControllerTimeMeal,
-                keyboardType: const TextInputType.numberWithOptions(),
-                decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
-              )
-            ),
-            buildRadioButton(meal),
-          ],
-        ),
+          const SizedBox(height: 10),
+          buildDropDownButton(
+            items: ["Italiano" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
+            meal: meal!
+          ),
+          SizedBox(
+            width: 100,
+            child: TextFormField(
+              validator: (value) {
+               if(value!.isEmpty){
+                return "Insira o tempo.";
+               }
+               else{
+                try{   
+                  int x = int.parse(value);
+                }catch(e){
+                  return "tempo inválido";
+                }
+               }
+              },
+              inputFormatters: [FilteringTextInputFormatter.deny (RegExp ("[0-9] +"))],
+              controller: registrationController.textControllerTimeMeal,
+              keyboardType: const TextInputType.numberWithOptions(),
+              decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
+            )
+          ),
+          buildRadioButton(meal),
+        ],
       ),
     );
   }
@@ -208,26 +208,11 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget buildListView(List<dynamic> list){
-    return SizedBox(
-      height: 200,
-      width: 100,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: list.length,
-        itemBuilder: (context, index) {
-          return ListTile(title: Text(list[index].name));
-        }, 
-      ),
-    );
-  }
 
   Widget buildExpansioList(String title, Meal meal, [bool changeToStep = false]){
     return ExpansionPanelList(
       expansionCallback: (panelIndex, isExpanded) {
         if(changeToStep){
-          print(title);
-          print(isExpanded);
           registrationController.changeExpansionListIngredient(meal, isExpanded);
         }else{
           registrationController.changeExpansionListStep(meal, isExpanded);
@@ -238,71 +223,78 @@ class _RegistrationPageState extends State<RegistrationPage> {
           isExpanded: changeToStep ? meal.ingredientIsExpanded : meal.stepIsExpanded,
           canTapOnHeader: true,
           headerBuilder: (context, isExpanded) {
-            return Text(title);
+            return Padding(
+              padding: const EdgeInsets.fromLTRB( 10, 0 , 0 , 0),
+              child: Text(title, style: const TextStyle(fontSize: 20),),
+            );
           },
-          body: const Text("TESTE")
+          body: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                     Expanded(
+                      child: TextFormField(
+                        validator: (value) {
+                          if(value!.isEmpty){
+                            return "Insira um valor";
+                          }
+                            return null;
+                        },
+                        controller: changeToStep ? registrationController.textControllerNameIngredient : registrationController.textControllerNameStep,
+                        decoration: const InputDecoration(
+                          border :OutlineInputBorder()
+                          )
+                        )
+                      ),
+                    IconButton(
+                      onPressed: (){
+                        registrationController.formVerification();
+                        if(changeToStep){
+                          if(registrationController.textControllerNameIngredient.text.isNotEmpty){
+                            registrationController.insertListIngredients(meal);
+                          }
+                        }else{
+                          if(registrationController.textControllerNameStep.text.isNotEmpty){
+                            registrationController.insertListStep(meal);
+                          }
+                        }
+                      }, 
+                      icon: const Icon(Icons.add)
+                    )
+                  ],
+                ),
+                buildListView(meal, changeToStep)
+              ],
+            ),
+          )
         )
       ],
     );
   }
 
-  Future<void> buildAlertDialog(BuildContext context , {required String text ,required String hintText,required StreamController<List<dynamic>> controller, required TextEditingController textEditingController, required Function functionUpdateList, required Function insertDatabase}){
-    return showDialog(
-      useSafeArea: true,
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          actions: [
-            ElevatedButton(
-              onPressed: (){
-                // insertDatabase();
-                // Navigator.pop(context);
-                registrationController.formVerification();
-              }, child: const Text("ALERT DIALOG")
-            )
-          ],
-          content: buildListViewAndTextField(
-            text: text,
-            hintText: hintText,
-            controller: controller,
-            textController: textEditingController,
-            functionUpdateList: functionUpdateList,
-          ),
-        );
-      },
-    );
-  }
-
-  Widget buildListViewAndTextField({required String text, required String hintText, required Function functionUpdateList, required TextEditingController textController, required StreamController<List<dynamic>> controller}){
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(text, style: const TextStyle(fontSize: 20)),
-          const SizedBox(height: 15),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: textController,
-                  decoration: InputDecoration(
-                    hintText: hintText,
-                    border: const OutlineInputBorder()
-                  ),
-                  onSubmitted: (_)=> functionUpdateList(),
+  Widget buildListView(Meal meal, [bool changeToStep = false]){
+    return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: changeToStep ? meal.ingredientMeal.length : meal.stepMeal.length,
+      itemBuilder: (context, index) {
+        return Row(
+          children: [
+            Expanded(
+              child: ListTile(
+                title: Text(
+                  changeToStep 
+                  ? "${meal.ingredientMeal[index].name}"
+                  : "${meal.stepMeal[index].name}"
                 ),
               ),
-              IconButton(
-                onPressed: () => functionUpdateList(),
-                icon: const Icon(Icons.add)
-              )
-            ],
-          ),
-          buildListView([])
-        ],
-      ),
+            )
+          ],
+        );
+      }
     );
   }
 }

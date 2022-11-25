@@ -11,8 +11,8 @@ class Meal{
  String? cost;
  bool ingredientIsExpanded;
  bool stepIsExpanded;
- List<IngredientMeal>? ingredientMeal;
- List<StepMeal>? stepMeal;
+ List<IngredientMeal> ingredientMeal;
+ List<StepMeal> stepMeal;
  bool? favorite;
 
   Meal({
@@ -25,8 +25,8 @@ class Meal{
     this.duration,
     this.ingredientIsExpanded = false,
     this.stepIsExpanded = false,
-    this.ingredientMeal,
-    this.stepMeal,
+    this.ingredientMeal = const [],
+    this.stepMeal = const [],
     this.favorite
   });
 

@@ -13,8 +13,8 @@ class RegistrationController{
   TextEditingController textControllerNameMeal = TextEditingController();
   TextEditingController textControllerTimeMeal = TextEditingController();
 
-  TextEditingController textControllerNameIngredients = TextEditingController();
-  TextEditingController textControllerNameSteps = TextEditingController();
+  TextEditingController textControllerNameIngredient = TextEditingController();
+  TextEditingController textControllerNameStep = TextEditingController();
 
   BehaviorSubject<Meal> controllerMeal = BehaviorSubject<Meal>();
   
@@ -23,11 +23,10 @@ class RegistrationController{
   List<IngredientMeal> listIngredients = [];
   List<StepMeal> listSteps = [];
   List<String> listTitleExpansionList = ["Insira os ingredientes", "Insira os passos"];
-
-
-  final formKey = GlobalKey<FormState>();
-
   
+
+
+  final formKey= GlobalKey<FormState>();
 
 
   Future<void> initDb() async{
@@ -75,7 +74,18 @@ class RegistrationController{
       meal.imgUrl = image.path;
       controllerMeal.sink.add(meal);
     }
+  }
 
+  void insertListIngredients(Meal meal){
+    listIngredients.add(IngredientMeal(mealId: meal.id, name: textControllerNameIngredient.text));
+    meal.ingredientMeal = listIngredients;
+    controllerMeal.sink.add(meal);
+  }
+
+  void insertListStep(Meal meal){
+    listSteps.add(StepMeal(mealId: meal.id, name: textControllerNameStep.text));
+    meal.stepMeal = listSteps;
+    controllerMeal.sink.add(meal);
   }
 
   void insertCategory(Meal meal, String newTitle){
@@ -109,11 +119,7 @@ class RegistrationController{
   }
 
   void formVerification() async{
-    if(formKey.currentState!.validate()){
-      print("valido");
-    }else{
-      print("invalido");
-    }
+   formKey.currentState!.validate();
   }
 
   void printTables() async{
