@@ -118,8 +118,41 @@ class RegistrationController{
     return lastMeal.id!;
   }
 
-  void formVerification() async{
-   formKey.currentState!.validate();
+  void validationExpansionList(bool changeToStep, Meal meal){
+     formKey.currentState!.validate();
+
+     if(changeToStep){
+      if(textControllerNameIngredient.text.isNotEmpty){
+        insertListIngredients(meal);
+      }
+     }else{
+      if(textControllerNameStep.text.isNotEmpty){
+        insertListStep(meal);
+      }
+     }
+  }
+
+  String validationForm(Meal meal){
+    if(meal.imgUrl == null ||  meal.imgUrl!.isEmpty){
+      return "Adicione uma imagem";
+    }else if(textControllerNameMeal.text.isEmpty){
+      return "Adicione o nome da receita";
+    }else if(meal.category == null || meal.category!.isEmpty){
+      return "Escolha a categoria da receita";
+    }else if(textControllerTimeMeal.text.isEmpty){
+      return "Adicione o tempo da receita";
+    }else if(meal.complexity == null || meal.complexity!.isEmpty){
+      return "Escolha a dificuldade da receita";
+    }else if(meal.cost == null){
+      return "Escolha o custo da receita";
+    }else if(meal.ingredientMeal.isEmpty){
+      return "Insira os ingredientes da receita";
+    }else if(meal.stepMeal.isEmpty){
+      return "Insira os passos da receita";
+    }else {
+      insertMealDatabase();
+      return "Receita salva com sucesso!";
+    }
   }
 
   void printTables() async{

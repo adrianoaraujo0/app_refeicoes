@@ -1,7 +1,5 @@
-import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
-import 'package:app_refeicoes/models/ingredient_meal.dart';
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
@@ -31,50 +29,50 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.red),
-      body: StreamBuilder<Meal>(
-        stream: registrationController.controllerMeal.stream,
-        builder: (context, snapshot) {
-          if(snapshot.data != null){
-            // print("id: ${snapshot.data!.id}");
-            // print("img: ${snapshot.data!.imgUrl}");
-            // print("name: ${snapshot.data!.name}");
-            // print("category: ${snapshot.data!.category}");
-            // print("time: ${snapshot.data!.duration}");
-            // print("complexity: ${snapshot.data!.complexity}");
-            // print("cost: ${snapshot.data!.cost}");
-            // print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
-            // print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
-          return SingleChildScrollView(
-              child: Form(
-                key: registrationController.formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    addImage(meal: snapshot.data!),
-                    const SizedBox(height: 10),
-                    buildForm(snapshot.data),
-                    const SizedBox(height: 40),
-                   buildExpansioList("Insira os ingredientes", snapshot.data!, true),
-                   buildExpansioList("Insira os passos", snapshot.data!),
-                   Container(height: 100),
-                  ],
-                ),
+    return StreamBuilder<Meal>(
+      stream: registrationController.controllerMeal.stream,
+      builder: (context, snapshot) {
+          // print("id: ${snapshot.data!.id}");
+          // print("img: ${snapshot.data!.imgUrl}");
+          // print("name: ${snapshot.data!.name}");
+          // print("category: ${snapshot.data!.category}");
+          // print("time: ${snapshot.data!.duration}");
+          // print("complexity: ${snapshot.data!.complexity}");
+          // print("cost: ${snapshot.data!.cost}");
+          // print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
+          // print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
+        if(snapshot.data != null){
+          return Scaffold(
+            appBar: AppBar(backgroundColor: Colors.red),
+            body: SingleChildScrollView(
+            child: Form(
+              key: registrationController.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  addImage(meal: snapshot.data!),
+                  const SizedBox(height: 10),
+                  buildForm(snapshot.data),
+                  const SizedBox(height: 40),
+                buildExpansioList("Insira os ingredientes", snapshot.data!, true),
+                buildExpansioList("Insira os passos", snapshot.data!),
+                Container(height: 100),
+                ],
               ),
-            );
-          }
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            child: const Text("Salvar"),
+              onPressed: (){
+                    registrationController.formKey.currentState!.validate();
+                    buildSnackBarFromSaveButton(snapshot.data!);
+                    // registrationController.insertMealDatabase(category: category);
+              }
+            ),
+          );
+        }
         return Container();
-        }
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: const Text("Salvar"),
-        onPressed: (){
-
-          registrationController.formVerification();
-          // registrationController.insertMealDatabase(category: category);
-        }
-      ),
+      }
     );
   }
 
@@ -229,7 +227,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             );
           },
           body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 30),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -251,16 +249,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                       ),
                     IconButton(
                       onPressed: (){
-                        registrationController.formVerification();
-                        if(changeToStep){
-                          if(registrationController.textControllerNameIngredient.text.isNotEmpty){
-                            registrationController.insertListIngredients(meal);
-                          }
-                        }else{
-                          if(registrationController.textControllerNameStep.text.isNotEmpty){
-                            registrationController.insertListStep(meal);
-                          }
-                        }
+                        registrationController.validationExpansionList(changeToStep, meal);
                       }, 
                       icon: const Icon(Icons.add)
                     )
@@ -295,6 +284,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ],
         );
       }
+    );
+  }
+
+  ScaffoldFeatureController<SnackBar, SnackBarClosedReason> buildSnackBarFromSaveButton(Meal meal){
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(registrationController.validationForm(meal)))
     );
   }
 }
