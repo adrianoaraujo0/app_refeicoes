@@ -234,27 +234,25 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Row(
                   children: [
                      Expanded(
-                      child: TextFormField(
-                        validator: (value) {
-                          if(value!.isEmpty){
-                            return "Insira um valor";
-                          }
-                            return null;
-                        },
+                      child: TextField(
                         controller: changeToStep ? registrationController.textControllerNameIngredient : registrationController.textControllerNameStep,
                         decoration: const InputDecoration(
                           border :OutlineInputBorder()
-                          )
+                          ),
+                          onChanged: (value) {
+                              registrationController.controllerMeal.sink.add(meal);
+                          },
                         )
                       ),
-                    IconButton(
-                      onPressed: (){
-                        registrationController.validationExpansionList(changeToStep, meal);
-                      }, 
-                      icon: const Icon(Icons.add)
-                    )
+                      IconButton(
+                        onPressed: registrationController.textControllerNameIngredient.text.isNotEmpty 
+                        ? (){registrationController.validationExpansionList(changeToStep, meal);}
+                        : null, 
+                        icon: const Icon(Icons.add)
+                      )
                   ],
                 ),
+                const SizedBox(height: 15),
                 buildListView(meal, changeToStep)
               ],
             ),
@@ -278,6 +276,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   changeToStep 
                   ? "${meal.ingredientMeal[index].name}"
                   : "${meal.stepMeal[index].name}"
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: (){
+                    if(changeToStep){
+                      registrationController.removeItemListIngredients(meal, index);
+                    }else{
+                      registrationController.removeItemListStep(meal, index);
+                    }
+                  }
                 ),
               ),
             )

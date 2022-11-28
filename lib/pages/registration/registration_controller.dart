@@ -80,13 +80,29 @@ class RegistrationController{
     listIngredients.add(IngredientMeal(mealId: meal.id, name: textControllerNameIngredient.text));
     meal.ingredientMeal = listIngredients;
     controllerMeal.sink.add(meal);
+    textControllerNameIngredient.clear();
+  }
+
+  void removeItemListIngredients(Meal meal ,int index){
+    listIngredients.removeAt(index);
+    meal.ingredientMeal = listIngredients;
+    controllerMeal.sink.add(meal);
+    textControllerNameStep.clear();
   }
 
   void insertListStep(Meal meal){
     listSteps.add(StepMeal(mealId: meal.id, name: textControllerNameStep.text));
     meal.stepMeal = listSteps;
     controllerMeal.sink.add(meal);
+    textControllerNameStep.clear();
   }
+
+   void removeItemListStep(Meal meal, int index){
+    listSteps.removeAt(index);
+    meal.stepMeal = listSteps;
+    controllerMeal.sink.add(meal);
+  }
+
 
   void insertCategory(Meal meal, String newTitle){
     meal.category = newTitle;
@@ -146,11 +162,11 @@ class RegistrationController{
     }else if(meal.cost == null){
       return "Escolha o custo da receita";
     }else if(meal.ingredientMeal.isEmpty){
-      return "Insira os ingredientes da receita";
+      return "Insira pelo menos 1 ingrediente";
     }else if(meal.stepMeal.isEmpty){
-      return "Insira os passos da receita";
+      return "Insira pelo menos 1 passo";
     }else {
-      insertMealDatabase();
+      // insertMealDatabase();
       return "Receita salva com sucesso!";
     }
   }
