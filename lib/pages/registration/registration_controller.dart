@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer';
 import 'package:app_refeicoes/models/ingredient_meal.dart';
 import 'package:app_refeicoes/models/meal.dart';
+import 'package:app_refeicoes/models/text_field_expansion_list.dart';
 import 'package:app_refeicoes/pages/registration/registration_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,21 +14,17 @@ class RegistrationController{
   TextEditingController textControllerNameMeal = TextEditingController();
   TextEditingController textControllerTimeMeal = TextEditingController();
 
-  TextEditingController textControllerNameIngredient = TextEditingController();
-  TextEditingController textControllerNameStep = TextEditingController();
 
   BehaviorSubject<Meal> controllerMeal = BehaviorSubject<Meal>();
   
   RegistrationRepository registrationRepository = RegistrationRepository();
   
-  List<IngredientMeal> listIngredients = [];
-  List<StepMeal> listSteps = [];
-  List<String> listTitleExpansionList = ["Insira os ingredientes", "Insira os passos"];
-  
-
+  List<TextFieldExpansionList> textFieldExpansionList = [
+    TextFieldExpansionList(id: "Ingredientes", controller: TextEditingController()),
+    TextFieldExpansionList(id: "Passos", controller: TextEditingController()),
+  ];
 
   final formKey= GlobalKey<FormState>();
-
 
   Future<void> initDb() async{
     await registrationRepository.initDb();
@@ -38,29 +35,29 @@ class RegistrationController{
   }
 
   void initMeal(int id){
-    controllerMeal.sink.add(Meal(id: id));
+    controllerMeal.sink.add(Meal(id: id, ingredientMeal: [], stepMeal: []));
   }
 
-  void insertMealDatabase({String? category}) async{
+  void insertMealDatabase([Meal? meal]) async{
     registrationRepository.insertMeal(
-      name: null,
-      category: null,
-      complexity: null,
-      cost: null,
-      duration: null,
+      name: meal?.name ,
+      category: meal?.category,
+      complexity: meal?.complexity,
+      cost: meal?.cost,
+      duration: meal?.duration,
       favorite: false,
-      imgUrl: null
+      imgUrl: meal?.imgUrl
     );
   }
 
-  void insertIngredientsDatabase() async{
-    for(IngredientMeal ingredient in listIngredients){
+  void insertIngredientsDatabase(Meal meal) async{
+    for(IngredientMeal ingredient in meal.ingredientMeal){
         await registrationRepository.insertIngredients(ingredient.mealId!,ingredient.name);
     }
   }
 
-  void insertStepDatabase() async{
-    for(StepMeal step in listSteps){
+  void insertStepDatabase(Meal meal) async{
+    for(StepMeal step in meal.stepMeal){
       await registrationRepository.insertStep(step.mealId!, step.name!);
     }
   }
@@ -77,29 +74,25 @@ class RegistrationController{
   }
 
   void insertListIngredients(Meal meal){
-    listIngredients.add(IngredientMeal(mealId: meal.id, name: textControllerNameIngredient.text));
-    meal.ingredientMeal = listIngredients;
+    meal.ingredientMeal.add(IngredientMeal(mealId: meal.id, name: textFieldExpansionList[0].controller.text));
     controllerMeal.sink.add(meal);
-    textControllerNameIngredient.clear();
-  }
-
-  void removeItemListIngredients(Meal meal ,int index){
-    listIngredients.removeAt(index);
-    meal.ingredientMeal = listIngredients;
-    controllerMeal.sink.add(meal);
-    textControllerNameStep.clear();
+    textFieldExpansionList[0].controller.clear();
   }
 
   void insertListStep(Meal meal){
-    listSteps.add(StepMeal(mealId: meal.id, name: textControllerNameStep.text));
-    meal.stepMeal = listSteps;
+    meal.stepMeal.add(StepMeal(mealId: meal.id, name: textFieldExpansionList[1].controller.text));
     controllerMeal.sink.add(meal);
-    textControllerNameStep.clear();
+    textFieldExpansionList[1].controller.clear();
+  }
+
+  void removeItemListIngredients(Meal meal ,int index){
+    meal.ingredientMeal.removeAt(index);
+    controllerMeal.sink.add(meal);
+    print(meal.ingredientMeal.length);
   }
 
    void removeItemListStep(Meal meal, int index){
-    listSteps.removeAt(index);
-    meal.stepMeal = listSteps;
+    meal.stepMeal.removeAt(index);
     controllerMeal.sink.add(meal);
   }
 
@@ -134,19 +127,19 @@ class RegistrationController{
     return lastMeal.id!;
   }
 
-  void validationExpansionList(bool changeToStep, Meal meal){
-     formKey.currentState!.validate();
+  // void validationExpansionList(bool changeToStep, Meal meal){
+  //    formKey.currentState!.validate();
 
-     if(changeToStep){
-      if(textControllerNameIngredient.text.isNotEmpty){
-        insertListIngredients(meal);
-      }
-     }else{
-      if(textControllerNameStep.text.isNotEmpty){
-        insertListStep(meal);
-      }
-     }
-  }
+  //    if(changeToStep){
+  //     if(textControllerNameIngredient.text.isNotEmpty){
+  //       insertListIngredients(meal);
+  //     }
+  //    }else{
+  //     if(textControllerNameStep.text.isNotEmpty){
+  //       insertListStep(meal);
+  //     }
+  //    }
+  // }
 
   String validationForm(Meal meal){
     if(meal.imgUrl == null ||  meal.imgUrl!.isEmpty){
@@ -166,23 +159,23 @@ class RegistrationController{
     }else if(meal.stepMeal.isEmpty){
       return "Insira pelo menos 1 passo";
     }else {
-      // insertMealDatabase();
+      insertMealDatabase();
       return "Receita salva com sucesso!";
     }
   }
 
   void printTables() async{
-    
+    print("MEALS");
     for(var x in await registrationRepository.findAllMeals()){
       log(x.toString());
     }
 
-    for(var x in await registrationRepository.findAllIngredients()){
-      log(x.toString());
-    }
+    // for(var x in await registrationRepository.findAllIngredients()){
+    //   log(x.toString());
+    // }
 
-     for(var x in await registrationRepository.findAllSteps()){
-      log(x.toString());
-    }
+    //  for(var x in await registrationRepository.findAllSteps()){
+    //   log(x.toString());
+    // }
   }
 }

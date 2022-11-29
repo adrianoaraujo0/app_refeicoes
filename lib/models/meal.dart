@@ -25,8 +25,8 @@ class Meal{
     this.duration,
     this.ingredientIsExpanded = false,
     this.stepIsExpanded = false,
-    this.ingredientMeal = const [],
-    this.stepMeal = const [],
+    required this.ingredientMeal,
+    required this.stepMeal,
     this.favorite
   });
 
@@ -38,6 +38,8 @@ class Meal{
       complexity: map["complexity"],
       imgUrl: map["imgUrl"],
       duration: map["duration"],
+      ingredientMeal: [],
+      stepMeal: [],
       category: map["category"],
       favorite: map["favorite"] == 1 ? true : false,
     );

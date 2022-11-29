@@ -22,7 +22,8 @@ class RegistrationRepository{
       "duration" : duration,
       "category" : category,
       "favorite" : favorite != false ? 1 : 0
-    });
+    }
+    );
   }
 
   Future<void> insertIngredients(int mealId, String? name) async{

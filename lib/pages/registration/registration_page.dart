@@ -17,13 +17,15 @@ class RegistrationPage extends StatefulWidget {
 class _RegistrationPageState extends State<RegistrationPage> {
   RegistrationController registrationController = RegistrationController();
 
-  String? category;
-
   @override
   void initState() {
-    registrationController.initDb();
-    registrationController.initMeal(widget.id);
-    log("${widget.id}");
+    registrationController.initDb().then((value){
+      registrationController.initMeal(widget.id);
+    }).then((value){
+      registrationController.printTables();
+    });
+    
+    // log("${widget.id}");
     super.initState();
   }
 
@@ -32,41 +34,36 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return StreamBuilder<Meal>(
       stream: registrationController.controllerMeal.stream,
       builder: (context, snapshot) {
-          // print("id: ${snapshot.data!.id}");
-          // print("img: ${snapshot.data!.imgUrl}");
-          // print("name: ${snapshot.data!.name}");
-          // print("category: ${snapshot.data!.category}");
-          // print("time: ${snapshot.data!.duration}");
-          // print("complexity: ${snapshot.data!.complexity}");
-          // print("cost: ${snapshot.data!.cost}");
+          print("id: ${snapshot.data!.id}");
+          print("img: ${snapshot.data!.imgUrl}");
+          print("name: ${snapshot.data!.name}");
+          print("category: ${snapshot.data!.category}");
+          print("time: ${snapshot.data!.duration}");
+          print("complexity: ${snapshot.data!.complexity}");
+          print("cost: ${snapshot.data!.cost}");
           // print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
           // print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
         if(snapshot.data != null){
           return Scaffold(
             appBar: AppBar(backgroundColor: Colors.red),
             body: SingleChildScrollView(
-            child: Form(
-              key: registrationController.formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  addImage(meal: snapshot.data!),
-                  const SizedBox(height: 10),
-                  buildForm(snapshot.data),
-                  const SizedBox(height: 40),
-                buildExpansioList("Insira os ingredientes", snapshot.data!, true),
-                buildExpansioList("Insira os passos", snapshot.data!),
-                Container(height: 100),
-                ],
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                addImage(meal: snapshot.data!),
+                const SizedBox(height: 10),
+                buildForm(snapshot.data),
+                const SizedBox(height: 40),
+              buildExpansioList("Insira os ingredientes", snapshot.data!, "Ingredientes", registrationController.insertListIngredients , snapshot.data!.ingredientMeal.map((e) => e.name).toList(), registrationController.removeItemListIngredients, true),
+              buildExpansioList("Insira os passos", snapshot.data!,"Passos", registrationController.insertListStep, snapshot.data!.stepMeal.map((e) => e.name).toList(), registrationController.removeItemListStep),
+              Container(height: 100),
+              ],
             ),
           ),
           floatingActionButton: FloatingActionButton(
             child: const Text("Salvar"),
               onPressed: (){
-                    registrationController.formKey.currentState!.validate();
                     buildSnackBarFromSaveButton(snapshot.data!);
-                    // registrationController.insertMealDatabase(category: category);
               }
             ),
           );
@@ -108,14 +105,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-            TextFormField(
-              validator: (value) {
-                if(value!.isEmpty){
-                  return "Insira um valor";
-                }
-                return null;
-              },
-            controller: registrationController.textControllerNameMeal,
+            TextField(
+              controller: registrationController.textControllerNameMeal,
               decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
             ),
           const SizedBox(height: 10),
@@ -125,19 +116,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
           ),
           SizedBox(
             width: 100,
-            child: TextFormField(
-              validator: (value) {
-               if(value!.isEmpty){
-                return "Insira o tempo.";
-               }
-               else{
-                try{   
-                  int x = int.parse(value);
-                }catch(e){
-                  return "tempo inválido";
-                }
-               }
-              },
+            child: TextField(
               inputFormatters: [FilteringTextInputFormatter.deny (RegExp ("[0-9] +"))],
               controller: registrationController.textControllerTimeMeal,
               keyboardType: const TextInputType.numberWithOptions(),
@@ -206,8 +185,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-
-  Widget buildExpansioList(String title, Meal meal, [bool changeToStep = false]){
+  Widget buildExpansioList(String title, Meal meal, String validator, Function saveList, List<String?> items,  Function removeItem ,[bool changeToStep = false]){
     return ExpansionPanelList(
       expansionCallback: (panelIndex, isExpanded) {
         if(changeToStep){
@@ -233,27 +211,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
               children: [
                 Row(
                   children: [
-                     Expanded(
-                      child: TextField(
-                        controller: changeToStep ? registrationController.textControllerNameIngredient : registrationController.textControllerNameStep,
-                        decoration: const InputDecoration(
-                          border :OutlineInputBorder()
-                          ),
-                          onChanged: (value) {
-                              registrationController.controllerMeal.sink.add(meal);
-                          },
-                        )
-                      ),
-                      IconButton(
-                        onPressed: registrationController.textControllerNameIngredient.text.isNotEmpty 
-                        ? (){registrationController.validationExpansionList(changeToStep, meal);}
-                        : null, 
-                        icon: const Icon(Icons.add)
-                      )
+                     buildTextField(registrationController, changeToStep, meal, validator),
+                     buildIconButtonForm(validator, meal, saveList)
                   ],
                 ),
                 const SizedBox(height: 15),
-                buildListView(meal, changeToStep)
+                buildListView(meal, validator, items, removeItem)
               ],
             ),
           )
@@ -262,29 +225,46 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget buildListView(Meal meal, [bool changeToStep = false]){
+  Widget buildTextField(RegistrationController registrationController, bool changeToStep, Meal meal, String validator){
+    return Expanded(
+      child: TextField(
+        controller: registrationController.textFieldExpansionList.where((controller) => controller.id == validator).first.controller,
+        decoration: const InputDecoration(border :OutlineInputBorder()),
+          onChanged: (value) {
+              registrationController.controllerMeal.sink.add(meal);
+          },
+        ),
+    );
+  }
+
+  Widget buildIconButtonForm(String validator, Meal meal, Function saveList){
+    return IconButton(
+      onPressed: registrationController.textFieldExpansionList.where((controller) => controller.id == validator).first.controller.text.isNotEmpty 
+      ? (){
+        saveList(meal);
+      }
+      : null, 
+      icon: const Icon(Icons.add)
+    );
+  }
+
+  Widget buildListView(Meal meal, String validator, List<String?> items , Function removeItem){
     return ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: changeToStep ? meal.ingredientMeal.length : meal.stepMeal.length,
+      itemCount: items.length,
       itemBuilder: (context, index) {
         return Row(
           children: [
             Expanded(
               child: ListTile(
                 title: Text(
-                  changeToStep 
-                  ? "${meal.ingredientMeal[index].name}"
-                  : "${meal.stepMeal[index].name}"
+                  "${items[index]}"
                 ),
                 trailing: IconButton(
                   icon: const Icon(Icons.delete),
                   onPressed: (){
-                    if(changeToStep){
-                      registrationController.removeItemListIngredients(meal, index);
-                    }else{
-                      registrationController.removeItemListStep(meal, index);
-                    }
+                    removeItem(meal ,index);
                   }
                 ),
               ),
