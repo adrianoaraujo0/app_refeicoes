@@ -35,12 +35,12 @@ class _RegistrationPageState extends State<RegistrationPage> {
       stream: registrationController.controllerMeal.stream,
       builder: (context, snapshot) {
           print("id: ${snapshot.data!.id}");
-          print("img: ${snapshot.data!.imgUrl}");
-          print("name: ${snapshot.data!.name}");
-          print("category: ${snapshot.data!.category}");
-          print("time: ${snapshot.data!.duration}");
-          print("complexity: ${snapshot.data!.complexity}");
-          print("cost: ${snapshot.data!.cost}");
+          print("img: ${snapshot.data?.imgUrl}");
+          print("name: ${snapshot.data?.name}");
+          print("category: ${snapshot.data?.category}");
+          print("time: ${snapshot.data?.duration}");
+          print("complexity: ${snapshot.data?.complexity}");
+          print("cost: ${snapshot.data?.cost}");
           // print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
           // print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
         if(snapshot.data != null){
@@ -54,8 +54,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 const SizedBox(height: 10),
                 buildForm(snapshot.data),
                 const SizedBox(height: 40),
-              buildExpansioList("Insira os ingredientes", snapshot.data!, "Ingredientes", registrationController.insertListIngredients , snapshot.data!.ingredientMeal.map((e) => e.name).toList(), registrationController.removeItemListIngredients, true),
-              buildExpansioList("Insira os passos", snapshot.data!,"Passos", registrationController.insertListStep, snapshot.data!.stepMeal.map((e) => e.name).toList(), registrationController.removeItemListStep),
+              buildExpansioList("Insira os ingredientes", snapshot.data!, "Ingredientes", registrationController.insertItemListIngredients , snapshot.data!.ingredientMeal.map((e) => e.name).toList(), registrationController.removeItemListIngredients, true),
+              buildExpansioList("Insira os passos", snapshot.data!,"Passos", registrationController.insertItemListStep, snapshot.data!.stepMeal.map((e) => e.name).toList(), registrationController.removeItemListStep),
               Container(height: 100),
               ],
             ),
@@ -241,7 +241,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return IconButton(
       onPressed: registrationController.textFieldExpansionList.where((controller) => controller.id == validator).first.controller.text.isNotEmpty 
       ? (){
-        saveList(meal);
+        registrationController.validatorInsertList(validator, meal);
       }
       : null, 
       icon: const Icon(Icons.add)

@@ -73,16 +73,26 @@ class RegistrationController{
     }
   }
 
-  void insertListIngredients(Meal meal){
+  void insertItemListIngredients(Meal meal){
+    print("ING");
     meal.ingredientMeal.add(IngredientMeal(mealId: meal.id, name: textFieldExpansionList[0].controller.text));
     controllerMeal.sink.add(meal);
     textFieldExpansionList[0].controller.clear();
   }
 
-  void insertListStep(Meal meal){
+  void insertItemListStep(Meal meal){
+    print("passos");
     meal.stepMeal.add(StepMeal(mealId: meal.id, name: textFieldExpansionList[1].controller.text));
     controllerMeal.sink.add(meal);
     textFieldExpansionList[1].controller.clear();
+  }
+
+  void validatorInsertList(String validator, Meal meal){
+    if(validator == "Ingredientes"){
+      insertItemListIngredients(meal);
+    }else {
+      insertItemListStep(meal);
+    }
   }
 
   void removeItemListIngredients(Meal meal ,int index){
