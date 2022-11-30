@@ -26,6 +26,10 @@ class RegistrationRepository{
     );
   }
 
+  Future<void> removeMeal(int id) async{
+   await _database.rawDelete("DELETE FROM meal WHERE id = $id");
+  }
+
   Future<void> insertIngredients(int mealId, String? name) async{
     await _database.insert("ingredient", {"mealId" : mealId ,"name" : name});
   }

@@ -21,11 +21,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
   void initState() {
     registrationController.initDb().then((value){
       registrationController.initMeal(widget.id);
+    log("${widget.id}");
     }).then((value){
       registrationController.printTables();
     });
-    
-    // log("${widget.id}");
     super.initState();
   }
 
@@ -34,37 +33,44 @@ class _RegistrationPageState extends State<RegistrationPage> {
     return StreamBuilder<Meal>(
       stream: registrationController.controllerMeal.stream,
       builder: (context, snapshot) {
-          print("id: ${snapshot.data!.id}");
+        if(snapshot.data != null){
+          print("id: ${snapshot.data?.id}");
           print("img: ${snapshot.data?.imgUrl}");
           print("name: ${snapshot.data?.name}");
           print("category: ${snapshot.data?.category}");
           print("time: ${snapshot.data?.duration}");
           print("complexity: ${snapshot.data?.complexity}");
           print("cost: ${snapshot.data?.cost}");
-          // print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
-          // print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
-        if(snapshot.data != null){
-          return Scaffold(
-            appBar: AppBar(backgroundColor: Colors.red),
-            body: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                addImage(meal: snapshot.data!),
-                const SizedBox(height: 10),
-                buildForm(snapshot.data),
-                const SizedBox(height: 40),
-              buildExpansioList("Insira os ingredientes", snapshot.data!, "Ingredientes", registrationController.insertItemListIngredients , snapshot.data!.ingredientMeal.map((e) => e.name).toList(), registrationController.removeItemListIngredients, true),
-              buildExpansioList("Insira os passos", snapshot.data!,"Passos", registrationController.insertItemListStep, snapshot.data!.stepMeal.map((e) => e.name).toList(), registrationController.removeItemListStep),
-              Container(height: 100),
-              ],
+          print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
+          print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
+          return WillPopScope(
+            onWillPop: () async {
+              final bool? teste = await buildAlertDialog(context, snapshot.data!); 
+              return teste ?? false;
+            },
+
+            child: Scaffold(
+              appBar: AppBar(backgroundColor: Colors.red),
+              body: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  addImage(meal: snapshot.data!),
+                  const SizedBox(height: 10),
+                  buildForm(snapshot.data),
+                  const SizedBox(height: 40),
+                buildExpansioList("Insira os ingredientes", snapshot.data!, "Ingredientes", registrationController.insertItemListIngredients , snapshot.data!.ingredientMeal.map((e) => e.name).toList(), registrationController.removeItemListIngredients, true),
+                buildExpansioList("Insira os passos", snapshot.data!,"Passos", registrationController.insertItemListStep, snapshot.data!.stepMeal.map((e) => e.name).toList(), registrationController.removeItemListStep),
+                Container(height: 100),
+                ],
+              ),
             ),
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: const Text("Salvar"),
-              onPressed: (){
-                    buildSnackBarFromSaveButton(snapshot.data!);
-              }
+            floatingActionButton: FloatingActionButton(
+              child: const Text("Salvar"),
+                onPressed: (){
+                      buildSnackBarFromSaveButton(snapshot.data!);
+                }
+              ),
             ),
           );
         }
@@ -108,6 +114,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
             TextField(
               controller: registrationController.textControllerNameMeal,
               decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
+              onChanged: (value) {
+                meal!.name = value;
+              },
             ),
           const SizedBox(height: 10),
           buildDropDownButton(
@@ -121,6 +130,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               controller: registrationController.textControllerTimeMeal,
               keyboardType: const TextInputType.numberWithOptions(),
               decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
+              onChanged: (value) {
+                meal.duration = int.parse(value);
+              },
             )
           ),
           buildRadioButton(meal),
@@ -211,7 +223,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               children: [
                 Row(
                   children: [
-                     buildTextField(registrationController, changeToStep, meal, validator),
+                     buildTextField(meal, validator),
                      buildIconButtonForm(validator, meal, saveList)
                   ],
                 ),
@@ -225,7 +237,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
-  Widget buildTextField(RegistrationController registrationController, bool changeToStep, Meal meal, String validator){
+  Widget buildTextField(Meal meal, String validator){
     return Expanded(
       child: TextField(
         controller: registrationController.textFieldExpansionList.where((controller) => controller.id == validator).first.controller,
@@ -278,7 +290,33 @@ class _RegistrationPageState extends State<RegistrationPage> {
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> buildSnackBarFromSaveButton(Meal meal){
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(registrationController.validationForm(meal)))
+        content: Text(registrationController.validationForm(meal))
+      )
     );
   }
+
+  Future<bool?> buildAlertDialog(BuildContext context, Meal meal){
+    return showDialog(
+      context: context, 
+      builder:(context) {
+        return AlertDialog(
+          title: const Text("Deseja sair sem salvar a refeicão?"),
+          actions: [
+            TextButton(
+              onPressed: ()=> Navigator.pop(context, false), 
+              child: const Text("Cancelar")
+            ),
+            TextButton(
+              onPressed: (){
+                registrationController.removeMealDatabase(meal);
+                Navigator.pop(context, true);
+            }, 
+              child: const Text("Sair")
+            )
+          ],
+        );
+      },
+      );
+  }
+
 }

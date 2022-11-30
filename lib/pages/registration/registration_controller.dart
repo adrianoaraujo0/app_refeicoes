@@ -11,9 +11,11 @@ import '../../models/step_meal.dart';
 
 class RegistrationController{
 
+  bool validatorWillPopScope = false;
+  final formKey= GlobalKey<FormState>();
+
   TextEditingController textControllerNameMeal = TextEditingController();
   TextEditingController textControllerTimeMeal = TextEditingController();
-
 
   BehaviorSubject<Meal> controllerMeal = BehaviorSubject<Meal>();
   
@@ -24,7 +26,6 @@ class RegistrationController{
     TextFieldExpansionList(id: "Passos", controller: TextEditingController()),
   ];
 
-  final formKey= GlobalKey<FormState>();
 
   Future<void> initDb() async{
     await registrationRepository.initDb();
@@ -39,7 +40,7 @@ class RegistrationController{
   }
 
   void insertMealDatabase([Meal? meal]) async{
-    registrationRepository.insertMeal(
+    await registrationRepository.insertMeal(
       name: meal?.name ,
       category: meal?.category,
       complexity: meal?.complexity,
@@ -48,6 +49,15 @@ class RegistrationController{
       favorite: false,
       imgUrl: meal?.imgUrl
     );
+
+    if(meal != null){
+      insertIngredientsDatabase(meal);
+      insertStepDatabase(meal);
+    }
+  }
+
+  void removeMealDatabase(Meal meal) async{
+    await registrationRepository.removeMeal(meal.id!);
   }
 
   void insertIngredientsDatabase(Meal meal) async{
@@ -74,14 +84,12 @@ class RegistrationController{
   }
 
   void insertItemListIngredients(Meal meal){
-    print("ING");
     meal.ingredientMeal.add(IngredientMeal(mealId: meal.id, name: textFieldExpansionList[0].controller.text));
     controllerMeal.sink.add(meal);
     textFieldExpansionList[0].controller.clear();
   }
 
   void insertItemListStep(Meal meal){
-    print("passos");
     meal.stepMeal.add(StepMeal(mealId: meal.id, name: textFieldExpansionList[1].controller.text));
     controllerMeal.sink.add(meal);
     textFieldExpansionList[1].controller.clear();
@@ -169,7 +177,7 @@ class RegistrationController{
     }else if(meal.stepMeal.isEmpty){
       return "Insira pelo menos 1 passo";
     }else {
-      insertMealDatabase();
+      insertMealDatabase(meal);
       return "Receita salva com sucesso!";
     }
   }
@@ -180,12 +188,12 @@ class RegistrationController{
       log(x.toString());
     }
 
-    // for(var x in await registrationRepository.findAllIngredients()){
-    //   log(x.toString());
-    // }
+    for(var x in await registrationRepository.findAllIngredients()){
+      log(x.toString());
+    }
 
-    //  for(var x in await registrationRepository.findAllSteps()){
-    //   log(x.toString());
-    // }
+     for(var x in await registrationRepository.findAllSteps()){
+      log(x.toString());
+    }
   }
 }
