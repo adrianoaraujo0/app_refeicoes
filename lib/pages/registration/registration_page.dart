@@ -67,7 +67,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             floatingActionButton: FloatingActionButton(
               child: const Text("Salvar"),
-                onPressed: (){
+                onPressed: () {
                       buildSnackBarFromSaveButton(snapshot.data!);
                 }
               ),
@@ -290,7 +290,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
   ScaffoldFeatureController<SnackBar, SnackBarClosedReason> buildSnackBarFromSaveButton(Meal meal){
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(registrationController.validationForm(meal))
+        content: Text(registrationController.validationForm(meal, context)),
       )
     );
   }

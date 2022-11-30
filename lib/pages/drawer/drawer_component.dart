@@ -37,40 +37,35 @@ class _DrawerComponentState extends State<DrawerComponent> {
           const SizedBox(height: 20),
           InkWell(
             onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const HomePage())),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Icon(Icons.fastfood),
-                  SizedBox(width: 10),
-                  Text("Refeicões" , style: TextStyle(fontSize: 25))
-                ],
-              ),
-            ),
+            child: buildContainer(Icons.fastfood, "Refeicoes")
           ),
           const SizedBox(height: 30),
           InkWell(
-            onTap: ()async {
+            onTap: () async {
               registrationController.insertMealDatabase();
               await registrationController.idLastMeal().then((value) =>  
                 Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(id: value)))
               );
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Icon(Icons.add_circle_outline_outlined),
-                  SizedBox(width: 10),
-                  Text("Cadastre sua receita" , style: TextStyle(fontSize: 25))
-                ],
-              ),
-            ),
+            child: buildContainer(Icons.add_circle_outline_outlined, "Cadastre sua receita")
           ),
+          const SizedBox(height: 30),
+          buildContainer(Icons.create, "Minhas receitas")
+        ],
+      ),
+    );
+  }
+
+  Widget buildContainer(IconData icon, String name){
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children:  [
+          Icon(icon),
+          const SizedBox(width: 10),
+          Text( name , style: const TextStyle(fontSize: 25))
         ],
       ),
     );

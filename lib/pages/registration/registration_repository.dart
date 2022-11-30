@@ -48,7 +48,7 @@ class RegistrationRepository{
     List<Meal> x = await findAllMeals();
     return x.last;
   }
-
+  
   Future<List<IngredientMeal>> findAllIngredients() async{
     List<Map<String, dynamic>> ingredientMap = await _database.rawQuery("SELECT * FROM ingredient");
     return IngredientMeal.fromMapList(ingredientMap);

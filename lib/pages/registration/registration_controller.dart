@@ -51,8 +51,8 @@ class RegistrationController{
     );
 
     if(meal != null){
-      insertIngredientsDatabase(meal);
-      insertStepDatabase(meal);
+      await insertIngredientsDatabase(meal);
+      await insertStepDatabase(meal);
     }
   }
 
@@ -60,13 +60,13 @@ class RegistrationController{
     await registrationRepository.removeMeal(meal.id!);
   }
 
-  void insertIngredientsDatabase(Meal meal) async{
+  Future insertIngredientsDatabase(Meal meal) async{
     for(IngredientMeal ingredient in meal.ingredientMeal){
         await registrationRepository.insertIngredients(ingredient.mealId!,ingredient.name);
     }
   }
 
-  void insertStepDatabase(Meal meal) async{
+  Future insertStepDatabase(Meal meal) async{
     for(StepMeal step in meal.stepMeal){
       await registrationRepository.insertStep(step.mealId!, step.name!);
     }
@@ -145,21 +145,7 @@ class RegistrationController{
     return lastMeal.id!;
   }
 
-  // void validationExpansionList(bool changeToStep, Meal meal){
-  //    formKey.currentState!.validate();
-
-  //    if(changeToStep){
-  //     if(textControllerNameIngredient.text.isNotEmpty){
-  //       insertListIngredients(meal);
-  //     }
-  //    }else{
-  //     if(textControllerNameStep.text.isNotEmpty){
-  //       insertListStep(meal);
-  //     }
-  //    }
-  // }
-
-  String validationForm(Meal meal){
+  String validationForm(Meal meal, BuildContext context){
     if(meal.imgUrl == null ||  meal.imgUrl!.isEmpty){
       return "Adicione uma imagem";
     }else if(textControllerNameMeal.text.isEmpty){
@@ -178,6 +164,8 @@ class RegistrationController{
       return "Insira pelo menos 1 passo";
     }else {
       insertMealDatabase(meal);
+      Navigator.pop(context);
+      print("123");
       return "Receita salva com sucesso!";
     }
   }
