@@ -27,9 +27,8 @@ class DBProvider {
       cost TEXT,
       complexity TEXT,
       category TEXT,
-      duration INTEGER,
-      imgUrl TEXT,
-      favorite INTEGER
+      duration REAL,
+      imgUrl TEXT
     );
   ''';
 
@@ -37,8 +36,7 @@ class DBProvider {
     CREATE TABLE ingredient(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       mealId INTEGER,
-      name TEXT,
-      isExpanded INTEGER
+      name TEXT
     );
   ''';
 
@@ -46,8 +44,7 @@ class DBProvider {
     CREATE TABLE step(
       id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
       mealId INTEGER,
-      name TEXT,
-      isExpanded INTEGER
+      name TEXT
     );
   ''';
 }

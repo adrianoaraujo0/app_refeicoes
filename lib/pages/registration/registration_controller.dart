@@ -39,14 +39,25 @@ class RegistrationController{
     controllerMeal.sink.add(Meal(id: id, ingredientMeal: [], stepMeal: []));
   }
 
-  void insertMealDatabase([Meal? meal]) async{
+  void inicializetMealDatabase([Meal? meal]) async{
     await registrationRepository.insertMeal(
       name: meal?.name ,
       category: meal?.category,
       complexity: meal?.complexity,
       cost: meal?.cost,
       duration: meal?.duration,
-      favorite: false,
+      imgUrl: meal?.imgUrl
+    );
+  }
+
+  void insertMealDatabase([Meal? meal]) async{
+    await registrationRepository.updateMeal(
+      id: meal?.id,
+      name: meal?.name ,
+      category: meal?.category,
+      complexity: meal?.complexity,
+      cost: meal?.cost,
+      duration: meal?.duration,
       imgUrl: meal?.imgUrl
     );
 
@@ -55,6 +66,8 @@ class RegistrationController{
       await insertStepDatabase(meal);
     }
   }
+
+
 
   void removeMealDatabase(Meal meal) async{
     await registrationRepository.removeMeal(meal.id!);
@@ -165,7 +178,6 @@ class RegistrationController{
     }else {
       insertMealDatabase(meal);
       Navigator.pop(context);
-      print("123");
       return "Receita salva com sucesso!";
     }
   }

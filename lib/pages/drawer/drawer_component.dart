@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:app_refeicoes/pages/home_page.dart';
+import 'package:app_refeicoes/pages/list_my_meals/list_my_meals_page.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
 import 'package:flutter/material.dart';
 
@@ -42,7 +43,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
           const SizedBox(height: 30),
           InkWell(
             onTap: () async {
-              registrationController.insertMealDatabase();
+              registrationController.inicializetMealDatabase();
               await registrationController.idLastMeal().then((value) =>  
                 Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(id: value)))
               );
@@ -50,7 +51,10 @@ class _DrawerComponentState extends State<DrawerComponent> {
             child: buildContainer(Icons.add_circle_outline_outlined, "Cadastre sua receita")
           ),
           const SizedBox(height: 30),
-          buildContainer(Icons.create, "Minhas receitas")
+          InkWell(
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ListMyMealsPage())),
+            child: buildContainer(Icons.create, "Minhas refeicoes")
+          )
         ],
       ),
     );

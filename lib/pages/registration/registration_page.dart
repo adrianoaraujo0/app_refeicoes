@@ -48,7 +48,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
               final bool? teste = await buildAlertDialog(context, snapshot.data!); 
               return teste ?? false;
             },
-
             child: Scaffold(
               appBar: AppBar(backgroundColor: Colors.red),
               body: SingleChildScrollView(
@@ -68,7 +67,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
             floatingActionButton: FloatingActionButton(
               child: const Text("Salvar"),
                 onPressed: () {
-                      buildSnackBarFromSaveButton(snapshot.data!);
+                  buildSnackBarFromSaveButton(snapshot.data!);
                 }
               ),
             ),
@@ -131,7 +130,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
               keyboardType: const TextInputType.numberWithOptions(),
               decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
               onChanged: (value) {
-                meal.duration = int.parse(value);
+                meal.duration = double.parse(value);
               },
             )
           ),

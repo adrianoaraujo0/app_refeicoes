@@ -6,7 +6,7 @@ class Meal{
  String? name;
  String? category;
  String? imgUrl;
- int? duration;
+ double? duration;
  String? complexity;
  String? cost;
  bool ingredientIsExpanded;

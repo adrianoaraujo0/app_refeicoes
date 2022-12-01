@@ -36,7 +36,12 @@ class _ListMealPageState extends State<ListMealPage> {
               ),
             );
           }
-          return const Text("Não há nenhuma receita nesta categoria", style: TextStyle(fontSize: 30), textAlign: TextAlign.center);
+          return Column(
+            children: [
+              Image.asset("assets/images/chef2.png"),
+              const Text("Não há nenhuma receita nesta categoria", style: TextStyle(fontSize: 30), textAlign: TextAlign.center),
+            ],
+          );
         }
       ),
     );

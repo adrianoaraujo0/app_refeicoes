@@ -11,7 +11,7 @@ class RegistrationRepository{
     _database = await DBProvider.db.database;
   }
 
-  Future<void> insertMeal({String? name, String? cost,String? complexity,String? imgUrl, int? duration,String? category, bool? favorite}) async{
+  Future<void> insertMeal({String? name, String? cost,String? complexity,String? imgUrl, double? duration,String? category}) async{
     await _database.insert(
       "meal", 
     {
@@ -21,9 +21,12 @@ class RegistrationRepository{
       "imgUrl" : imgUrl,
       "duration" : duration,
       "category" : category,
-      "favorite" : favorite != false ? 1 : 0
     }
     );
+  }
+
+  Future<void> updateMeal({int? id, String? name, String? cost,String? complexity,String? imgUrl, double? duration,String? category}) async{
+    await _database.rawUpdate("UPDATE meal SET name = '$name', cost = '$cost', complexity = '$complexity', imgUrl = '$imgUrl', duration = $duration, category = '$category' WHERE id = $id");
   }
 
   Future<void> removeMeal(int id) async{
@@ -51,6 +54,8 @@ class RegistrationRepository{
   
   Future<List<IngredientMeal>> findAllIngredients() async{
     List<Map<String, dynamic>> ingredientMap = await _database.rawQuery("SELECT * FROM ingredient");
+    
+    // INSERT INTO Test(name, value, num) VALUES("some name", 1234, 456.789)'
     return IngredientMeal.fromMapList(ingredientMap);
   }
 
