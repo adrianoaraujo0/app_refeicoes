@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1017998007482",
+    "project_id": "app-refeicoes",
+    "storage_bucket": "app-refeicoes.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1017998007482:android:6056b7c9d55ef38f87f683",
+        "android_client_info": {
+          "package_name": "com.example.app_refeicoes"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1017998007482-gm2pgd7dietm67qhge7lba2bvg7maqmf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9BdSRwsUmPd_EnunCZF2HL3PDpxw2Mdg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1017998007482-gm2pgd7dietm67qhge7lba2bvg7maqmf.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1017998007482-6pni9b3miem8t78bfqn34qeputnq7nve.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.appRefeicoes"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -22,6 +22,7 @@ dependencies:
   #RXDART
   rxdart: ^0.27.7
 
+  firebase_core:
 dev_dependencies:
   flutter_test:
     sdk: flutter
