@@ -1,20 +1,18 @@
-import 'dart:io';
-
 import 'package:app_refeicoes/models/meal.dart';
-import 'package:app_refeicoes/pages/my_meal/my_meal_controller.dart';
+import 'package:app_refeicoes/pages/my_meals/my_meal_controller.dart';
 import 'package:flutter/material.dart';
 
-class MyMealPage extends StatefulWidget {
+class MyMealsPage extends StatefulWidget {
 
-  MyMealPage({required this.meal ,super.key});
+  const MyMealsPage({required this.meal ,super.key});
   final Meal meal;
 
   @override
-  State<MyMealPage> createState() => _MyMealPageState();
+  State<MyMealsPage> createState() => _MyMealsPageState();
 }
 
-class _MyMealPageState extends State<MyMealPage> {
-  MyMealController myMealController = MyMealController();
+class _MyMealsPageState extends State<MyMealsPage> {
+  MyMealsController myMealController = MyMealsController();
 
   @override
   void initState() {

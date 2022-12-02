@@ -1,9 +1,9 @@
-import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/list_meal/list_meal_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class ListMealPage extends StatefulWidget {
-  ListMealPage({required this.categoryName ,super.key});
+  const ListMealPage({required this.categoryName ,super.key});
 
   final String categoryName;
 
@@ -24,42 +24,56 @@ class _ListMealPageState extends State<ListMealPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.categoryName), centerTitle: true, backgroundColor: Colors.red),
-      body: StreamBuilder<List<Meal>>(
-        stream: listMealController.controllerListMeal.stream,
+      body: StreamBuilder(
+        stream: FirebaseFirestore.instance.collection("meals").snapshots(),
         builder: (context, snapshot) {
-          if(snapshot.data != null && snapshot.data!.isNotEmpty){
-            return Center(
-              child: Column(
-                children: [
-                  buildListView(snapshot.data!)
-                ],
-              ),
+          if(snapshot.data == null){
+            return const Center(
+              child: CircularProgressIndicator()
+            );
+          }else if(snapshot.data!.docs.isEmpty){
+            return Column(
+              children: [
+                Image.asset("assets/images/chef2.png"),
+                const Text("Não há nenhuma receita nesta categoria", style: TextStyle(fontSize: 30), textAlign: TextAlign.center),
+              ],
+            );
+          }else {
+            return Column(
+              children: [
+                buildListView(snapshot.data!.docs)
+              ],
             );
           }
-          return Column(
-            children: [
-              Image.asset("assets/images/chef2.png"),
-              const Text("Não há nenhuma receita nesta categoria", style: TextStyle(fontSize: 30), textAlign: TextAlign.center),
-            ],
-          );
         }
       ),
     );
   }
 
-  Widget buildListView(List<Meal> listMeals){
+  Widget buildListView(List<QueryDocumentSnapshot<Map<String, dynamic>>> listMeals){
     return ListView.builder(
       shrinkWrap: true,
       itemCount: listMeals.length,
       itemBuilder: (context, index) {
-        return buildListTile(listMeals, index);
+        return buildListTile(listMeals[index], index);
       },
     );
   }
 
-  Widget buildListTile(List<Meal> listMeals, int index){
-    return ListTile(
-        title: Text(listMeals[index].name!),
+  Widget buildListTile(QueryDocumentSnapshot<Map<String, dynamic>>  meal, int index){
+    return Card(
+      elevation: 5,
+      child: Column(
+        children: [
+          ListTile(
+              leading: Text("${index + 1}", style: const TextStyle(fontSize: 20)),
+              title: Text(meal["name"]),
+              subtitle:  Text(meal["category"]),
+              trailing: IconButton(icon: const Icon(Icons.favorite), onPressed: (){listMealController.validateMealCategory(meal["category"]);}),
+          ),
+          Image.network(meal["imgUrl"])
+        ],
+      ),
     );
   }
 }

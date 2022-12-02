@@ -1,8 +1,8 @@
 import 'package:app_refeicoes/models/meal.dart';
-import 'package:app_refeicoes/pages/my_meal/my_meal_repository.dart';
+import 'package:app_refeicoes/pages/my_meals/my_meal_repository.dart';
 import 'package:rxdart/subjects.dart';
 
-class MyMealController{
+class MyMealsController{
 
   BehaviorSubject<Meal> controllerMyMeal = BehaviorSubject();
 

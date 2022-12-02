@@ -1,5 +1,6 @@
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/list_meal/list_meal_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rxdart/subjects.dart';
 
 class ListMealController{
@@ -15,6 +16,12 @@ class ListMealController{
   Future<void> listCategories(String category) async{
     List<Meal> listMeal = await listMealRepository.findMealListByCategory(category);
     controllerListMeal.sink.add(listMeal);
+  }
+
+  void validateMealCategory(String category) async{
+      Future<QuerySnapshot<Map<String, dynamic>>> x = FirebaseFirestore.instance.collection("meals").get();
+      
+    
   }
 
 }

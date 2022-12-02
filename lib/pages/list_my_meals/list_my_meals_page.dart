@@ -1,10 +1,10 @@
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/list_my_meals/list_my_meals_controller.dart';
-import 'package:app_refeicoes/pages/my_meal/my_meal_page.dart';
+import 'package:app_refeicoes/pages/my_meals/my_meal_page.dart';
 import 'package:flutter/material.dart';
 
 class ListMyMealsPage extends StatefulWidget {
-  ListMyMealsPage({super.key});
+  const ListMyMealsPage({super.key});
 
   @override
   State<ListMyMealsPage> createState() => _ListMyMealsPageState();
@@ -36,7 +36,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMealPage(meal: snapshot.data![index]))),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMealsPage(meal: snapshot.data![index]))),
                         title: Text(snapshot.data![index].name!),
                         subtitle:  Text(snapshot.data![index].category!),
                         leading: Text("${index + 1}", style: const TextStyle(fontSize: 20), textAlign: TextAlign.center),
