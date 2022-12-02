@@ -19,7 +19,8 @@ class ListMealController{
   }
 
   void validateMealCategory(String category) async{
-      Future<QuerySnapshot<Map<String, dynamic>>> x = FirebaseFirestore.instance.collection("meals").get();
+      QuerySnapshot<Map<String, dynamic>> x = await FirebaseFirestore.instance.collection("meals").get();
+      print("${x.docs[0]["name"]}");
       
     
   }
