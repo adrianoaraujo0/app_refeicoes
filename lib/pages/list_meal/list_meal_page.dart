@@ -26,13 +26,13 @@ class _ListMealPageState extends State<ListMealPage> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.categoryName), centerTitle: true, backgroundColor: Colors.red),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection("meals").snapshots(),
+        stream: FirebaseFirestore.instance.collection("meals").where("category", isEqualTo: widget.categoryName).snapshots(),
         builder: (context, snapshot) {
           if(snapshot.data == null){
             return const Center(
               child: CircularProgressIndicator()
             );
-          }else if(snapshot.data!.docs.isEmpty || snapshot.data!.docs.map((e) => e["category"] != widget.categoryName).first){
+          }else if(snapshot.data!.docs.isEmpty){
             return Column(
               children: [
                 Image.asset("assets/images/chef2.png"),
