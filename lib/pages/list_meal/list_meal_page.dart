@@ -1,4 +1,5 @@
 import 'package:app_refeicoes/pages/list_meal/list_meal_controller.dart';
+import 'package:app_refeicoes/pages/meal/meal_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -31,7 +32,7 @@ class _ListMealPageState extends State<ListMealPage> {
             return const Center(
               child: CircularProgressIndicator()
             );
-          }else if(snapshot.data!.docs.isEmpty){
+          }else if(snapshot.data!.docs.isEmpty || snapshot.data!.docs.map((e) => e["category"] != widget.categoryName).first){
             return Column(
               children: [
                 Image.asset("assets/images/chef2.png"),
@@ -61,18 +62,23 @@ class _ListMealPageState extends State<ListMealPage> {
   }
 
   Widget buildListTile(QueryDocumentSnapshot<Map<String, dynamic>>  meal, int index){
-    return Card(
-      elevation: 5,
-      child: Column(
-        children: [
-          ListTile(
-              leading: Text("${index + 1}", style: const TextStyle(fontSize: 20)),
-              title: Text(meal["name"]),
-              subtitle:  Text(meal["category"]),
-              trailing: IconButton(icon: const Icon(Icons.favorite), onPressed: (){listMealController.validateMealCategory(meal["category"]);}),
-          ),
-          Image.network(meal["imgUrl"])
-        ],
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal.data())));
+      },
+      child: Card(
+        elevation: 5,
+        child: Column(
+          children: [
+            ListTile(
+                leading: Text("${index + 1}", style: const TextStyle(fontSize: 20)),
+                title: Text(meal["name"]),
+                subtitle:  Text(meal["category"]),
+                trailing: IconButton(icon: const Icon(Icons.favorite), onPressed: (){listMealController.validateMealCategory(meal["category"]);}),
+            ),
+            Image.network(meal["imgUrl"])
+          ],
+        ),
       ),
     );
   }

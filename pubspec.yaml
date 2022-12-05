@@ -23,7 +23,7 @@ dependencies:
   rxdart: ^0.27.7
 
   #FIREBASE
-  firebase_core:
+  firebase_core: ^2.3.0
   cloud_firestore: ^4.1.0
   
 dev_dependencies:

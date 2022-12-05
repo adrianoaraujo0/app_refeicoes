@@ -1,8 +1,12 @@
+import 'package:app_refeicoes/models/ingredient_meal.dart';
+import 'package:app_refeicoes/pages/meal/meal_controller.dart';
 import 'package:flutter/material.dart';
 
 class MealPage extends StatelessWidget {
 
-  const MealPage({super.key});
+  MealPage({required this.meal ,super.key});
+  MealController mealController = MealController();
+  final Map<String, dynamic>  meal;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,7 @@ class MealPage extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              // Image.network(meal!.imgUrl),
+              Image.network(meal["imgUrl"]),
               containerDetails(),
               const SizedBox(height: 30),
               const Divider(endIndent: 30, indent: 30),
@@ -37,7 +41,7 @@ class MealPage extends StatelessWidget {
                 ),
               ),
               const Divider(endIndent: 30, indent: 30),
-              listViewIngredients(),
+              listViewIngredients(meal["Ingredients"]),
               const SizedBox(height: 30),
               const Divider(endIndent: 30, indent: 30),
               SizedBox(
@@ -59,7 +63,7 @@ class MealPage extends StatelessWidget {
                 ),
               ),
               const Divider(endIndent: 30, indent: 30),
-              // listViewSteps()
+              listViewSteps(meal["Steps"])
             ]
           ),
         ),
@@ -77,27 +81,27 @@ class MealPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Text(
-          //   meal!.name,
-          //   style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w700, overflow: TextOverflow.fade)
-          // ),
+          Text(
+            meal["name"],
+            style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w500, overflow: TextOverflow.fade)
+          ),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Icon(Icons.access_time_rounded),
               const SizedBox(width: 5),
-              // Text("${meal!.duration}min"),
+              Text("${mealController.convertSecondsToMinutes(meal["duration"]).toStringAsPrecision(1)} min"),
               const SizedBox(width: 20),
 
               const Icon(Icons.monetization_on_outlined),
               const SizedBox(width: 5),
-              Text(""),
+              Text("${meal["cost"]}"),
               const SizedBox(width: 20),
               
               const Icon(Icons.food_bank),
               const SizedBox(width: 5),
-              Text("")
+              Text("${meal["complexity"]}"),
             ],
           )
         ],
@@ -105,11 +109,12 @@ class MealPage extends StatelessWidget {
     );
   }
 
-  Widget listViewIngredients(){
+  Widget listViewIngredients(List<dynamic> ingredientsMeal){
+    print(ingredientsMeal.length);
     return  ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: 0,
+      itemCount: ingredientsMeal.length,
       itemBuilder: (context, index) {
         return Container(
           padding: const EdgeInsets.all(10.0),
@@ -118,12 +123,12 @@ class MealPage extends StatelessWidget {
             children: [
               const Icon(Icons.arrow_right_sharp),
               const SizedBox(width: 10),
-              // Expanded(
-              //   child: Text( 
-              //     meal!.mealIngredients[index],
-              //     style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300)
-              //   ),
-              // ),
+              Expanded(
+                child: Text( 
+                  ingredientsMeal[index],
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300)
+                ),
+              ),
             ],
           ),
         );  
@@ -131,32 +136,32 @@ class MealPage extends StatelessWidget {
     );
   }
 
-  //  Widget listViewSteps(){
-  //   return  ListView.builder(
-  //     physics: const NeverScrollableScrollPhysics(),
-  //     shrinkWrap: true,
-  //     itemCount: meal!.mealSteps.length,
-  //     itemBuilder: (context, index) {
-  //       return Container(
-  //         padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-  //         child: Row(
-  //             children: [
-  //               Text("${index + 1}",
-  //               style: const TextStyle(fontSize: 30, color: Colors.grey, fontWeight: FontWeight.w100)),
-  //               const SizedBox(width: 15),
-  //               Expanded(child: Text(meal!.mealSteps[index]["step"], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
-  //               if(meal!.mealSteps[index]["seconds"] != null) 
-  //               IconButton(
-  //                 icon: Icon(Icons.access_time, size: 40, color: Colors.amber[300]),
-  //                 onPressed: (){
-  //                   Navigator.push(context, MaterialPageRoute(builder: (context) => StopwatchPage(seconds: meal!.mealSteps[index]["seconds"])));
-  //                 }
-  //               ),
-  //             ]
-  //           ),
-  //       );  
-  //     },
-  //   );
-  // }
+   Widget listViewSteps(List<dynamic> stepsMeal){
+    return  ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemCount: stepsMeal.length,
+      itemBuilder: (context, index) {
+        return Container(
+          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+          child: Row(
+              children: [
+                Text("${index + 1}",
+                style: const TextStyle(fontSize: 30, color: Colors.grey, fontWeight: FontWeight.w100)),
+                const SizedBox(width: 15),
+                Expanded(child: Text(stepsMeal[index], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
+                // if(meal!.mealSteps[index]["seconds"] != null) 
+                // IconButton(
+                //   icon: Icon(Icons.access_time, size: 40, color: Colors.amber[300]),
+                //   onPressed: (){
+                //     Navigator.push(context, MaterialPageRoute(builder: (context) => StopwatchPage(seconds: meal!.mealSteps[index]["seconds"])));
+                //   }
+                // ),
+              ]
+            ),
+        );  
+      },
+    );
+  }
 
 }
