@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/my_meals/my_meal_controller.dart';
 import 'package:flutter/material.dart';
@@ -37,13 +39,11 @@ class _MyMealsPageState extends State<MyMealsPage> {
                   Container(
                     height: 200,
                     width: double.maxFinite,
-                    child: Image.network(snapshot.data!.imgUrl!),
-                    /*decoration: BoxDecoration(
+                    decoration: BoxDecoration(
                       image: DecorationImage(
                         fit: BoxFit.fill,
                         image: FileImage(File(widget.meal.imgUrl!)))
                     ),
-                  ),*/
                   ),
                   containerDetails(),
                   const SizedBox(height: 30),

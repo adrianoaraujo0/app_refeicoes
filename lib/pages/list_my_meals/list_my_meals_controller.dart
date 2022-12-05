@@ -10,7 +10,6 @@ class ListMyMealController{
 
   Future<void> initListMyMealsPage() async{
     await listMyMealsRepository.initDb();
-    await listMyMealsRepository.fillDatabase();
     List<Meal> listMeal = await listMyMealsRepository.findAllListMeals();
    
     controllerMyListMeals.sink.add(listMeal);

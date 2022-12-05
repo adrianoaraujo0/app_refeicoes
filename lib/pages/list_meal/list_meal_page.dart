@@ -48,6 +48,8 @@ class _ListMealPageState extends State<ListMealPage> {
           }
         }
       ),
+
+      floatingActionButton: ElevatedButton(child: Text("Publicar"), onPressed: () { }),
     );
   }
 
