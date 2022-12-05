@@ -18,11 +18,8 @@ class ListMealController{
     controllerListMeal.sink.add(listMeal);
   }
 
-  void validateMealCategory(String category) async{
-      QuerySnapshot<Map<String, dynamic>> x = await FirebaseFirestore.instance.collection("meals").get();
-      print("${x.docs[0]["name"]}");
-      print("${category}");
-      
+  void changeFavorite(String id, bool favorite) async{
+    FirebaseFirestore.instance.collection("meals").doc(id).update({"favorite" : !favorite});
     
   }
 

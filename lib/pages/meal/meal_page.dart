@@ -1,7 +1,7 @@
-import 'package:app_refeicoes/models/ingredient_meal.dart';
 import 'package:app_refeicoes/pages/meal/meal_controller.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class MealPage extends StatelessWidget {
 
   MealPage({required this.meal ,super.key});
@@ -41,7 +41,7 @@ class MealPage extends StatelessWidget {
                 ),
               ),
               const Divider(endIndent: 30, indent: 30),
-              listViewIngredients(meal["Ingredients"]),
+              listViewIngredients(meal["ingredients"]),
               const SizedBox(height: 30),
               const Divider(endIndent: 30, indent: 30),
               SizedBox(
@@ -63,7 +63,7 @@ class MealPage extends StatelessWidget {
                 ),
               ),
               const Divider(endIndent: 30, indent: 30),
-              listViewSteps(meal["Steps"])
+              listViewSteps(meal["steps"])
             ]
           ),
         ),

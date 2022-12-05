@@ -63,18 +63,22 @@ class _ListMealPageState extends State<ListMealPage> {
 
   Widget buildListTile(QueryDocumentSnapshot<Map<String, dynamic>>  meal, int index){
     return InkWell(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal.data())));
-      },
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal.data()))),
       child: Card(
         elevation: 5,
         child: Column(
           children: [
             ListTile(
-                leading: Text("${index + 1}", style: const TextStyle(fontSize: 20)),
-                title: Text(meal["name"]),
-                subtitle:  Text(meal["category"]),
-                trailing: IconButton(icon: const Icon(Icons.favorite), onPressed: (){listMealController.validateMealCategory(meal["category"]);}),
+              leading: Text("${index + 1}", style: const TextStyle(fontSize: 20)),
+              title: Text(meal["name"]),
+              subtitle:  Text(meal["category"]),
+              trailing: IconButton(
+                icon:  Icon(
+                  Icons.favorite, 
+                  color: meal["favorite"] ? Colors.red : Colors.grey
+                ), 
+                onPressed: () => listMealController.changeFavorite(meal.id, meal["favorite"])
+              ),
             ),
             Image.network(meal["imgUrl"])
           ],
