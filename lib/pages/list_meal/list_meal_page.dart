@@ -48,8 +48,6 @@ class _ListMealPageState extends State<ListMealPage> {
           }
         }
       ),
-
-      floatingActionButton: ElevatedButton(child: Text("Publicar"), onPressed: () { }),
     );
   }
 
@@ -82,7 +80,11 @@ class _ListMealPageState extends State<ListMealPage> {
                 onPressed: () => listMealController.changeFavorite(meal.id, meal["favorite"])
               ),
             ),
-            Image.network(meal["imgUrl"])
+            Container(
+              height: 230,
+              width: double.maxFinite,
+              child: Image.network(meal["imgUrl"], fit: BoxFit.cover)
+            )
           ],
         ),
       ),

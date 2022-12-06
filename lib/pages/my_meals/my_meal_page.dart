@@ -22,7 +22,6 @@ class _MyMealsPageState extends State<MyMealsPage> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
 
@@ -98,6 +97,8 @@ class _MyMealsPageState extends State<MyMealsPage> {
           return const Center(child: CircularProgressIndicator());
         }
       ),
+      floatingActionButton: ElevatedButton(child: const Text("Publicar"), onPressed: () => myMealController.insertMealInFirebase(widget.meal, context)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 

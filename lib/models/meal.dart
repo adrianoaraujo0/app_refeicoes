@@ -30,6 +30,20 @@ class Meal{
     this.favorite
   });
 
+  Map<String, dynamic> toMap(Meal meal){
+    return {
+      "name": meal.name,
+      "cost" : meal.cost,
+      "complexity" : meal.complexity,
+      "imgUrl" : meal.imgUrl,
+      "duration" : meal.duration,
+      "ingrediets" : meal.ingredientMeal,
+      "steps" : meal.stepMeal,
+      "category" : meal.category,
+      "favorite" : meal.favorite
+    };
+  }
+
   factory Meal.fromMap(Map<String, dynamic> map) {
     return Meal(
       id: map["id"],

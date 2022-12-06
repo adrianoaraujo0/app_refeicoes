@@ -20,7 +20,8 @@ class ListMealController{
 
   void changeFavorite(String id, bool favorite) async{
     FirebaseFirestore.instance.collection("meals").doc(id).update({"favorite" : !favorite});
-    
   }
+
+
 
 }

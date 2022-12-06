@@ -71,8 +71,6 @@ class MealPage extends StatelessWidget {
     );
   }
 
-
-
    Widget containerDetails(){
     return Container(
       padding: const EdgeInsets.all(10),
