@@ -104,7 +104,7 @@ class HomePage extends StatelessWidget {
           itemCount: snapshot.data!.docs.length,
           itemBuilder: (context, index) {
             return InkWell(
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: snapshot.data!.docs[index].data()))),
+              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: snapshot.data!.docs[index]))),
               child: listTileFavorites(snapshot.data!.docs[index].data())
             );
           },

@@ -24,6 +24,7 @@ class _ListMealPageState extends State<ListMealPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       appBar: AppBar(title: Text(widget.categoryName), centerTitle: true, backgroundColor: Colors.red),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection("meals").where("category", isEqualTo: widget.categoryName).snapshots(),
@@ -40,10 +41,12 @@ class _ListMealPageState extends State<ListMealPage> {
               ],
             );
           }else {
-            return Column(
-              children: [
-                buildListView(snapshot.data!.docs)
-              ],
+            return SingleChildScrollView(
+              child: Column(
+                children: [
+                  buildListView(snapshot.data!.docs)
+                ],
+              ),
             );
           }
         }
@@ -53,6 +56,7 @@ class _ListMealPageState extends State<ListMealPage> {
 
   Widget buildListView(List<QueryDocumentSnapshot<Map<String, dynamic>>> listMeals){
     return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       itemCount: listMeals.length,
       itemBuilder: (context, index) {
@@ -62,30 +66,44 @@ class _ListMealPageState extends State<ListMealPage> {
   }
 
   Widget buildListTile(QueryDocumentSnapshot<Map<String, dynamic>>  meal, int index){
-    return InkWell(
-      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal.data()))),
-      child: Card(
-        elevation: 5,
-        child: Column(
-          children: [
-            ListTile(
-              leading: Text("${index + 1}", style: const TextStyle(fontSize: 20)),
-              title: Text(meal["name"]),
-              subtitle:  Text(meal["category"]),
-              trailing: IconButton(
-                icon:  Icon(
-                  Icons.favorite, 
-                  color: meal["favorite"] ? Colors.red : Colors.grey
-                ), 
-                onPressed: () => listMealController.changeFavorite(meal.id, meal["favorite"])
-              ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+      child: InkWell(
+        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MealPage(meal: meal))),
+        child: Card(
+          elevation: 5,
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                SizedBox(
+                height: 300,
+                width: double.maxFinite,
+                child: Image.network(meal["imgUrl"], fit: BoxFit.fill)
+                ),
+                SizedBox(
+                  height: 100,
+                  width: double.maxFinite,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Flexible(child: Divider(color: Colors.grey, endIndent: 20, indent: 20)), 
+                          Text(meal["category"], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w100)),
+                          const Flexible(child: Divider(color: Colors.grey,  endIndent: 20, indent: 20)), 
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Text(meal["name"], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300)),
+                    ],
+                  ),
+                ),
+             
+              ],
             ),
-            Container(
-              height: 230,
-              width: double.maxFinite,
-              child: Image.network(meal["imgUrl"], fit: BoxFit.cover)
-            )
-          ],
+          ),
         ),
       ),
     );

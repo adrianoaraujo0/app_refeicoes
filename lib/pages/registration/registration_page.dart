@@ -34,15 +34,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
       stream: registrationController.controllerMeal.stream,
       builder: (context, snapshot) {
         if(snapshot.data != null){
-          print("id: ${snapshot.data?.id}");
-          print("img: ${snapshot.data?.imgUrl}");
-          print("name: ${snapshot.data?.name}");
-          print("category: ${snapshot.data?.category}");
-          print("time: ${snapshot.data?.duration}");
-          print("complexity: ${snapshot.data?.complexity}");
-          print("cost: ${snapshot.data?.cost}");
-          print("isExpandedIngredient: ${snapshot.data!.ingredientIsExpanded}");
-          print("isExpandedStep: ${snapshot.data!.stepIsExpanded}");
           return WillPopScope(
             onWillPop: () async {
               final bool? teste = await buildAlertDialog(context, snapshot.data!); 
@@ -105,37 +96,50 @@ class _RegistrationPageState extends State<RegistrationPage> {
   }
 
   Widget buildForm(Meal? meal){
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-            TextField(
-              controller: registrationController.textControllerNameMeal,
-              decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
-              onChanged: (value) {
-                meal!.name = value;
-              },
+    return Form(
+      key: registrationController.formKey,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+              TextFormField(
+                validator: (value) {
+                  if(value!.isEmpty){
+                    return "Preencha o campo";
+                  }
+                },
+                controller: registrationController.textControllerNameMeal,
+                decoration: const InputDecoration(hintText: "ex: Ovo mexido", labelText: "Nome da receita"),
+                onChanged: (value) {
+                  meal!.name = value;
+                },
+              ),
+            const SizedBox(height: 10),
+            buildDropDownButton(
+              items: ["Italiano" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
+              meal: meal!
             ),
-          const SizedBox(height: 10),
-          buildDropDownButton(
-            items: ["Italiano" , "Rápido & Fácil", "Hamburgers", "Alemã", "Leve & Saudável", "Exótica", "Café da Manhã","Asiática","Francesa", "Verão"],
-            meal: meal!
-          ),
-          SizedBox(
-            width: 100,
-            child: TextField(
-              inputFormatters: [FilteringTextInputFormatter.deny (RegExp ("[0-9] +"))],
-              controller: registrationController.textControllerTimeMeal,
-              keyboardType: const TextInputType.numberWithOptions(),
-              decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
-              onChanged: (value) {
-                meal.duration = double.parse(value);
-              },
-            )
-          ),
-          buildRadioButton(meal),
-        ],
+            SizedBox(
+              width: 120,
+              child: TextFormField(
+                validator: (value) {
+                  if(value!.isEmpty){
+                    return "Preencha o campo";
+                  }
+                },
+                inputFormatters: [FilteringTextInputFormatter.deny (RegExp ("[0-9] +"))],
+                controller: registrationController.textControllerTimeMeal,
+                keyboardType: const TextInputType.numberWithOptions(),
+                decoration: const InputDecoration(labelText: "Tempo", hintText: "ex: 12 min"),
+                onChanged: (value) {
+                  meal.duration = double.parse(value);
+                },
+              )
+            ),
+            buildRadioButton(meal),
+          ],
+        ),
       ),
     );
   }

@@ -37,8 +37,8 @@ class MyMealsController{
         "duration" : meal.duration,
         "complexity" : meal.complexity,
         "cost" : meal.cost,
-        "ingredients" : {"teste": 1},
-        "steps" : {"B": 1, "A": 2, "C": 3},
+        "ingredients" : meal.ingredientMeal.map((e) => e.name).toList(),
+        "steps" : meal.stepMeal.map((e) => e.name).toList(),
         "favorite" : false
       },
     ).whenComplete(() {

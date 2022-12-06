@@ -1,4 +1,5 @@
 import 'package:app_refeicoes/pages/meal/meal_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
@@ -6,19 +7,42 @@ class MealPage extends StatelessWidget {
 
   MealPage({required this.meal ,super.key});
   MealController mealController = MealController();
-  final Map<String, dynamic>  meal;
+  final QueryDocumentSnapshot<Map<String, dynamic>>  meal;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
+        actions: [
+          StreamBuilder(
+            stream: FirebaseFirestore.instance.collection("meals").doc(meal.id).snapshots(),
+            builder: (context, snapshot) {
+              if(snapshot.data == null){
+                return Container();
+              }
+              return IconButton(
+                icon:  Icon(
+                  Icons.favorite, 
+                  color: snapshot.data!.data()!["favorite"] ? Colors.yellow[400] : Colors.white
+                ), 
+                onPressed: () {
+                    mealController.changeFavorite(snapshot.data!.id, snapshot.data!.data()!["favorite"]);
+                  }
+              );
+            }
+          ),
+        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              Image.network(meal["imgUrl"]),
+              Container(
+                height: 230,
+                width: double.maxFinite,
+                child: Image.network(meal["imgUrl"], fit: BoxFit.cover)
+              ),
               containerDetails(),
               const SizedBox(height: 30),
               const Divider(endIndent: 30, indent: 30),
@@ -89,7 +113,7 @@ class MealPage extends StatelessWidget {
             children: [
               const Icon(Icons.access_time_rounded),
               const SizedBox(width: 5),
-              Text("${mealController.convertSecondsToMinutes(meal["duration"]).toStringAsPrecision(1)} min"),
+              Text("${mealController.convertSecondsToMinutes(meal["duration"]).toStringAsFixed(1)} min"),
               const SizedBox(width: 20),
 
               const Icon(Icons.monetization_on_outlined),
@@ -108,7 +132,6 @@ class MealPage extends StatelessWidget {
   }
 
   Widget listViewIngredients(List<dynamic> ingredientsMeal){
-    print(ingredientsMeal.length);
     return  ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,

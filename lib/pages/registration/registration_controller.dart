@@ -12,7 +12,7 @@ import '../../models/step_meal.dart';
 class RegistrationController{
 
   bool validatorWillPopScope = false;
-  final formKey= GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   TextEditingController textControllerNameMeal = TextEditingController();
   TextEditingController textControllerTimeMeal = TextEditingController();
@@ -160,21 +160,53 @@ class RegistrationController{
 
   String validationForm(Meal meal, BuildContext context){
     if(meal.imgUrl == null ||  meal.imgUrl!.isEmpty){
+
+      formKey.currentState!.validate();
+
       return "Adicione uma imagem";
+
     }else if(textControllerNameMeal.text.isEmpty){
+      
+      formKey.currentState!.validate();
+      
       return "Adicione o nome da receita";
+
     }else if(meal.category == null || meal.category!.isEmpty){
+      
+      formKey.currentState!.validate();
+      
       return "Escolha a categoria da receita";
+
     }else if(textControllerTimeMeal.text.isEmpty){
+      
+      formKey.currentState!.validate();
+      
       return "Adicione o tempo da receita";
+
     }else if(meal.complexity == null || meal.complexity!.isEmpty){
+      
+      formKey.currentState!.validate();
+      
       return "Escolha a dificuldade da receita";
+
     }else if(meal.cost == null){
+      
+      formKey.currentState!.validate();
+      
       return "Escolha o custo da receita";
+
     }else if(meal.ingredientMeal.isEmpty){
+      
+      formKey.currentState!.validate();
+      
       return "Insira pelo menos 1 ingrediente";
+
     }else if(meal.stepMeal.isEmpty){
+      
+      formKey.currentState!.validate();
+      
       return "Insira pelo menos 1 passo";
+
     }else {
       insertMealDatabase(meal);
       Navigator.pop(context);
