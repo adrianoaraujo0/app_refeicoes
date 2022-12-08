@@ -5,14 +5,11 @@ import 'package:rxdart/subjects.dart';
 class ListMyMealController{
 
   ListMyMealsRepository listMyMealsRepository = ListMyMealsRepository();
-
   BehaviorSubject<List<Meal>> controllerMyListMeals = BehaviorSubject<List<Meal>>();
 
   Future<void> initListMyMealsPage() async{
-    await listMyMealsRepository.initDb();
-    List<Meal> listMeal = await listMyMealsRepository.findAllListMeals();
-   
-    controllerMyListMeals.sink.add(listMeal);
+    listMyMealsRepository.initDb();
+    controllerMyListMeals.sink.add(listMyMealsRepository.findAllMeals());
   }
 
 }

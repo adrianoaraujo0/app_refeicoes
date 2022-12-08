@@ -1,0 +1,72 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:2382562587788776160",
+      "lastPropertyId": "9:1102850525236999998",
+      "name": "Meal",
+      "properties": [
+        {
+          "id": "1:7891461701966184915",
+          "name": "id",
+          "type": 6,
+          "flags": 1
+        },
+        {
+          "id": "2:6612564544770996922",
+          "name": "name",
+          "type": 9
+        },
+        {
+          "id": "3:3550204881584618073",
+          "name": "category",
+          "type": 9
+        },
+        {
+          "id": "4:6049653863618670403",
+          "name": "imgUrl",
+          "type": 9
+        },
+        {
+          "id": "5:4049340004862986670",
+          "name": "duration",
+          "type": 8
+        },
+        {
+          "id": "6:4894290288299806061",
+          "name": "complexity",
+          "type": 9
+        },
+        {
+          "id": "7:2512483469090143742",
+          "name": "cost",
+          "type": 9
+        },
+        {
+          "id": "8:1714705358935569490",
+          "name": "ingredientMeal",
+          "type": 30
+        },
+        {
+          "id": "9:1102850525236999998",
+          "name": "stepMeal",
+          "type": 30
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:2382562587788776160",
+  "lastIndexId": "0:0",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

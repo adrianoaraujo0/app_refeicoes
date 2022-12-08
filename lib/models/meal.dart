@@ -1,70 +1,23 @@
-import 'package:app_refeicoes/models/ingredient_meal.dart';
-import 'package:app_refeicoes/models/step_meal.dart';
+import 'package:objectbox/objectbox.dart';
 
+@Entity()
 class Meal{
- final int? id;
+
+ int? id;
  String? name;
  String? category;
  String? imgUrl;
  double? duration;
  String? complexity;
  String? cost;
- bool ingredientIsExpanded;
- bool stepIsExpanded;
- List<IngredientMeal> ingredientMeal;
- List<StepMeal> stepMeal;
- bool? favorite;
+ List<String>? ingredientMeal;
+ List<String>? stepMeal;
 
-  Meal({
-    this.id,
-    this.name,
-    this.cost,
-    this.complexity,
-    this.imgUrl,
-    this.category,
-    this.duration,
-    this.ingredientIsExpanded = false,
-    this.stepIsExpanded = false,
-    required this.ingredientMeal,
-    required this.stepMeal,
-    this.favorite
-  });
+ @Transient()
+ bool ingredientIsExpanded = false;
+ @Transient()
+ bool stepIsExpanded = false;
 
-  Map<String, dynamic> toMap(Meal meal){
-    return {
-      "name": meal.name,
-      "cost" : meal.cost,
-      "complexity" : meal.complexity,
-      "imgUrl" : meal.imgUrl,
-      "duration" : meal.duration,
-      "ingrediets" : meal.ingredientMeal,
-      "steps" : meal.stepMeal,
-      "category" : meal.category,
-      "favorite" : meal.favorite
-    };
-  }
+ Meal({this.name, this.category, this.imgUrl, this.duration, this.complexity, this.cost, this.ingredientMeal, this.stepMeal});
 
-  factory Meal.fromMap(Map<String, dynamic> map) {
-    return Meal(
-      id: map["id"],
-      name: map["name"],
-      cost: map["cost"],
-      complexity: map["complexity"],
-      imgUrl: map["imgUrl"],
-      duration: map["duration"],
-      ingredientMeal: [],
-      stepMeal: [],
-      category: map["category"],
-      favorite: map["favorite"] == 1 ? true : false,
-    );
-  }
-
-  static fromMapList(List<Map<String, dynamic>> meals){
-    return meals.map((e) => Meal.fromMap(e)).toList();
-  }
-
-   @override
-     String toString() {
-    return "id: $id, name: $name cost: $cost. complexity: $complexity, image: $imgUrl, duration: $duration, category: $category, favorite: $favorite";
-  }
 }

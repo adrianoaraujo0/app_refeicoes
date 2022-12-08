@@ -14,8 +14,8 @@ class ListMealController{
   }
 
   Future<void> listCategories(String category) async{
-    List<Meal> listMeal = await listMealRepository.findMealListByCategory(category);
-    controllerListMeal.sink.add(listMeal);
+    // List<Meal> listMeal = await listMealRepository.findMealListByCategory(category);
+    // controllerListMeal.sink.add(listMeal);
   }
 
   void changeFavorite(String id, bool favorite) async{

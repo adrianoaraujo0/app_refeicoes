@@ -142,7 +142,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
     return  ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: widget.meal.ingredientMeal.length,
+      itemCount: widget.meal.ingredientMeal!.length,
       itemBuilder: (context, index) {
         return Container(
           padding: const EdgeInsets.all(10.0),
@@ -153,7 +153,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text( 
-                  widget.meal.ingredientMeal[index].name!,
+                  widget.meal.ingredientMeal![index],
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300)
                 ),
               ),
@@ -168,7 +168,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
     return  ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: meal.stepMeal.length,
+      itemCount: meal.stepMeal!.length,
       itemBuilder: (context, index) {
         return Container(
           padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
@@ -177,7 +177,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
                 Text("${index + 1}",
                 style: const TextStyle(fontSize: 30, color: Colors.grey, fontWeight: FontWeight.w100)),
                 const SizedBox(width: 15),
-                Expanded(child: Text(widget.meal.stepMeal[index].name!, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
+                Expanded(child: Text(widget.meal.stepMeal![index], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
                 // if(meal.stepMeal[index]!= null) 
                 // IconButton(
                 //   icon: Icon(Icons.access_time, size: 40, color: Colors.amber[300]),

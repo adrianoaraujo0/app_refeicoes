@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:developer';
-import 'package:app_refeicoes/models/ingredient_meal.dart';
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/models/text_field_expansion_list.dart';
 import 'package:app_refeicoes/pages/registration/registration_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rxdart/subjects.dart';
-import '../../models/step_meal.dart';
 
 class RegistrationController{
 
@@ -26,63 +23,20 @@ class RegistrationController{
     TextFieldExpansionList(id: "Passos", controller: TextEditingController()),
   ];
 
-
-  Future<void> initDb() async{
-    await registrationRepository.initDb();
-  }
-
   void updateForm(Meal meal){
     controllerMeal.sink.add(meal);
   }
 
-  void initMeal(int id){
-    controllerMeal.sink.add(Meal(id: id, ingredientMeal: [], stepMeal: []));
-  }
-
-  void inicializetMealDatabase([Meal? meal]) async{
-    await registrationRepository.insertMeal(
-      name: meal?.name ,
-      category: meal?.category,
-      complexity: meal?.complexity,
-      cost: meal?.cost,
-      duration: meal?.duration,
-      imgUrl: meal?.imgUrl
-    );
+  Future<void> initMeal() async{
+    registrationRepository.initDb();
+    controllerMeal.sink.add(Meal(ingredientMeal: [], stepMeal: []));
   }
 
   void insertMealDatabase([Meal? meal]) async{
-    await registrationRepository.updateMeal(
-      id: meal?.id,
-      name: meal?.name ,
-      category: meal?.category,
-      complexity: meal?.complexity,
-      cost: meal?.cost,
-      duration: meal?.duration,
-      imgUrl: meal?.imgUrl
-    );
-
-    if(meal != null){
-      await insertIngredientsDatabase(meal);
-      await insertStepDatabase(meal);
-    }
+    registrationRepository.insertMeal(meal!.name!, meal.category!, meal.imgUrl!, meal.duration!, meal.complexity!, meal.cost!, meal.stepMeal!, meal.ingredientMeal!);
   }
-
-
 
   void removeMealDatabase(Meal meal) async{
-    await registrationRepository.removeMeal(meal.id!);
-  }
-
-  Future insertIngredientsDatabase(Meal meal) async{
-    for(IngredientMeal ingredient in meal.ingredientMeal){
-        await registrationRepository.insertIngredients(ingredient.mealId!,ingredient.name);
-    }
-  }
-
-  Future insertStepDatabase(Meal meal) async{
-    for(StepMeal step in meal.stepMeal){
-      await registrationRepository.insertStep(step.mealId!, step.name!);
-    }
   }
 
   Future<void> takePhotoFromGallery(Meal meal) async{
@@ -97,14 +51,14 @@ class RegistrationController{
   }
 
   void insertItemListIngredients(Meal meal){
-    meal.ingredientMeal.add(IngredientMeal(mealId: meal.id, name: textFieldExpansionList[0].controller.text));
-    controllerMeal.sink.add(meal);
+    meal.ingredientMeal!.add(textFieldExpansionList[0].controller.text);
+    controllerMeal.add(meal);
     textFieldExpansionList[0].controller.clear();
   }
 
   void insertItemListStep(Meal meal){
-    meal.stepMeal.add(StepMeal(mealId: meal.id, name: textFieldExpansionList[1].controller.text));
-    controllerMeal.sink.add(meal);
+    meal.stepMeal!.add(textFieldExpansionList[1].controller.text);
+    controllerMeal.add(meal);
     textFieldExpansionList[1].controller.clear();
   }
 
@@ -117,14 +71,13 @@ class RegistrationController{
   }
 
   void removeItemListIngredients(Meal meal ,int index){
-    meal.ingredientMeal.removeAt(index);
+    meal.ingredientMeal!.removeAt(index);
     controllerMeal.sink.add(meal);
-    print(meal.ingredientMeal.length);
   }
 
    void removeItemListStep(Meal meal, int index){
-    meal.stepMeal.removeAt(index);
-    controllerMeal.sink.add(meal);
+    meal.stepMeal!.removeAt(index);
+    controllerMeal.add(meal);
   }
 
 
@@ -153,10 +106,6 @@ class RegistrationController{
     controllerMeal.sink.add(meal);
   }
 
-  Future<int> idLastMeal() async{
-    Meal lastMeal =  await registrationRepository.findLastMeal();
-    return lastMeal.id!;
-  }
 
   String validationForm(Meal meal, BuildContext context){
     if(meal.imgUrl == null ||  meal.imgUrl!.isEmpty){
@@ -195,37 +144,25 @@ class RegistrationController{
       
       return "Escolha o custo da receita";
 
-    }else if(meal.ingredientMeal.isEmpty){
+    }else if(meal.ingredientMeal!.isEmpty){
       
       formKey.currentState!.validate();
       
       return "Insira pelo menos 1 ingrediente";
 
-    }else if(meal.stepMeal.isEmpty){
+    }else if(meal.stepMeal!.isEmpty){
       
       formKey.currentState!.validate();
       
       return "Insira pelo menos 1 passo";
 
-    }else {
+    }
+    else {
       insertMealDatabase(meal);
+      print(meal.name);
       Navigator.pop(context);
       return "Receita salva com sucesso!";
     }
-  }
-
-  void printTables() async{
-    print("MEALS");
-    for(var x in await registrationRepository.findAllMeals()){
-      log(x.toString());
-    }
-
-    for(var x in await registrationRepository.findAllIngredients()){
-      log(x.toString());
-    }
-
-     for(var x in await registrationRepository.findAllSteps()){
-      log(x.toString());
-    }
+    
   }
 }

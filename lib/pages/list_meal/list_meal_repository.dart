@@ -13,14 +13,14 @@ class ListMealRepository{
     _database = await DBProvider.db.database;
   }
 
-  Future<List<Meal>> findAllMeals() async {
-    List<Map<String, dynamic>> mealMap = await _database.rawQuery("SELECT * FROM meal");
+  // Future<List<Meal>> findAllMeals() async {
+  //   List<Map<String, dynamic>> mealMap = await _database.rawQuery("SELECT * FROM meal");
     
-    return Meal.fromMapList(mealMap);
-  }
+  //   return Meal.fromMapList(mealMap);
+  // }
 
-   Future<List<Meal>> findMealListByCategory(String category) async{
-    List<Map<String, dynamic>> listMeal = await _database.rawQuery("SELECT * FROM meal WHERE category = '$category'");
-    return  Meal.fromMapList(listMeal);
-  }
+  //  Future<List<Meal>> findMealListByCategory(String category) async{
+  //   List<Map<String, dynamic>> listMeal = await _database.rawQuery("SELECT * FROM meal WHERE category = '$category'");
+  //   return  Meal.fromMapList(listMeal);
+  // }
 }

@@ -20,7 +20,6 @@ class _DrawerComponentState extends State<DrawerComponent> {
 
   @override
   void initState() {
-    registrationController.initDb();
     super.initState();
   }
 
@@ -43,9 +42,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
           const SizedBox(height: 30),
           InkWell(
             onTap: () async {
-              registrationController.inicializetMealDatabase();
-              await registrationController.idLastMeal().then((value) =>  
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage(id: value)))
+                Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage())
               );
             },
             child: buildContainer(Icons.add_circle_outline_outlined, "Cadastre sua receita")

@@ -14,9 +14,6 @@ class MyMealsController{
   MyMealRepository myMealRepository = MyMealRepository();
 
   Future<void> initMyMealPage(Meal meal) async{
-    await myMealRepository.initDb();
-    meal.ingredientMeal = await myMealRepository.findAllIngredients(meal.id!);
-    meal.stepMeal = await myMealRepository.findAllSteps(meal.id!);
     controllerMyMeal.sink.add(meal);
   }
 
@@ -37,8 +34,8 @@ class MyMealsController{
         "duration" : meal.duration,
         "complexity" : meal.complexity,
         "cost" : meal.cost,
-        "ingredients" : meal.ingredientMeal.map((e) => e.name).toList(),
-        "steps" : meal.stepMeal.map((e) => e.name).toList(),
+        "ingredients" : meal.ingredientMeal,
+        "steps" : meal.stepMeal,
         "favorite" : false
       },
     ).whenComplete(() {

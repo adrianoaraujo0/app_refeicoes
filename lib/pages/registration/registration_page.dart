@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/registration/registration_controller.dart';
@@ -6,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class RegistrationPage extends StatefulWidget {
-  const RegistrationPage({required this.id ,super.key});
+  const RegistrationPage({super.key});
 
-  final int id;
 
   @override
   State<RegistrationPage> createState() => _RegistrationPageState();
@@ -19,12 +17,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
   @override
   void initState() {
-    registrationController.initDb().then((value){
-      registrationController.initMeal(widget.id);
-    log("${widget.id}");
-    }).then((value){
-      registrationController.printTables();
-    });
+    registrationController.initMeal();
+    
     super.initState();
   }
 
@@ -49,8 +43,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   const SizedBox(height: 10),
                   buildForm(snapshot.data),
                   const SizedBox(height: 40),
-                buildExpansioList("Insira os ingredientes", snapshot.data!, "Ingredientes", registrationController.insertItemListIngredients , snapshot.data!.ingredientMeal.map((e) => e.name).toList(), registrationController.removeItemListIngredients, true),
-                buildExpansioList("Insira os passos", snapshot.data!,"Passos", registrationController.insertItemListStep, snapshot.data!.stepMeal.map((e) => e.name).toList(), registrationController.removeItemListStep),
+                buildExpansioList("Insira os ingredientes", snapshot.data!, "Ingredientes", registrationController.insertItemListIngredients, snapshot.data!.ingredientMeal!, registrationController.removeItemListIngredients, true),
+                buildExpansioList("Insira os passos", snapshot.data!,"Passos", registrationController.insertItemListStep, snapshot.data!.stepMeal!, registrationController.removeItemListStep),
                 Container(height: 100),
                 ],
               ),

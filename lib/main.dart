@@ -1,9 +1,11 @@
+import 'package:app_refeicoes/database/objectbox_database.dart';
 import 'package:app_refeicoes/pages/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  ObjectBox.create();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
