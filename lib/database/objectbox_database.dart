@@ -7,9 +7,14 @@ class ObjectBox {
   // The Store of this app.
   static late final Store store;
 
+  static late final Box<Meal>  mealId;
+  
+
   static Future<void> create() async {
     final docsDir = await getApplicationDocumentsDirectory();
     // Future<Store> openStore() {...} is defined in the generated objectbox.g.dart
     store = await openStore(directory: path.join(docsDir.path, "obx-example"));
+
+    mealId = store.box<Meal>();
   }
 }
