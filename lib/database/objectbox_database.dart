@@ -17,4 +17,5 @@ class ObjectBox {
 
     mealId = store.box<Meal>();
   }
+  
 }

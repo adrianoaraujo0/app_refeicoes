@@ -8,7 +8,6 @@ class ListMyMealController{
   BehaviorSubject<List<Meal>> controllerMyListMeals = BehaviorSubject<List<Meal>>();
 
   Future<void> initListMyMealsPage() async{
-    listMyMealsRepository.initDb();
     controllerMyListMeals.sink.add(listMyMealsRepository.findAllMeals());
   }
 

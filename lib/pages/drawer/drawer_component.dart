@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import '../registration/registration_page.dart';
 
 class DrawerComponent extends StatefulWidget {
-  DrawerComponent({super.key});
+  const DrawerComponent({super.key});
 
   @override
   State<DrawerComponent> createState() => _DrawerComponentState();
@@ -42,14 +42,14 @@ class _DrawerComponentState extends State<DrawerComponent> {
           const SizedBox(height: 30),
           InkWell(
             onTap: () async {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => RegistrationPage())
+                Navigator.push(context, MaterialPageRoute(builder: (context) => const RegistrationPage())
               );
             },
             child: buildContainer(Icons.add_circle_outline_outlined, "Cadastre sua receita")
           ),
           const SizedBox(height: 30),
           InkWell(
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  ListMyMealsPage())),
+            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => const ListMyMealsPage())),
             child: buildContainer(Icons.create, "Minhas refeicoes")
           )
         ],

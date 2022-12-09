@@ -305,7 +305,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
             ),
             TextButton(
               onPressed: (){
-                registrationController.removeMealDatabase(meal);
                 Navigator.pop(context, true);
             }, 
               child: const Text("Sair")

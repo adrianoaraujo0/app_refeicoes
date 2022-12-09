@@ -28,7 +28,6 @@ class RegistrationController{
   }
 
   Future<void> initMeal() async{
-    registrationRepository.initDb();
     controllerMeal.sink.add(Meal(ingredientMeal: [], stepMeal: []));
   }
 
@@ -36,8 +35,6 @@ class RegistrationController{
     registrationRepository.insertMeal(meal!.name!, meal.category!, meal.imgUrl!, meal.duration!, meal.complexity!, meal.cost!, meal.stepMeal!, meal.ingredientMeal!);
   }
 
-  void removeMealDatabase(Meal meal) async{
-  }
 
   Future<void> takePhotoFromGallery(Meal meal) async{
 
@@ -159,7 +156,6 @@ class RegistrationController{
     }
     else {
       insertMealDatabase(meal);
-      print(meal.name);
       Navigator.pop(context);
       return "Receita salva com sucesso!";
     }

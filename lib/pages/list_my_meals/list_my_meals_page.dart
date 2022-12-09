@@ -36,7 +36,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMealsPage(meal: snapshot.data![index]))),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMealsPage(id: snapshot.data![index].id!,))),
                         title: Text(snapshot.data![index].name!),
                         subtitle:  Text(snapshot.data![index].category!),
                         leading: Text("${index + 1}", style: const TextStyle(fontSize: 20), textAlign: TextAlign.center),

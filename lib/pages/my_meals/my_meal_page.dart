@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class MyMealsPage extends StatefulWidget {
 
-  const MyMealsPage({required this.meal ,super.key});
-  final Meal meal;
+  const MyMealsPage({required this.id, super.key});
+  final int id;
 
   @override
   State<MyMealsPage> createState() => _MyMealsPageState();
@@ -18,91 +18,105 @@ class _MyMealsPageState extends State<MyMealsPage> {
 
   @override
   void initState() {
-    myMealController.initMyMealPage(widget.meal);
+    myMealController.initMyMealPage(widget.id);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
 
-  return Scaffold(
-      appBar: AppBar( backgroundColor: Colors.red),
-      body: StreamBuilder<Meal>(
-        stream: myMealController.controllerMyMeal.stream,
-        builder: (context, snapshot) {
-          if(snapshot.data != null){
-          return SafeArea(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    height: 200,
-                    width: double.maxFinite,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        fit: BoxFit.fill,
-                        image: FileImage(File(widget.meal.imgUrl!)))
-                    ),
-                  ),
-                  containerDetails(),
-                  const SizedBox(height: 30),
-                  const Divider(endIndent: 30, indent: 30),
-                  SizedBox(
-                    height: 25,
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "INGREDIENTES",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.red
-                          )
+  return StreamBuilder<Meal>(
+    stream: myMealController.controllerMyMeal.stream,
+    builder: (context, snapshotMeal) {
+      if(snapshotMeal.data != null){
+        return Scaffold(
+            appBar: AppBar( backgroundColor: Colors.red),
+            body: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 200,
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: FileImage(File(snapshotMeal.data!.imgUrl!)))
+                          ),
                         ),
-                        SizedBox(width: 5),
-                        Icon(Icons.fastfood_rounded),
-                      ],
-                    ),
-                  ),
-                  const Divider(endIndent: 30, indent: 30),
-                  listViewIngredients(snapshot.data!),
-                  const SizedBox(height: 30),
-                  const Divider(endIndent: 30, indent: 30),
-                  SizedBox(
-                    height: 25,
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        Text(
-                          "PASSOS",
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.red
-                          )
+                        containerDetails(snapshotMeal.data!),
+                        const SizedBox(height: 30),
+                        const Divider(endIndent: 30, indent: 30),
+                        SizedBox(
+                          height: 25,
+                          width: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Text(
+                                "INGREDIENTES",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.red
+                                )
+                              ),
+                              SizedBox(width: 5),
+                              Icon(Icons.fastfood_rounded),
+                            ],
+                          ),
                         ),
-                        SizedBox(width: 5),
-                        Icon(Icons.fastfood_rounded),
-                      ],
+                        const Divider(endIndent: 30, indent: 30),
+                        listViewIngredients(snapshotMeal.data!),
+                        const SizedBox(height: 30),
+                        const Divider(endIndent: 30, indent: 30),
+                        SizedBox(
+                          height: 25,
+                          width: double.infinity,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: const [
+                              Text(
+                                "PASSOS",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.red
+                                )
+                              ),
+                              SizedBox(width: 5),
+                              Icon(Icons.fastfood_rounded),
+                            ],
+                          ),
+                        ),
+                        const Divider(endIndent: 30, indent: 30),
+                        listViewSteps(snapshotMeal.data!)
+                      ]
                     ),
                   ),
-                  const Divider(endIndent: 30, indent: 30),
-                  listViewSteps(snapshot.data!)
-                ]
-              ),
+                ),
+            floatingActionButton: StreamBuilder<bool>(
+              stream: myMealController.controllerFloatingActionButton.stream,
+              initialData: true,
+              builder: (context, snapshot) {
+                if(snapshot.data == true){
+                  return ElevatedButton(
+                    child: const Text("Publicar"),
+                    onPressed: () => myMealController.insertMealInFirebase(snapshotMeal.data!, context)
+                  );
+                }else{
+                  return const CircularProgressIndicator();
+                }
+              }
             ),
+            floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
           );
-          }
-          return const Center(child: CircularProgressIndicator());
+        }else{
+          return Container();
         }
-      ),
-      floatingActionButton: ElevatedButton(child: const Text("Publicar"), onPressed: () => myMealController.insertMealInFirebase(widget.meal, context)),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      }
     );
   }
 
-   Widget containerDetails(){
+   Widget containerDetails(Meal meal){
     return Container(
       padding: const EdgeInsets.all(10),
       height: 120,
@@ -111,7 +125,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            widget.meal.name!,
+            meal.name!,
             style: const TextStyle(fontSize: 25, fontWeight: FontWeight.w700, overflow: TextOverflow.fade)
           ),
           const SizedBox(height: 12),
@@ -120,17 +134,17 @@ class _MyMealsPageState extends State<MyMealsPage> {
             children: [
               const Icon(Icons.access_time_rounded),
               const SizedBox(width: 5),
-              Text("${widget.meal.duration}min"),
+              Text("${meal.duration}min"),
               const SizedBox(width: 20),
 
               const Icon(Icons.monetization_on_outlined),
               const SizedBox(width: 5),
-              Text("${widget.meal.cost}"),
+              Text("${meal.cost}"),
               const SizedBox(width: 20),
               
               const Icon(Icons.food_bank),
               const SizedBox(width: 5),
-              Text("${widget.meal.complexity}"),
+              Text("${meal.complexity}"),
             ],
           )
         ],
@@ -142,7 +156,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
     return  ListView.builder(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      itemCount: widget.meal.ingredientMeal!.length,
+      itemCount: meal.ingredientMeal!.length,
       itemBuilder: (context, index) {
         return Container(
           padding: const EdgeInsets.all(10.0),
@@ -153,7 +167,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
               const SizedBox(width: 10),
               Expanded(
                 child: Text( 
-                  widget.meal.ingredientMeal![index],
+                  meal.ingredientMeal![index],
                   style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300)
                 ),
               ),
@@ -177,7 +191,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
                 Text("${index + 1}",
                 style: const TextStyle(fontSize: 30, color: Colors.grey, fontWeight: FontWeight.w100)),
                 const SizedBox(width: 15),
-                Expanded(child: Text(widget.meal.stepMeal![index], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
+                Expanded(child: Text(meal.stepMeal![index], style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w300, overflow: TextOverflow.clip))),
                 // if(meal.stepMeal[index]!= null) 
                 // IconButton(
                 //   icon: Icon(Icons.access_time, size: 40, color: Colors.amber[300]),
