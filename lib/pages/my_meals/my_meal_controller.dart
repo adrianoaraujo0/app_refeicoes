@@ -20,13 +20,13 @@ class MyMealsController{
     controllerMyMeal.sink.add(meal);
   }
 
-  void insertMealInFirebase(Meal meal, BuildContext context) async{
+  void insertMealInFirebase(Meal meal, BuildContext context, ConnectionState state) async{
   
       // controllerFloatingActionButton.sink.add(false);
 
    
       // UploadTask uploadTask;
-      print(ConnectionState.active);
+      print(state);
       print("123");
       // FirebaseStorage.instance.ref(meal.id.toString()).putFile(File(meal.imgUrl!));
         
@@ -71,6 +71,13 @@ class MyMealsController{
         const SnackBar(content: Text("Erro ao salvar. Verifique sua conexão."))
       );
     }
+
+  double convertSecondsToMinutes(dynamic seconds){
+    if(seconds >= 60){
+      return seconds / 60;
+    }
+    return seconds.toDouble();
+  }
 
 }
 

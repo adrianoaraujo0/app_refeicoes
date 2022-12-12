@@ -7,6 +7,10 @@ class ListMealController{
 
   ListMealRepository listMealRepository = ListMealRepository();
   BehaviorSubject<List<Meal>> controllerListMeal = BehaviorSubject<List<Meal>>();
+  BehaviorSubject<Map<String, bool>> controllerCheckBox = BehaviorSubject<Map<String, bool>>();
+  BehaviorSubject<List<QueryDocumentSnapshot<Map<String, dynamic>>>> controllerListView = BehaviorSubject<List<QueryDocumentSnapshot<Map<String, dynamic>>>> ();
+
+  List<Map<String, dynamic>> listFilter = [];
 
   Future<void> initPage(String nameCategory) async{
     await listMealRepository.initDb();
@@ -22,6 +26,10 @@ class ListMealController{
     FirebaseFirestore.instance.collection("meals").doc(id).update({"favorite" : !favorite});
   }
 
+  void filterListMeal(String cost){
+    listFilter.where((element) => element.entries.elementAt(3).value == cost).toList();
+  }
+  
 
 
 }

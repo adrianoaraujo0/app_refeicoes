@@ -111,6 +111,7 @@ class MealPage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
+
               const Icon(Icons.access_time_rounded),
               const SizedBox(width: 5),
               Text("${mealController.convertSecondsToMinutes(meal["duration"]).toStringAsFixed(1)} min"),
@@ -124,6 +125,7 @@ class MealPage extends StatelessWidget {
               const Icon(Icons.food_bank),
               const SizedBox(width: 5),
               Text("${meal["complexity"]}"),
+
             ],
           )
         ],

@@ -100,7 +100,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
                 if(snapshot.data == true){
                   return ElevatedButton(
                     child: const Text("Publicar"),
-                    onPressed: () => myMealController.insertMealInFirebase(snapshotMeal.data!, context)
+                    onPressed: () => myMealController.insertMealInFirebase(snapshotMeal.data!,  context , snapshotMeal.connectionState)
                   );
                 }else{
                   return const CircularProgressIndicator();
@@ -134,7 +134,7 @@ class _MyMealsPageState extends State<MyMealsPage> {
             children: [
               const Icon(Icons.access_time_rounded),
               const SizedBox(width: 5),
-              Text("${meal.duration}min"),
+              Text("${myMealController.convertSecondsToMinutes(meal.duration)}min"),
               const SizedBox(width: 20),
 
               const Icon(Icons.monetization_on_outlined),
