@@ -40,6 +40,8 @@ dev_dependencies:
   build_runner: ^2.0.0
   objectbox_generator: any
 
+  line_awesome_flutter: ^2.0.0
+
   flutter_lints: ^2.0.0
 
 objectbox:
