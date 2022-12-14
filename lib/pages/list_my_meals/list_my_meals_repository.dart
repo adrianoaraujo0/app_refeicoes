@@ -9,4 +9,11 @@ class ListMyMealsRepository{
    return ObjectBox.mealId.getAll();
   }
 
+
+  // List<Meal> findAllMeals(){
+  //  return ObjectBox.mealId.getAll().
+  // }
+
+
+
 }

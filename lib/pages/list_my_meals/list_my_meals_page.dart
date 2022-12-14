@@ -114,12 +114,12 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
         const SizedBox(width: 70),
         StreamBuilder<IconButtonController>(
           stream: listMyMealController.controllerIconButton.stream,
-          initialData: IconButtonController(name: name, isAsc: false),
+          initialData: IconButtonController(),
           builder: (context, snapshot) {
             return Row(
               children: [
-                buildIconButton(snapshot.data!.name!, false, snapshot.data!.isAsc),
-                buildIconButton(snapshot.data!.name!, true, snapshot.data!.isAsc)
+                buildIconButton(name, snapshot.data!.name, false, snapshot.data!.isAsc),
+                buildIconButton(name, snapshot.data!.name, true, snapshot.data!.isAsc)
               ]
             );
           }
@@ -161,15 +161,15 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         TextButton(onPressed: () => Navigator.pop(context), child: const Text("Voltar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400))),
-        TextButton(onPressed: (() => Navigator.pop), child: const Text("Aplicar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)))
+        TextButton(onPressed: () => Navigator.pop, child: const Text("Aplicar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)))
       ],
     );
   }
 
-  Widget buildIconButton(String name, bool valueButton, bool? isAsc){
+  Widget buildIconButton(String name, String? nameAsc , bool valueButton, bool? isAsc){
     return IconButton(
       onPressed: () {
-        if(valueButton == isAsc){
+        if(valueButton == isAsc && name == nameAsc){
           listMyMealController.controllerIconButton.sink.add(IconButtonController(name: name, isAsc: null));
         }else{
           listMyMealController.controllerIconButton.sink.add(IconButtonController(name: name, isAsc: valueButton));
@@ -180,7 +180,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
         ? LineAwesomeIcons.sort_alphabetical_up
         : LineAwesomeIcons.sort_alphabetical_down
       ),  
-        color: valueButton == isAsc
+        color: valueButton == isAsc && name == nameAsc
         ? Colors.black
         : Colors.grey
     );
