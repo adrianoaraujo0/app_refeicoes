@@ -1,3 +1,4 @@
+import 'package:app_refeicoes/models/checkbox_controller.dart';
 import 'package:app_refeicoes/models/icon_button_controller.dart';
 import 'package:app_refeicoes/models/meal.dart';
 import 'package:app_refeicoes/pages/list_my_meals/list_my_meals_controller.dart';
@@ -128,28 +129,38 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
   }
 
   Widget buildFilters(String name, List<String> values){
-    return Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
+    return StreamBuilder<CheckboxController>(
+      stream: listMyMealController.controllerCheckbox.stream,
+      initialData: CheckboxController(),
+      builder: (context, snapshot) {
+        return Column(
           children: [
-            Text("$name:", style: const TextStyle(fontSize: 19)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text("$name:", style: const TextStyle(fontSize: 19)),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: values.map((name) {
+                return buildCheckBox(name, snapshot.data);
+              }).toList()
+            ),
           ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: values.map((e) {
-            return buildCheckBox(e);
-          }).toList()
-        ),
-      ],
+        );
+      }
     );
   }
 
-  Widget buildCheckBox(String name){
+  Widget buildCheckBox(String name, CheckboxController? controller){
     return Row(
       children: [
-        const Checkbox(value: false, onChanged: null, shape: CircleBorder()),
+        Checkbox(
+          value: controller!.name == name ? true : false,
+          onChanged: (value) => listMyMealController.controllerCheckbox.sink.add(CheckboxController(name: name, value: value!)) ,
+          shape: const CircleBorder()
+        ),
         Text(name)
       ],
     );
