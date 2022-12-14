@@ -33,7 +33,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
         actions: [
           IconButton(onPressed: ()=> showDialog(context: context, builder: (context) => buildDialog()), icon: const Icon(Icons.more_vert))
         ],
-        ),
+      ),
       body: StreamBuilder<List<Meal>>(
           stream: listMyMealController.controllerMyListMeals.stream,
           builder: (context, snapshot) {
@@ -41,7 +41,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
               return Column(
                 children: [
                   ListView.builder(
-                    itemCount: snapshot.data!.length ,
+                    itemCount: snapshot.data!.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return ListTile(
@@ -84,17 +84,16 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
                 const Divider(),
                 const Text("Ordenar por:", style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 15),
-                buildOrders("Custo"),
-                buildOrders("Dificuldade"),
-                buildOrders("Tempo"),
+                buildOrders("Alfabeto"),
+                // buildOrders("Dificuldade"),
+                // buildOrders("Tempo"),
                 const SizedBox(height: 15),
                 const Text("Filtrar por:", style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 15),
                 buildFilters("Custo", ["Barato", "Razoável", "Caro"]),
                 const SizedBox(height: 15),
-                buildFilters("Dificuldade", ["Barato", "Razoável", "Caro"]),
+                buildFilters("Dificuldade", ["Fácil", "Médio", "Difícil"]),
                 const SizedBox(height: 15),
-                buildFilters("Tempo", ["Barato", "Razoável", "Caro"]),
                 const SizedBox(height: 40),
                 const Divider(),
                 buildBottomAlertDialog()
@@ -150,7 +149,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
   Widget buildCheckBox(String name){
     return Row(
       children: [
-        Checkbox(value: false, onChanged: null, shape: CircleBorder()),
+        const Checkbox(value: false, onChanged: null, shape: CircleBorder()),
         Text(name)
       ],
     );
@@ -161,18 +160,26 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         TextButton(onPressed: () => Navigator.pop(context), child: const Text("Voltar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400))),
-        TextButton(onPressed: () => Navigator.pop, child: const Text("Aplicar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)))
+        TextButton(
+          onPressed: () {
+            // listMyMealController.orderList(listMyMealController.controllerIconButton.value.name!);
+            // Navigator.pop(context);
+            listMyMealController.orderList();
+          },
+            child: const Text("Aplicar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)
+          )
+        )
       ],
     );
   }
 
-  Widget buildIconButton(String name, String? nameAsc , bool valueButton, bool? isAsc){
+  Widget buildIconButton(String nameButton, String? name, bool valueButton, bool? isAsc){
     return IconButton(
       onPressed: () {
-        if(valueButton == isAsc && name == nameAsc){
-          listMyMealController.controllerIconButton.sink.add(IconButtonController(name: name, isAsc: null));
+        if(valueButton == isAsc && nameButton == name){
+          listMyMealController.controllerIconButton.sink.add(IconButtonController(name: nameButton, isAsc: null));
         }else{
-          listMyMealController.controllerIconButton.sink.add(IconButtonController(name: name, isAsc: valueButton));
+          listMyMealController.controllerIconButton.sink.add(IconButtonController(name: nameButton, isAsc: valueButton));
         }
       }, 
       icon: Icon(
@@ -180,7 +187,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
         ? LineAwesomeIcons.sort_alphabetical_up
         : LineAwesomeIcons.sort_alphabetical_down
       ),  
-        color: valueButton == isAsc && name == nameAsc
+        color: valueButton == isAsc && nameButton == name
         ? Colors.black
         : Colors.grey
     );

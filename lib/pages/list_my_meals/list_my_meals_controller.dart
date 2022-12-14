@@ -8,12 +8,19 @@ class ListMyMealController{
   ListMyMealsRepository listMyMealsRepository = ListMyMealsRepository();
   BehaviorSubject<List<Meal>> controllerMyListMeals = BehaviorSubject<List<Meal>>();
   BehaviorSubject<IconButtonController> controllerIconButton =  BehaviorSubject<IconButtonController>();
+  BehaviorSubject<String> controllerTextButton =  BehaviorSubject<String>();
 
 
   Future<void> initListMyMealsPage() async{
     controllerMyListMeals.sink.add(listMyMealsRepository.findAllMeals());
   }
 
+  Future<void> orderList() async{
+    controllerMyListMeals.sink.add(listMyMealsRepository.filterMeals());
+    // listMyMealsRepository.filterMeals();
+    // controllerMyListMeals.sink.add(listMyMealsRepository.findAMeals(order));
+  }
+  
 
 
 }
