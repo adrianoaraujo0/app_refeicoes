@@ -17,12 +17,20 @@ class ListMyMealsRepository{
   }
 
   List<Meal> filterMeals(){
-    final query = ObjectBox.mealId.query(Meal_.cost.contains("Barato").or(Meal_.cost.contains("Razoável")).or(Meal_.cost.contains("Caro"))).build().find();
+    final query = ObjectBox.mealId.query(
+      (Meal_.cost.contains("Barato").or(Meal_.cost.contains("Razoável")).or(Meal_.cost.contains("Caro"))
+      .and(Meal_.complexity.contains("").or(Meal_.complexity.contains("Razoável")).or(Meal_.complexity.contains("Difícil")))
+
+
+
+    )).build().find();
+
+
+
     final query2 = ObjectBox.mealId.query(Meal_.complexity.contains("Fácil").or(Meal_.complexity.contains("Médio"))).build().find();
         // .and(Meal_.complexity.contains("Fácil").or(Meal_.complexity.contains("Razoável")).or(Meal_.complexity.contains("Difícil")))
   
     print(query.length);
-    print(query2.length);
 
 
     return query;
