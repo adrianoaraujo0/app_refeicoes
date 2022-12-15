@@ -51,7 +51,9 @@ class ListMyMealsRepository{
 
 
   filter(List<CheckboxController> controllers){
-
+      if(controllers.where((element) => element.category == "Custo").isEmpty){
+        
+      }
 
     
   }
