@@ -46,9 +46,10 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
                     shrinkWrap: true,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMealsPage(id: snapshot.data![index].id!,))),
+                        onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMealsPage(id: snapshot.data![index].id!))),
                         title: Text(snapshot.data![index].name!),
-                        subtitle:  Text(snapshot.data![index].category!),
+                        subtitle:  Text(snapshot.data![index].complexity!),
+                        trailing: Text(snapshot.data![index].cost!),
                         leading: Text("${index + 1}", style: const TextStyle(fontSize: 20), textAlign: TextAlign.center),
                       );  
                     },
@@ -86,15 +87,12 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
                 const Text("Ordenar por:", style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 15),
                 buildOrders("Alfabeto"),
-                // buildOrders("Dificuldade"),
-                // buildOrders("Tempo"),
                 const SizedBox(height: 15),
                 const Text("Filtrar por:", style: TextStyle(fontSize: 19, fontWeight: FontWeight.w600)),
                 const SizedBox(height: 15),
-                buildFilters("Custo", ["Barato", "Razoável", "Caro"]),
+                buildFilters("Custo", [ "Barato", "Razoável", "Caro"]),
                 const SizedBox(height: 15),
                 buildFilters("Dificuldade", ["Fácil", "Médio", "Difícil"]),
-                const SizedBox(height: 15),
                 const SizedBox(height: 40),
                 const Divider(),
                 buildBottomAlertDialog()
@@ -128,23 +126,23 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
     );
   }
 
-  Widget buildFilters(String name, List<String> values){
-    return StreamBuilder<CheckboxController>(
+  Widget buildFilters(String category, List<String> values){
+    return StreamBuilder<List<CheckboxController>>(
       stream: listMyMealController.controllerCheckbox.stream,
-      initialData: CheckboxController(),
+      initialData: [],
       builder: (context, snapshot) {
         return Column(
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text("$name:", style: const TextStyle(fontSize: 19)),
+                Text("$category:", style: const TextStyle(fontSize: 19)),
               ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: values.map((name) {
-                return buildCheckBox(name, snapshot.data);
+                return buildCheckBox(name, category, snapshot.data!);
               }).toList()
             ),
           ],
@@ -153,12 +151,20 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
     );
   }
 
-  Widget buildCheckBox(String name, CheckboxController? controller){
+  Widget buildCheckBox(String name, String category , List<CheckboxController> listCheckboxController){
     return Row(
       children: [
         Checkbox(
-          value: controller!.name == name ? true : false,
-          onChanged: (value) => listMyMealController.controllerCheckbox.sink.add(CheckboxController(name: name, value: value!)) ,
+          value: listCheckboxController.where((element) => element.name == name && element.category == category).isNotEmpty,
+          onChanged: (value) {
+            if(value == true){
+              listCheckboxController.add(CheckboxController(name: name, category: category));
+              listMyMealController.controllerCheckbox.sink.add(listCheckboxController);
+            }else{
+              listCheckboxController.removeWhere((element) => element.name == name && element.category == category);
+              listMyMealController.controllerCheckbox.sink.add(listCheckboxController);
+            }
+          },
           shape: const CircleBorder()
         ),
         Text(name)
@@ -173,9 +179,9 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
         TextButton(onPressed: () => Navigator.pop(context), child: const Text("Voltar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400))),
         TextButton(
           onPressed: () {
-            // listMyMealController.orderList(listMyMealController.controllerIconButton.value.name!);
+            // listMyMealController.orderCrescentDescending(listMyMealController.controllerIconButton.value.isAsc);
+            listMyMealController.orderList(listMyMealController.controllerCheckbox.value);
             // Navigator.pop(context);
-            listMyMealController.orderList();
           },
             child: const Text("Aplicar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)
           )
@@ -195,8 +201,8 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
       }, 
       icon: Icon(
         valueButton 
-        ? LineAwesomeIcons.sort_alphabetical_up
-        : LineAwesomeIcons.sort_alphabetical_down
+        ? LineAwesomeIcons.sort_alphabetical_down
+        : LineAwesomeIcons.sort_alphabetical_up
       ),  
         color: valueButton == isAsc && nameButton == name
         ? Colors.black

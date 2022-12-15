@@ -1,8 +1,8 @@
 class CheckboxController{
 
+  String? category; 
   String? name;
-  bool? value;
 
-  CheckboxController({this.name, this.value});
+  CheckboxController({this.category, this.name});
 
 }

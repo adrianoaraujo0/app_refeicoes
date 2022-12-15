@@ -1,39 +1,59 @@
 
 import 'package:app_refeicoes/database/objectbox.g.dart';
 import 'package:app_refeicoes/database/objectbox_database.dart';
+import 'package:app_refeicoes/models/checkbox_controller.dart';
 import 'package:app_refeicoes/models/meal.dart';
 
 class ListMyMealsRepository{
-
 
   List<Meal> findAllMeals(){
    return ObjectBox.mealId.getAll();
   }
 
+  List<Meal> findMealsCrescentOrDescending(bool? isAsc){
 
-  List<Meal> findAMeals(String order){
-    final query = ObjectBox.mealId.query()..order(Meal_.cost, flags: Order.descending);
-    return query.build().find();
+    QueryBuilder<Meal>? query;
+
+    if(isAsc == true){
+      query = ObjectBox.mealId.query()..order(Meal_.name);
+      return query.build().find();
+      
+    }else if(isAsc == false){
+      query = ObjectBox.mealId.query()..order(Meal_.name, flags: Order.descending);
+      return query.build().find();
+    }else{
+      return findAllMeals();
+    }
+
+
   }
 
-  List<Meal> filterMeals(){
+  List<Meal> filterMeals(List<CheckboxController> controllers){
+
+   
+    
+
+
+    print(controllers.where((element) => element.category == "Custo").isEmpty);
+    print(controllers.where((element) => element.category == "Dificuldade").isEmpty);
+    
+ 
+
     final query = ObjectBox.mealId.query(
-      (Meal_.cost.contains("Barato").or(Meal_.cost.contains("Razoável")).or(Meal_.cost.contains("Caro"))
-      .and(Meal_.complexity.contains("").or(Meal_.complexity.contains("Razoável")).or(Meal_.complexity.contains("Difícil")))
-
-
-
-    )).build().find();
-
-
-
-    final query2 = ObjectBox.mealId.query(Meal_.complexity.contains("Fácil").or(Meal_.complexity.contains("Médio"))).build().find();
-        // .and(Meal_.complexity.contains("Fácil").or(Meal_.complexity.contains("Razoável")).or(Meal_.complexity.contains("Difícil")))
-  
-    print(query.length);
-
+      Meal_.cost.oneOf([])
+      .and(
+        Meal_.complexity.oneOf([])
+      )
+    ).build().find();
 
     return query;
+  }
+
+
+  filter(List<CheckboxController> controllers){
+
+
+    
   }
 
 

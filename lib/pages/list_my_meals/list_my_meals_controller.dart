@@ -9,18 +9,19 @@ class ListMyMealController{
   ListMyMealsRepository listMyMealsRepository = ListMyMealsRepository();
   BehaviorSubject<List<Meal>> controllerMyListMeals = BehaviorSubject<List<Meal>>();
   BehaviorSubject<IconButtonController> controllerIconButton =  BehaviorSubject<IconButtonController>();
-  BehaviorSubject<CheckboxController> controllerCheckbox =  BehaviorSubject<CheckboxController>();
+  BehaviorSubject<List<CheckboxController>> controllerCheckbox = BehaviorSubject<List<CheckboxController>>();
 
   Future<void> initListMyMealsPage() async{
     controllerMyListMeals.sink.add(listMyMealsRepository.findAllMeals());
   }
 
-  Future<void> orderList() async{
-    controllerMyListMeals.sink.add(listMyMealsRepository.filterMeals());
-    // listMyMealsRepository.filterMeals();
-    // controllerMyListMeals.sink.add(listMyMealsRepository.findAMeals(order));
+  Future<void> orderCrescentDescending(bool? isAsc) async{
+    controllerMyListMeals.sink.add(listMyMealsRepository.findMealsCrescentOrDescending(isAsc));
   }
-  
 
+  Future<void> orderList(List<CheckboxController> controller) async{
+    controllerMyListMeals.sink.add(listMyMealsRepository.filterMeals(controller));
+    
+  }
 
 }
