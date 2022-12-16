@@ -36,7 +36,7 @@ class _DrawerComponentState extends State<DrawerComponent> {
           ),
           const SizedBox(height: 20),
           InkWell(
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) =>  const HomePage())),
+            onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>  const HomePage())),
             child: buildContainer(Icons.fastfood, "Refeicoes")
           ),
           const SizedBox(height: 30),

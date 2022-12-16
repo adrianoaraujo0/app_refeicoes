@@ -19,7 +19,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
 
   @override
   void initState() {
-    listMyMealController.initListMyMealsPage();
+    listMyMealController.updateListMyMealsPage();
 
     super.initState();
   }
@@ -54,8 +54,11 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
                         onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MyMealsPage(id: snapshot.data![index].id!))),
                         title: Text(snapshot.data![index].name!),
                         subtitle:  Text(snapshot.data![index].complexity!),
-                        trailing: Text(snapshot.data![index].cost!),
                         leading: Text("${index + 1}", style: const TextStyle(fontSize: 20), textAlign: TextAlign.center),
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.red),
+                          onPressed: () => listMyMealController.deleteMeal(context ,snapshot.data![index])
+                        ),
                       );  
                     },
                   )

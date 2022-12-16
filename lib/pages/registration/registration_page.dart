@@ -147,12 +147,13 @@ class _RegistrationPageState extends State<RegistrationPage> {
           child: const Text("Dificuldade", style: TextStyle(fontSize: 22)),
         ),
         Column(
-        children: [
-          buildRadioListTile("Fácil", meal),
-          buildRadioListTile("Médio", meal),
-          buildRadioListTile("Difícil", meal),
-        ],
-      ),
+          children: [
+            buildCheckbox(["Fácil", "Médio", "Difícil"], meal)
+            // buildRadioListTile("Fácil", meal),
+            // buildRadioListTile("Médio", meal),
+            // buildRadioListTile("Difícil", meal),
+          ],
+        ),
         Container(
           margin: const EdgeInsets.fromLTRB(0, 20, 0 , 10),
           child: const Text("Custo", style: TextStyle(fontSize: 22)),
@@ -169,6 +170,26 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+  Widget buildCheckbox(List<String> values, Meal meal){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: values.map((name){
+        return Row(
+          children: [
+            Checkbox(
+              value: name == meal.cost, 
+              shape: const CircleBorder(),
+              onChanged: (value){ 
+                registrationController.insertCost(meal, name);
+              }, 
+            ),
+            Text(name)
+          ]
+        );
+      }).toList()
+    );
+  }
+
   Widget buildRadioListTile(String title, Meal meal, [bool changeToCost = false]){
     return RadioListTile(
       title: Text(title),
@@ -180,6 +201,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
         }else{
           registrationController.insertComplexity(meal, value!);
         }
+
       }  
     );
   }

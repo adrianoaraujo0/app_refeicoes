@@ -8,7 +8,7 @@ class Category {
     required this.image,
   });
 
-  //transformar um mapa num objetoo
+  //transformar um mapa num objeto
   factory Category.fromMap(Map<String, dynamic> map){
     return Category(
       name: map["name"],

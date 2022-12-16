@@ -61,9 +61,14 @@ class ListMyMealsRepository{
     }else{
       return null;
     }
-    
   }
 
+  void deleteMeal(int id){
+    ObjectBox.mealId.remove(id);
+  }
 
+  void insertMeal(Meal meal){
+    ObjectBox.mealId.put(meal);
+  }
 
 }
