@@ -10,51 +10,57 @@ class ListMyMealsRepository{
    return ObjectBox.mealId.getAll();
   }
 
-  List<Meal> findMealsCrescentOrDescending(bool? isAsc){
+  List<Meal> findMealsCrescentOrDescending(bool? isAsc, List<CheckboxController> controllers){
 
     QueryBuilder<Meal>? query;
 
     if(isAsc == true){
-      query = ObjectBox.mealId.query()..order(Meal_.name);
+
+      query = filterMeals(controllers)..order(Meal_.name);
+       
       return query.build().find();
-      
     }else if(isAsc == false){
-      query = ObjectBox.mealId.query()..order(Meal_.name, flags: Order.descending);
+      
+      query = filterMeals(controllers)..order(Meal_.name, flags: Order.descending);
       return query.build().find();
+
     }else{
-      return findAllMeals();
+
+      return filterMeals(controllers).build().find();
+
     }
-
-
   }
-
-  List<Meal> filterMeals(List<CheckboxController> controllers){
-
-   
-    
-
-
-    print(controllers.where((element) => element.category == "Custo").isEmpty);
-    print(controllers.where((element) => element.category == "Dificuldade").isEmpty);
-    
- 
-
-    final query = ObjectBox.mealId.query(
-      Meal_.cost.oneOf([])
-      .and(
-        Meal_.complexity.oneOf([])
+  QueryBuilder<Meal> filterMeals(List<CheckboxController> controllers){
+    return ObjectBox.mealId.query(
+      filter(
+        controllers.where((element) => element.category == "Custo").toList(),
+        controllers.where((element) => element.category == "Dificuldade").toList()
       )
-    ).build().find();
-
-    return query;
+    );
   }
 
+  Condition<Meal>? filter(List<CheckboxController> listCost, List<CheckboxController> listComplexity){
+    
+    if(listCost.isNotEmpty && listComplexity.isNotEmpty){
 
-  filter(List<CheckboxController> controllers){
-      if(controllers.where((element) => element.category == "Custo").isEmpty){
-        
-      }
+      List<String> costs = listCost.map((e) => e.name!).toList();
+      List<String> complexity = listComplexity.map((e) => e.name!).toList();
 
+      return Meal_.cost.oneOf(costs).and(Meal_.complexity.oneOf(complexity));
+
+    }else if(listCost.isNotEmpty){
+
+      List<String> costs = listCost.map((e) => e.name!).toList();
+      return Meal_.cost.oneOf(costs);
+    
+    }else if(listComplexity.isNotEmpty){
+
+      List<String> complexity = listComplexity.map((e) => e.name!).toList();
+      return Meal_.complexity.oneOf(complexity);
+
+    }else{
+      return null;
+    }
     
   }
 

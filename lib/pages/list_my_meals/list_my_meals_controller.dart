@@ -15,13 +15,15 @@ class ListMyMealController{
     controllerMyListMeals.sink.add(listMyMealsRepository.findAllMeals());
   }
 
-  Future<void> orderCrescentDescending(bool? isAsc) async{
-    controllerMyListMeals.sink.add(listMyMealsRepository.findMealsCrescentOrDescending(isAsc));
+  Future<void> orderCrescentDescending(bool? isAsc, List<CheckboxController> controller) async{
+    controllerMyListMeals.sink.add(
+      listMyMealsRepository.findMealsCrescentOrDescending(isAsc, controller)
+    );
   }
 
-  Future<void> orderList(List<CheckboxController> controller) async{
-    controllerMyListMeals.sink.add(listMyMealsRepository.filterMeals(controller));
+  // Future<void> orderList(List<CheckboxController> controller) async{
+  //   controllerMyListMeals.sink.add(listMyMealsRepository.filterMeals(controller).order(Meal()));
     
-  }
+  // }
 
 }

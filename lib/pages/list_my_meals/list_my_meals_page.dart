@@ -32,7 +32,12 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
         title: const Text("Minhas refeicoes"),
         centerTitle: true,
         actions: [
-          IconButton(onPressed: ()=> showDialog(context: context, builder: (context) => buildDialog()), icon: const Icon(Icons.more_vert))
+          IconButton(
+            onPressed: () {
+              listMyMealController.controllerCheckbox.sink.add([]);
+              listMyMealController.controllerIconButton.sink.add(IconButtonController());
+              showDialog(context: context, builder: (context) => buildDialog());
+          }, icon: const Icon(Icons.more_vert))
         ],
       ),
       body: StreamBuilder<List<Meal>>(
@@ -81,6 +86,7 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
           child: SizedBox(
             width: double.maxFinite,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Ordenacao/Filtro", style: TextStyle(fontSize: 25,  fontWeight: FontWeight.w400)),
                 const Divider(),
@@ -112,12 +118,11 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
         const SizedBox(width: 70),
         StreamBuilder<IconButtonController>(
           stream: listMyMealController.controllerIconButton.stream,
-          initialData: IconButtonController(),
           builder: (context, snapshot) {
             return Row(
               children: [
-                buildIconButton(name, snapshot.data!.name, false, snapshot.data!.isAsc),
-                buildIconButton(name, snapshot.data!.name, true, snapshot.data!.isAsc)
+                buildIconButton(name, snapshot.data?.name, false, snapshot.data?.isAsc),
+                buildIconButton(name, snapshot.data?.name, true, snapshot.data?.isAsc)
               ]
             );
           }
@@ -129,21 +134,26 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
   Widget buildFilters(String category, List<String> values){
     return StreamBuilder<List<CheckboxController>>(
       stream: listMyMealController.controllerCheckbox.stream,
-      initialData: [],
+      initialData: const [],
       builder: (context, snapshot) {
         return Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text("$category:", style: const TextStyle(fontSize: 19)),
               ],
             ),
             Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: values.map((name) {
                 return buildCheckBox(name, category, snapshot.data!);
               }).toList()
+              // children: values.map((name) {
+              //   return buildCheckBox(name, category, snapshot.data!);
+              // }).toList()
             ),
           ],
         );
@@ -179,9 +189,9 @@ class _ListMyMealsPageState extends State<ListMyMealsPage> {
         TextButton(onPressed: () => Navigator.pop(context), child: const Text("Voltar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400))),
         TextButton(
           onPressed: () {
-            // listMyMealController.orderCrescentDescending(listMyMealController.controllerIconButton.value.isAsc);
-            listMyMealController.orderList(listMyMealController.controllerCheckbox.value);
-            // Navigator.pop(context);
+            listMyMealController.orderCrescentDescending(listMyMealController.controllerIconButton.valueOrNull?.isAsc, listMyMealController.controllerCheckbox.valueOrNull!.toList());
+            // listMyMealController.orderList(listMyMealController.controllerCheckbox.valueOrNull!.toList());
+            Navigator.pop(context);
           },
             child: const Text("Aplicar", style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600)
           )
